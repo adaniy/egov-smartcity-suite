@@ -50,96 +50,134 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
+<div class="panel-heading custom_form_panel_heading">
+	<div class="panel-title">
+		<spring:message code="lbl.encloseddocuments" />
+	</div>
+</div>
+<div class="panel-body">
+	<div class="row view-content header-color hidden-xs">
+		<label class="col-sm-3 ">
+			<spring:message code="lbl.documentname"/>
+		</label>
+		<%--<label class="col-sm-2 ">
+        <spring:message code="lbl.issubmitted" />
+        </label>--%>
+		<label class="col-sm-3 ">
+			<spring:message code="lbl.remarks"/>
+		</label>
+		<label class="col-sm-6 ">
+			<spring:message code="lbl.attachdocument"/><span class="error-msg"> (<spring:message code="lbl.supp.doc.types"/>)</span>
+			<br>
+			<small class="error-msg"><spring:message
+					code="lbl.mesg.document"/></small>
+		</label>
+	</div>
 <c:choose>
-	<c:when test="${!checkListDetailList.isEmpty()}">
-		<div class="panel-heading custom_form_panel_heading">
-			<div class="panel-title">
-				<spring:message code="lbl.encloseddocuments" />
-				-
-				<spring:message code="lbl.checklist" />
-			</div>
-		</div>
-		<div class="form-group view-content header-color hidden-xs">
-			<div class="col-sm-3 text-center">
-				<spring:message code="lbl.documentname" />
-			</div>
-			<div class="col-sm-3 text-center">
-				<spring:message code="lbl.issubmitted" />
-			</div>
-			<div class="col-sm-3 text-center">
-				<spring:message code="lbl.remarks" />
-			</div>
-			<div class="col-sm-3 text-center">
-				<spring:message code="lbl.attachdocument" />
-			</div>
-		</div>
-		<c:forEach var="docs" items="${checkListDetailList}"
+	<c:when test="${bpaApplication.serviceType ne null}">
+		<c:forEach var="docs" items="${applicationDocumentList}"
 			varStatus="status">
-			<div class="form-group">
-				<div class="col-sm-3 add-margin check-text text-center">
-					<c:choose>
-						<c:when test="${docs.isMandatory}">
-							<input type="checkbox" checked disabled>&nbsp;<c:out
-								value="${docs.description}" />
-						</c:when>
-						<c:otherwise>
-							<input type="checkbox" disabled>&nbsp;<c:out
-								value="${docs.description}" />
-						</c:otherwise>
-					</c:choose>
-					<form:hidden
-						id="applicationDocument${status.index}checklistDetail.id"
-						path="applicationDocument[${status.index}].checklistDetail.id"
-						value="${docs.id}" />
+			<div class="row">
+				<div class="col-sm-3 add-margin <c:if test="${docs.checklistDetail.description eq 'One day permit agreement'}">document-desc</c:if>">
+					<c:out value="${docs.checklistDetail.description}"></c:out>
+					<span ></span>
+					<c:if test="${docs.checklistDetail.isMandatory}">
+						<span class="mandatory"></span>
+					</c:if>
+					<form:hidden id="applicationDocument${status.index}id"
+						path="applicationDocument[${status.index}].id" value="${docs.id}" />
 					<form:hidden id="applicationDocument${status.index}checklistDetail"
-						path="applicationDocument[${status.index}].checklistDetail.isMandatory"
-						value="${docs.isMandatory}" />
-					<form:hidden
-						id="applicationDocument${status.index}checklistDetail.description"
-						path="applicationDocument[${status.index}].checklistDetail.description"
-						value="${docs.description}" />
+						path="applicationDocument[${status.index}].checklistDetail"
+						value="${docs.checklistDetail.id}" />
 				</div>
 
-				<div class="col-sm-3 add-margin text-center">
+				<%--<div class="col-sm-2 add-margin">
 					<form:checkbox id="applicationDocument${status.index}issubmitted"
 						path="applicationDocument[${status.index}].issubmitted"
-						value="applicationDocument${status.index}issubmitted" />
-				</div>
+						value="${docs.issubmitted}" />
+				</div>--%>
 
-				<div class="col-sm-3 add-margin text-center">
+				<div class="col-sm-3 add-margin">
 
 					<form:textarea class="form-control patternvalidation"
-						data-pattern="string" maxlength="256"
+						data-pattern="alphanumericspecialcharacters" maxlength="255"
 						id="applicationDocument${status.index}remarks"
-						path="applicationDocument[${status.index}].remarks" />
+						path="applicationDocument[${status.index}].remarks"
+						value="{docs.remarks}" />
 					<form:errors path="applicationDocument[${status.index}].remarks"
 						cssClass="add-margin error-msg" />
 				</div>
 
-				<div class="col-sm-3 add-margin text-center">
-					<c:choose>
-						<c:when test="${docs.isMandatory}">
-							<input type="file" id="file${status.index}id"
-								name="applicationDocument[${status.index}].files"
-								class="file-ellipsis upload-file" required="required">
-						</c:when>
-						<c:otherwise>
-							<input type="file" id="file${status.index}id"
-								name="applicationDocument[${status.index}].files"
-								class="file-ellipsis upload-file">
-						</c:otherwise>
-					</c:choose>
-					<form:errors path="applicationDocument[${status.index}].files"
-						cssClass="add-margin error-msg" />
-					<div class="add-margin error-msg text-left">
-						<font size="2"> <spring:message code="lbl.mesg.document" />
-						</font>
+				<div class="col-sm-6 add-margin">
+					<div class="files-upload-container <c:if test="${docs.checklistDetail.description eq 'One day permit agreement'}">documentRequire</c:if>"
+					    data-file-max-size="5"
+					    <c:if test="${docs.checklistDetail.isMandatory eq true && fn:length(docs.getOrderedSupportDocs()) eq 0}">required</c:if>
+						data-allowed-extenstion="doc,docx,xls,xlsx,rtf,pdf,txt,zip,jpeg,jpg,png,gif,tiff">
+						<div class="files-viewer">
+
+							<c:forEach items="${docs.getOrderedSupportDocs()}" var="file" varStatus="status1">
+								<div class="file-viewer" data-toggle="tooltip"
+									data-placement="top" title="${file.fileName}">
+									<a class="download" target="_blank"
+										href="/bpa/application/downloadfile/${file.fileStoreId}"></a>
+
+										<c:choose>
+											<c:when test="${file.contentType eq 'application/pdf'}">
+												<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+											</c:when>
+											<c:when test="${file.contentType eq 'application/txt'}">
+												<i class="fa fa-file-text-o" aria-hidden="true"></i>
+											</c:when>
+											<c:when
+												test="${file.contentType eq 'application/rtf' || file.contentType eq 'application/doc' || file.contentType eq 'application/docx' || file.contentType eq 'application/msword' || file.contentType eq 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}">
+												<i class="fa fa-file-word-o" aria-hidden="true"></i>
+											</c:when>
+											<c:when test="${file.contentType eq 'application/zip'}">
+												<i class="fa fa-file-archive-o" aria-hidden="true"></i>
+											</c:when>
+											<c:when
+												test="${file.contentType eq 'image/jpg' || file.contentType eq 'image/jpeg' || file.contentType eq 'image/png' || file.contentType eq 'image/gif' || file.contentType eq 'image/tiff'}">
+												<i class="fa fa-picture-o" aria-hidden="true"></i>
+											</c:when>
+											<c:when
+												test="${file.contentType eq 'application/xls' || file.contentType eq 'application/xlsx' || file.contentType eq 'application/vnd.ms-excel'}">
+												<i class="fa fa-file-excel-o" aria-hidden="true"></i>
+											</c:when>
+											<c:otherwise>
+												<i class="fa fa-file-o" aria-hidden="true"></i>
+											</c:otherwise>
+										</c:choose>
+										<span class="doc-numbering">${status1.index+1}</span>
+								</div>
+							</c:forEach>
+
+							<a href="javascript:void(0);" class="file-add"
+								data-unlimited-files="true"
+								data-file-input-name="applicationDocument[${status.index}].files">
+								<i class="fa fa-plus"></i>
+							</a>
+
+						</div>
 					</div>
 				</div>
 			</div>
 		</c:forEach>
 	</c:when>
+	<c:otherwise>
+		<div id="bpaDocumentsBody"></div>
+	</c:otherwise>
 </c:choose>
+</div> 	
 
+<!-- The Modal -->
+<div id="imgModel" class="image-modal">
+	<span class="closebtn">&times;</span> <img class="modal-content"
+		id="previewImg">
+	<div id="caption"></div>
+</div>
 
+<link rel="stylesheet" href="<c:url value='/resources/css/bpa-style.css?rnd=${app_release_no}'/>">
+<script
+	src="<cdn:url value='/resources/js/app/document-upload-helper.js?rnd=${app_release_no}'/>"></script>

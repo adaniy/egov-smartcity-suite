@@ -46,37 +46,55 @@
   ~   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
   ~
   -->
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-	xsi:schemaLocation="http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
-	default-lazy-init="true">
+       default-lazy-init="true">
 
-	<context:component-scan base-package="org.egov.bpa" />
+    <context:component-scan base-package="org.egov.bpa"/>
 
-	<bean id="bpaApplicationBillable"
-		class="org.egov.bpa.application.service.collection.BpaApplicationBillable"
-		scope="prototype" />
+    <bean id="bpaApplicationBillable"
+          class="org.egov.bpa.transaction.service.collection.BpaApplicationBillable"
+          scope="prototype"/>
 
-	<bean id="BpaApplicationInboxRenderService"
-		class="org.egov.infra.workflow.inbox.DefaultInboxRenderServiceImpl">
-		<constructor-arg index="0"
-			ref="BpaApplicationPersistenceService" />
-	</bean>
+    <bean id="occupancyCertificateBillable"
+          class="org.egov.bpa.transaction.service.collection.OccupancyCertificateBillable"
+          scope="prototype"/>
 
-	<bean id="BpaApplicationPersistenceService" parent="abstractPersistenceService">
-		<constructor-arg name="type"
-			value="org.egov.bpa.application.entity.BpaApplication" />
-	</bean>
-	<!-- <bean id="RegistartionInboxRenderService" class="org.egov.infra.workflow.inbox.DefaultInboxRenderServiceImpl"> 
-		<constructor-arg index="0" ref="registartionInboxRenderService" /> </bean> -->
+    <bean id="BpaApplicationInboxRenderService"
+          class="org.egov.infra.workflow.inbox.DefaultInboxRenderServiceImpl">
+        <constructor-arg index="0"
+                         ref="BpaApplicationPersistenceService"/>
+    </bean>
 
+    <bean id="OccupancyCertificateInboxRenderService"
+          class="org.egov.infra.workflow.inbox.DefaultInboxRenderServiceImpl">
+        <constructor-arg index="0"
+                         ref="OccupancyCertificatePersistenceService"/>
+    </bean>
 
-	<bean id="BPACollectionsInterface"
-		class="org.egov.bpa.application.service.collection.BpaTaxCollection" />
+    <bean id="BpaApplicationPersistenceService" parent="abstractPersistenceService">
+        <constructor-arg name="type"
+                         value="org.egov.bpa.transaction.entity.BpaApplication"/>
+    </bean>
 
-	<bean id="bpaApplicationWorkflowCustomDefaultImpl"
-		class="org.egov.bpa.application.workflow.BpaApplicationWorkflowCustomDefaultImpl" />
+    <bean id="OccupancyCertificatePersistenceService" parent="abstractPersistenceService">
+        <constructor-arg name="type"
+                         value="org.egov.bpa.transaction.entity.oc.OccupancyCertificate"/>
+    </bean>
 
+    <bean id="BPACollectionsInterface"
+          class="org.egov.bpa.transaction.service.collection.BpaTaxCollection"/>
+
+    <bean id="OCCollectionsInterface"
+          class="org.egov.bpa.transaction.service.collection.OccupancyCertificateTaxCollection"/>
+
+    <bean id="bpaApplicationWorkflowCustomDefaultImpl"
+          class="org.egov.bpa.transaction.workflow.BpaApplicationWorkflowCustomDefaultImpl"/>
+
+    <bean id="occupancyCertificateWorkflowCustomDefaultImpl"
+          class="org.egov.bpa.transaction.workflow.oc.OccupancyCertificateWorkflowCustomDefaultImpl"/>
 
 </beans>

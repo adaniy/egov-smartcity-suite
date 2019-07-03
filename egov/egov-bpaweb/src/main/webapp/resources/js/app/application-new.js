@@ -45,167 +45,74 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  *
  */
-var reportdatatable;
-jQuery(document).ready(function($) {
-	if($('#noJAORSAMessage') && $('#noJAORSAMessage').val())
-		bootbox.alert($('#noJAORSAMessage').val());
 
-});
-function validateMobileNumber(obj)
-{
-
-	var text = obj.value;
-	if(text!=''){
-		
-		if(text.length!=10)
-		{		
-			obj.value="";
+$(document).ready(
+		function($) {
 			
-			bootbox.alert("Invalid Mobile length");
-			return false;
-	
-		}
-	validatePhoneNumber(obj,'mobile');
-	}
-	return true;
-}
-
-function validatePhoneNumber(obj,mode){
-	var text = obj.value;
-	if(text!=""){
-		
-	var msg;
-	if(mode=='mobile')
-		msg='<s:text name="invalid.mobileno" />';
-	else
-		msg='<s:text name="invalid.teleno" />';
-	if(isNaN(text))
-	{
-		dom.get("bpa_error_area").style.display = '';
-		document.getElementById("bpa_error_area").innerHTML = msg;
-		obj.value="";
-		return false;
-	}
-	if(text<=0)
-	{
-		dom.get("bpa_error_area").style.display = '';
-		document.getElementById("bpa_error_area").innerHTML = msg;
-		obj.value="";
-		return false;
-	}
-	if(text.replace(".","~").search("~")!=-1)
-	{
-		dom.get("bpa_error_area").style.display = '';
-		document.getElementById("bpa_error_area").innerHTML = '<s:text name="period.notallowed" />';
-		obj.value='';
-		return false;
-	}
-	if(text.replace("+","~").search("~")!=-1)
-	{
-		dom.get("bpa_error_area").style.display = '';
-		document.getElementById("bpa_error_area").innerHTML = '<s:text name="plus.notallowed" />';
-		obj.value='';
-		return false;
-	}
-	}
-	return true;
-}
-$('#ward').change(function(){
-	jQuery.ajax({
-		url: "/egi/boundary/block/by-ward",
-		type: "GET",
-		data: {
-			wardId : jQuery('#ward').val()
-		},
-		cache: false,
-		dataType: "json",
-		success: function (response) {
-			jQuery('#block').html("");
-			jQuery('#block').append("<option value=''>Select</option>");
-			jQuery.each(JSON.parse(response), function(index, value) {
-				jQuery('#block').append($('<option>').text(value.name).attr('value', value.id));
+			//toggle between multiple tab
+			jQuery('form').validate({
+				ignore: ".ignore",
+				invalidHandler: function(e, validator){
+				if(validator.errorList.length)
+				$('#settingstab a[href="#' + jQuery(validator.errorList[0].element).closest(".tab-pane").attr('id') + '"]').tab('show');
+				}
+				});
+			
+			
+			var validator = $("#newApplicationform").validate({
+				highlight : function(element, errorClass) {
+					$(element).fadeOut(function() {
+						$(element).fadeIn();
+					});
+				}
 			});
-		}, 
-		error: function (response) {
-			jQuery('#block').html("");
-			jQuery('#block').append("<option value=''>Select</option>");
-		}
-	});
-});
 
-$('#serviceType').change(function(){
-	jQuery.ajax({
-		url: "/bpa/ajax/getAdmissionFees",
-		type: "GET",
-		data: {
-			serviceType : jQuery('#serviceType').val()
-		},
-		cache: false,
-		dataType: "json",
-		success: function (response) {
-			
-				$("#admissionfeeAmount").prop("disabled", true);
-				jQuery('#admissionfeeAmount').val(response);
+			if ($('#noJAORSAMessage') && $('#noJAORSAMessage').val())
+				bootbox.alert($('#noJAORSAMessage').val());
 
-		}, 
-		error: function (response) {
-			
-		}
-	});
-});
-/*$('#serviceType').change(function(){
-	jQuery.ajax({
-		url: "/bpa/ajax/getDocumentListByServiceType",
-		type: "GET",
-		data: {
-			serviceType : jQuery('#serviceType').val()
-		},
-		cache: false,
-		dataType: "json",
-		success: function (response) {
-			
+			if ($('#invalidStakeholder').val())
+				bootbox.alert($('#invalidStakeholder').val());
 
-		}, 
-		error: function (response) {
-			
-		}
-	});
-});*/
-
-
-//toggle between multiple tab
-jQuery('form').validate({
-	ignore: ".ignore",
-	invalidHandler: function(e, validator){
-	if(validator.errorList.length)
-	$('#settingstab a[href="#' + jQuery(validator.errorList[0].element).closest(".tab-pane").attr('id') + '"]').tab('show');
-	}
-	});
-
-$('#buttonSubmit').click(function(e) {
-	if ($('form').valid()) {
-		//
-	} else {
-		e.preventDefault();
-	}
-});
-
-$('#stakeHolderType').change(function(){
-	$.ajax({
-		url: "/bpa/ajax/stakeholdersbytype",     
-		type: "GET",
-		data: {
-			stakeHolderType : $('#stakeHolderType').val()    
-		},
-		dataType: "json",
-		success: function (response) {
-			$('#stakeHolder').empty();
-			$('#stakeHolder').append($("<option value=''>Select from below</option>"));
-			$.each(response, function(index, value) {
-				$('#stakeHolder').append($('<option>').text(value.name).attr('value', value.id));  
+			$('#buttonSubmit').click(function(e) {
+				return validateForm(validator);
 			});
-		}, 
-		error: function (response) {
-		}
-	});
-});
+
+			function validateForm(validator) {
+				if ($("#postalAddressTypeHead").val() == "") {
+					bootbox.alert('Please Enter Pincode.');
+					return false;
+				}
+				if ($('#newApplicationform').valid()
+						&& validateUploadFilesMandatory()) {
+					document.getElementById("workFlowAction").value = $(
+							'#buttonSubmit').val();
+					return true;
+				} else {
+					$errorInput=undefined;
+					
+					$.each(validator.invalidElements(), function(index, elem){
+						
+						if(!$(elem).is(":visible") && !$(elem).val() && index==0 
+								&& $(elem).closest('div').find('.bootstrap-tagsinput').length > 0){
+							$errorInput=$(elem);
+						}
+						
+						if(!$(elem).is(":visible") && !$(elem).closest('div.panel-body').is(":visible")){
+							$(elem).closest('div.panel-body').show();
+						}
+					});
+					
+					if($errorInput)
+						$errorInput.tagsinput('focus');
+					
+					validator.focusInvalid();
+					return false;
+				}
+			}
+
+			$('.applicantname').hide();
+			$('#name').change(function() {
+				$('.applicantname').show();
+				$("span#applicantName").html($(this).val());
+			});
+		});

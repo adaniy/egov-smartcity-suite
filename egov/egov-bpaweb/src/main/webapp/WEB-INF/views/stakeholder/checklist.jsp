@@ -52,52 +52,107 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<br>
-<br>
-<c:forEach var="doc" items="${stakeHolderDocumentList}"
-	varStatus="status">
+
+<div class="panel-heading custom_form_panel_heading">
+	<div class="panel-title">
+		
+	</div>
+</div>
+<div class="panel-body">
+	<div class="row view-content header-color hidden-xs">
+	<label class="col-sm-4 ">
+		   <spring:message code="lbl.documentname" />
+		 </label>
+		<label class="col-sm-8 ">
+		<spring:message code="lbl.attachdocument" /><span class="error-msg">
+		 (
+		<spring:message code="lbl.supp.doc.types"/>
+		)</span>
+		<br> <small class="error-msg"><spring:message
+				code="lbl.mesg.document" /></small>
+	</label>
+	</div>
+	<c:forEach var="doc" items="${stakeHolderDocumentList}"
+		varStatus="status">
 		<div class="form-group">
-			<div class="col-sm-1"></div>
-		<%-- 	<form:hidden id="documents[${status.index}].id"
-				path="stakeHolderDocument[${status.index}].id" value="${doc.id}" /> --%>
-			<form:hidden id="checkListDocuments[${status.index}].id" path="checkListDocuments[${status.index}].id" value="${doc.id}" />
-			<div class="col-sm-4 add-margin text-right">
-				<c:out value="${doc.description}"></c:out><c:if test="${doc.isMandatory}"><span class="mandatory"></span></c:if>
+			<form:hidden
+				id="stakeHolderDocument[${status.index}].checkListDetail.id"
+				path="stakeHolderDocument[${status.index}].checkListDetail.id"
+				value="${doc.checkListDetail.id}" />
+					<form:hidden id="stakeHolderDocument${status.index}.checkListDetail.isMandatory"
+						path="stakeHolderDocument[${status.index}].checkListDetail.isMandatory"
+						value="${doc.checkListDetail.isMandatory}" />
+			<div class="col-sm-4 add-margin ">
+				<c:out value="${doc.checkListDetail.description}"></c:out>
+				<c:if test="${doc.checkListDetail.isMandatory}">
+					<span class="mandatory"></span>
+				</c:if>
 			</div>
-			<div class="col-sm-2 add-margin text-center">
-				<%-- <input type="file" id="file${status.index}id"
-					name="checkListDocuments[${status.index}].file"
-					class="file-ellipsis upload-file">
-				<form:errors path="checkListDocuments[${status.index}].file"
-					cssClass="add-margin error-msg" /> --%>
-					
-				<c:choose>
-		<c:when test="${doc.isMandatory}">
-			<input type="file" id="file${status.index}id" name="checkListDocuments[${status.index}].file" class="file-ellipsis upload-file" required="required">
-		</c:when>
-		<c:otherwise>
-			<input type="file" id="file${status.index}id" name="checkListDocuments[${status.index}].file" class="file-ellipsis upload-file">
-		</c:otherwise>
-		</c:choose>	
-			<form:errors path="checkListDocuments[${status.index}].file" cssClass="add-margin error-msg" />
-			</div>
-			<div class="col-sm-2">
-				<c:set value="false" var="isDocFound"></c:set>
-				<c:forEach items="${stakeHolder.stakeHolderDocument}" var="shdoc"
-					varStatus="loopStatus">
-					<c:if test="${shdoc.checkListDetail.id == doc.id}">
-						<c:set value="true" var="isDocFound"></c:set>
-						<input type="hidden" id="stakeholderfile${status.index}"
-							value="${shdoc.documentId.fileName}|${shdoc.documentId.contentType}|${regdoc.base64EncodedFile}">
-						<a id="shdoc${status.index}">
-							${shdoc.documentId.fileName}</a>
-					</c:if>
-				</c:forEach>
-				<c:if test="${!isDocFound}">
-				NA
-			</c:if>
+			<div class="col-sm-8 add-margin">
+					<div class="files-upload-container"
+					    data-file-max-size="5"
+					    <c:if test="${doc.checkListDetail.isMandatory eq true && fn:length(doc.getSupportDocs()) eq 0}">required</c:if>
+						data-allowed-extenstion="doc,docx,xls,xlsx,rtf,pdf,txt,zip,jpeg,jpg,png,gif,tiff">
+						<div class="files-viewer">
+
+							<c:forEach items="${doc.supportDocs}" var="file">
+								<div class="file-viewer" data-toggle="tooltip"
+									data-placement="top" title="${file.fileName}">
+									<a class="download" target="_blank"
+										href="/bpa/application/downloadfile/${file.fileStoreId}"></a>
+
+									<c:choose>
+										<c:when test="${file.contentType eq 'application/pdf'}">
+											<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+										</c:when>
+										<c:when test="${file.contentType eq 'application/txt'}">
+											<i class="fa fa-file-text-o" aria-hidden="true"></i>
+										</c:when>
+										<c:when
+											test="${file.contentType eq 'application/rtf' || file.contentType eq 'application/doc' || file.contentType eq 'application/docx'}">
+											<i class="fa fa-file-word-o" aria-hidden="true"></i>
+										</c:when>
+										<c:when test="${file.contentType eq 'application/zip'}">
+											<i class="fa fa-file-archive-o" aria-hidden="true"></i>
+										</c:when>
+										<c:when
+											test="${file.contentType eq 'application/xls' || file.contentType eq 'application/xlsx'}">
+											<i class="fa fa-file-excel-o" aria-hidden="true"></i>
+										</c:when>
+										<c:when
+											test="${file.contentType eq 'image/jpg' || file.contentType eq 'image/jpeg' || file.contentType eq 'image/png' || file.contentType eq 'image/gif' || file.contentType eq 'image/tiff'}">
+											<i class="fa fa-picture-o" aria-hidden="true"></i>
+										</c:when>
+										<c:otherwise>
+											<i class="fa fa-file-o" aria-hidden="true"></i>
+										</c:otherwise>
+									</c:choose>
+								</div>
+							</c:forEach>
+
+							<a href="javascript:void(0);" class="file-add"
+								data-unlimited-files="true"
+								data-file-input-name="stakeHolderDocument[${status.index}].files">
+								<i class="fa fa-plus"></i>
+							</a>
+
+						</div>
+					</div>
 			</div>
 		</div>
-</c:forEach>
+	</c:forEach>
+</div>
 
+<!-- The Modal -->
+<div id="imgModel" class="image-modal">
+	<span class="closebtn">&times;</span> <img class="modal-content"
+		id="previewImg">
+	<div id="caption"></div>
+</div>
+
+<link rel="stylesheet" href="<c:url value='/resources/css/bpa-style.css?rnd=${app_release_no}'/>">
+<script
+	src="<cdn:url value='/resources/js/app/document-upload-helper.js?rnd=${app_release_no}'/>"></script>

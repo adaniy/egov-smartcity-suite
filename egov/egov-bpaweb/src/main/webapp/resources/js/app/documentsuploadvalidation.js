@@ -45,37 +45,54 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  *
  */
-$(document).ready(function(){
-	
-	var fileformatsinclude = ['pdf','jpeg','jpg','png']; 
-	
-	$('.upload-file').change( function(e) {		
-		/*validation for file upload*/
-		myfile= $( this ).val();
-		var ext = myfile.split('.').pop();
-		if($.inArray(ext.toLowerCase(), fileformatsinclude) > -1){
-			//do something    
-		}
-		else{
-			bootbox.alert("Please upload .pdf, jpeg, .jpg and .png format documents only");
-			$( this ).val('');
-			return false;
-		}	
-		
-		var image = $( this ).prop('files')[0];
-		var fileReader = new FileReader();
-		var inputUpload = $(this);
 
-		fileReader.onload = function(e) {   
-           $( $(inputUpload).siblings('img') ).prop('src', e.target.result);
-		}
-       
-		fileReader.readAsDataURL(image);
-		
-		var fileInput = $(this);
-   		var maxSize = 2097152; //file size  in bytes(2MB)
-		var inMB = maxSize/1024/1024;
-		
-	});
-	
+$(document)
+		.ready(
+				function() {
+					var fileformatsinclude = [ 'doc', 'docx', 'xls', 'xlsx',
+							'rtf', 'pdf', 'jpeg', 'jpg', 'png', 'txt', 'zip',
+							'rar' ];
+
+					jQuery('.upload-file')
+							.change(
+									function(e) {
+										/* validation for file upload */
+										var myfile = jQuery(this).val();
+										var ext = myfile.split('.').pop();
+										validate_file(fileformatsinclude, ext,
+												jQuery(this));
+
+										var fileInput = jQuery(this);
+										var maxSize = 2097152; // file size in
+																// bytes(2MB)
+										if (fileInput.get(0).files.length) {
+											var fileSize = this.files[0].size; // in
+																				// bytes
+											var charlen = (this.value
+													.split('/').pop().split(
+															'\\').pop()).length;
+											if (charlen > 50) {
+												bootbox
+														.alert('Document name should not exceed 50 characters!');
+												fileInput.replaceWith(fileInput
+														.val('').clone(true));
+												return false;
+											} else if (fileSize > maxSize) {
+												bootbox
+														.alert('File size should not exceed 2 MB!');
+												fileInput.replaceWith(fileInput
+														.val('').clone(true));
+												return false;
+											}
+										}
+									});
+
+					function validate_file(fileformat, ext, obj) {
+						if (jQuery.inArray(ext.toLowerCase(), fileformat) == -1) {
+							bootbox.alert("Please upload " + fileformat
+									+ " format documents only");
+							obj.val('');
+							return false;
+						}
+					}
 });

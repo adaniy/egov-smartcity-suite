@@ -47,91 +47,78 @@
  */
 $(document).ready(function()
 {	
-	var currentstate=$('#currentState').val();
-	if(currentstate != 'Rejected')
-		{
-		$('#approvalDepartment').change(function(){
-			$.ajax({
-				url: "/eis/ajaxWorkFlow-getDesignationsByObjectTypeAndDesignation",     
-				type: "GET",
-				data: {
-					approvalDepartment : $('#approvalDepartment').val(),
-					departmentRule : $('#approvalDepartment').find("option:selected").text(),
-					type : $('#stateType').val(),
-					currentState : $('#currentState').val(),
-					amountRule : $('#amountRule').val(),
-					additionalRule : $('#additionalRule').val(),
-					pendingAction : $('#pendingActions').val(),
-					currentDesignation : $('#currentDesignation').val()
-				},
-				dataType: "json",
-				success: function (response) {
-					console.log("success"+response);
-					$('#approvalDesignation').empty();
-					$('#approvalDesignation').append($("<option value=''>Select from below</option>"));
-					$.each(response, function(index, value) {
-						$('#approvalDesignation').append($('<option>').text(value.name).attr('value', value.id));
-					});
-					
-				}, 
-				error: function (response) {
-					bootbox.alert('json fail');
-					console.log("failed");
-				}
-			});
-		});
-		}
-	else
-		{
-		$('#approvalDepartment').change(function(){
-			$.ajax({
-				url: "/eis/ajaxWorkFlow-getDesignationsByObjectType",     
-				type: "GET",
-				data: {
-					approvalDepartment : $('#approvalDepartment').val(),
-					departmentRule : $('#approvalDepartment').find("option:selected").text(),
-					type : $('#stateType').val(),
-					currentState : $('#currentState').val(),
-					amountRule : $('#amountRule').val(),
-					additionalRule : $('#additionalRule').val(),
-					pendingAction : $('#pendingActions').val()
-				},
-				dataType: "json",
-				success: function (response) {
-					console.log("success"+response);
-					$('#approvalDesignation').empty();
-					$('#approvalDesignation').append($("<option value=''>Select from below</option>"));
-					$.each(response, function(index, value) {
-						$('#approvalDesignation').append($('<option>').text(value.name).attr('value', value.id));
-					});
-					
-				}, 
-				error: function (response) {
-					bootbox.alert('json fail');
-					console.log("failed");
-				}
-			});
-		});
-		}
-
 	
+	// On page load setting default department get selected
+	$('[name=approvalDepartment] option').filter(function() { 
+        return ($(this).text() == $('#defaultDepartment').val());
+    }).prop('selected', true);
+	
+	$('#approvalDepartment').change(function(){
+		$.ajax({
+			url: "/bpa/bpaajaxWorkFlow-getDesignationsByObjectTypeAndDesignation",     
+			type: "GET",
+			data: {
+				approvalDepartment : $('#approvalDepartment').val(),
+				departmentRule : $('#approvalDepartment').find("option:selected").text(),
+				type : $('#stateType').val(),
+				currentState : $('#currentState').val(),
+				amountRule : $('#amountRule').val(),
+				additionalRule : $('#additionalRule').val(),
+				pendingAction : $('#pendingActions').val()
+			},
+			dataType: "json",
+			success: function (response) {
+				console.log("success"+response);
+				$('#approvalDesignation').empty();
+				//$('#approvalDesignation').append($("<option value=''>Select from below</option>"));
+				$.each(response, function(index, value) {
+					$('#approvalDesignation').append($('<option>').text(value.name).attr('value', value.id));
+				});
+				$('#approvalDesignation').trigger('change');
+			}, 
+			error: function (response) {
+				bootbox.alert('json fail');
+				console.log("failed");
+			}
+		});
+	});
 	
 	$('#approvalDesignation').change(function(){
 		$.ajax({
-			url: "/eis/ajaxWorkFlow-positionsByDepartmentAndDesignation",     
+			url: "/bpa/bpaajaxWorkFlow-positionsByDepartmentAndDesignationAndBoundary",     
 			type: "GET",
 			data: {
-				approvalDesignation : $('#approvalDesignation').val(),
-				approvalDepartment : $('#approvalDepartment').val()    
+				approvalDesignation : $('#approvalDesignation option:selected').val(),
+				approvalDepartment : $('#approvalDepartment option:selected').val(),
+				boundaryId :$('#electionBoundary').val()
 			},
 			dataType: "json",
 			success: function (response) {
 				console.log("success"+response);
 				$('#approvalPosition').empty();
-				$('#approvalPosition').append($("<option value=''>Select from below</option>"));
+				//$('#approvalPosition').append($("<option value=''>Select from below</option>"));
 				$.each(response, function(index, value) {
 					$('#approvalPosition').append($('<option>').text(value.userName+'/'+value.positionName).attr('value', value.positionId));  
 				});
+				
+				if($('#electionBoundaryName').val() == 'WARD 24-KUDILTHODU' && $('#revenueBoundaryName').val() == 'WARD 28-NELLIKKODE') {
+					$('[name=approvalPosition] option').filter(function() { 
+				        return ($(this).text() == 'AETP2/TP_Assistant Engineer_2');
+				    }).prop('selected', true);
+					
+					$('[name=approvalPosition] option').filter(function() { 
+				        return ($(this).text() == 'PWO5/TP_Town Planning Building Overseer_5');
+				    }).prop('selected', true);
+					
+				} else if($('#electionBoundaryName').val() == 'WARD 24-KUDILTHODU' && $('#revenueBoundaryName').val() == 'WARD 33-CHEVAYUR') {
+					$('[name=approvalPosition] option').filter(function() { 
+						return ($(this).text() == 'AETP1/TP_Assistant Engineer_1');
+				    }).prop('selected', true);
+					
+					$('[name=approvalPosition] option').filter(function() { 
+				        return ($(this).text() == 'PWO3/TP_Town Planning Building Overseer_3');
+				    }).prop('selected', true);
+				}
 				
 			}, 
 			error: function (response) {
@@ -139,7 +126,7 @@ $(document).ready(function()
 			}
 		});
 	});
-	
+	$('#approvalDepartment').trigger('change');
 });
 
 function callAlertForDepartment() {

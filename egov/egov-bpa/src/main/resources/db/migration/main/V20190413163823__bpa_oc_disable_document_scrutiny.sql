@@ -1,0 +1,1 @@
+update eg_appconfig_values set value='NO' where config=(select id from eg_appconfig  where keyname ='OC_DOCUMENT_SCRUTINY_INTEGRATION_REQUIRED');

@@ -39,11 +39,9 @@
  */
 package org.egov.bpa.autonumber.impl;
 
-import java.io.Serializable;
-
-import org.egov.bpa.application.autonumber.BpaBillReferenceNumberGenerator;
+import org.egov.bpa.autonumber.BpaBillReferenceNumberGenerator;
 import org.egov.bpa.utils.BpaConstants;
-import org.egov.infra.persistence.utils.ApplicationSequenceNumberGenerator;
+import org.egov.infra.persistence.utils.GenericSequenceNumberGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,13 +49,11 @@ import org.springframework.stereotype.Service;
 public class BpaBillReferenceNumberGeneratorImpl implements BpaBillReferenceNumberGenerator {
 
     @Autowired
-    private ApplicationSequenceNumberGenerator applicationSequenceNumberGenerator;
+    private GenericSequenceNumberGenerator genericSequenceNumberGenerator;
 
     @Override
     public String generateBillNumber(final String installmentYear) {
-        final String sequenceName = BpaConstants.WATER_CONN_BILLNO_SEQ + installmentYear;
-        final Serializable nextSequence = applicationSequenceNumberGenerator.getNextSequence(sequenceName);
-        return String.format("%s%06d", "01", nextSequence);
+        final String sequenceName = BpaConstants.BPA_BILLNO_SEQ + installmentYear;
+        return String.format("%s%06d", "01", genericSequenceNumberGenerator.getNextSequence(sequenceName));
     }
-
 }

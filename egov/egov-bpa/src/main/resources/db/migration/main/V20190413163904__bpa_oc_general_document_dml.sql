@@ -1,0 +1,12 @@
+update egbpa_mstr_chklistdetail set ismandatory=true where code='OCDOC-02';
+update egbpa_mstr_chklistdetail set isactive =false, ismandatory=false where code='OCDOC-08';
+update egbpa_mstr_chklistdetail set ismandatory=true where code='OCDOC-42';
+update egbpa_mstr_chklistdetail set isactive =false, ismandatory=false where code='OCDOC-48';
+update egbpa_mstr_chklistdetail set ismandatory=true where code='OCDOC-62';
+update egbpa_mstr_chklistdetail set isactive =false, ismandatory=false where code='OCDOC-68';
+update egbpa_mstr_chklistdetail set ismandatory=true where code='OCDOC-122';
+update egbpa_mstr_chklistdetail set isactive =false, ismandatory=false where code='OCDOC-128';
+update egbpa_mstr_chklistdetail set ismandatory=true where code='OCDOC-152';
+update egbpa_mstr_chklistdetail set isactive =false, ismandatory=false where code='OCDOC-158';
+update egbpa_mstr_chklistdetail set ismandatory=true where code='OCDOC-172';
+update egbpa_mstr_chklistdetail set isactive =false, ismandatory=false where code='OCDOC-178';

@@ -54,48 +54,89 @@
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn"%>
 <div class="row">
 	<div class="col-md-12">
-		<form:form role="form" method="post" modelAttribute="bpaApplication"
-			id="editWaterConnectionform"
+		<form:form role="form" action="/bpa/application/update-submit/${bpaApplication.applicationNumber}" method="post" modelAttribute="bpaApplication"
+			id="editBpaApplicationForm"
 			cssClass="form-horizontal form-groups-bordered"
 			enctype="multipart/form-data">
 
-			<form:hidden path="" id="wfstate" value="${bpaApplication.state.id}" />
 			<form:hidden path="" id="workFlowAction" name="workFlowAction" />
-			<form:hidden path="" id="wfstateDesc" value="${waterConnectionDetails.state.value}" />
+			<input type="hidden" name="citizenOrBusinessUser"
+				value="${citizenOrBusinessUser}">
+			<form:hidden path="" id="wfstate" value="${bpaApplication.state.id}" />
+			<form:hidden path="" id="collectFeeValidate" value="${collectFeeValidate}" />
+			<input type="hidden"  id="workFlowByNonEmp" value="${workFlowByNonEmp}" />
+			<form:hidden path="" value="${areaInSqMtr}" id="areaInSqMtr" name="areaInSqMtr"/>
+			<form:hidden path="" value="${currentDesignation}" id="currentDesignation" name="currentDesignation"/>
+			<form:hidden path="" value="${isApproveValid}" id="isApproveValid" name="isApproveValid"/>
+			<form:hidden path="" id="applicationId" value="${bpaApplication.id}" />
+			<form:hidden path="" id="wfstateDesc"
+				value="${bpaApplication.state.value}" />
 			<form:hidden path="" id="mode" name="mode" value="${mode}" />
-			
-			<div class="panel panel-primary" data-collapsed="0">
-				<jsp:include page="applicationDetails.jsp"></jsp:include>
+			<ul class="nav nav-tabs" id="settingstab">
+				<li class="active"><a data-toggle="tab"
+					href="#appliccation-info" data-tabidx=0><spring:message
+							code='lbl.appln.details' /></a></li>
+				<li><a data-toggle="tab" href="#document-info" data-tabidx=1><spring:message
+							code='title.documentdetail' /></a></li>
+			</ul>
+			<div class="tab-content">
+				<div id="document-info" class="tab-pane fade">
+					<div class="panel panel-primary" data-collapsed="0">
+						<jsp:include page="bpaDocumentDetails.jsp"></jsp:include>
+					</div>
+				</div>
+				<div id="appliccation-info" class="tab-pane fade in active">
+					<div class="panel panel-primary" data-collapsed="0">
+						<jsp:include page="applicationDetails.jsp"></jsp:include>
+					</div>
+					<div class="panel panel-primary edcrApplnDetails" data-collapsed="0">
+						<jsp:include page="edcr-application-details-form.jsp"></jsp:include>
+					</div>
+					<div class="panel panel-primary" data-collapsed="0">
+						<jsp:include page="applicantDetailForm.jsp"></jsp:include>
+					</div>
+					<div class="panel panel-primary" data-collapsed="0">
+						<jsp:include page="siteDetail.jsp"></jsp:include>
+					</div>
+					<div class="panel panel-primary existingbuildingdetails" data-collapsed="0">
+						<jsp:include page="existing-buildingdetails.jsp" />
+					</div>
+					<div class="panel panel-primary buildingdetails" data-collapsed="0">
+						<jsp:include page="buildingDetails.jsp" />
+					</div>
+					<c:if test="${not empty  bpaApplication.receipts}">
+						<div class="panel panel-primary" data-collapsed="0">
+							<jsp:include page="view-bpa-receipt-details.jsp"></jsp:include>
+						</div>
+					</c:if>
+					<div class="panel panel-primary" data-collapsed="0">
+						<jsp:include page="applicationhistory-view.jsp"></jsp:include>
+					</div>
+				</div>
 			</div>
-			<div class="panel panel-primary" data-collapsed="0">
-				<jsp:include page="applicantDetailForm.jsp"></jsp:include>
-			</div>
-			<div class="panel panel-primary" data-collapsed="0">
-				<jsp:include page="siteDetail.jsp"></jsp:include>
-			</div>
-			<div class="panel panel-primary" data-collapsed="0">
-				<jsp:include page="buildingDetails.jsp" />
-			</div>
-			
+			<c:if test="${wfstateDesc !='NEW'}">
 			<jsp:include page="../common/commonWorkflowMatrix.jsp" />
+			</c:if>
 			<div class="buttonbottom" align="center">
 				<jsp:include page="../common/commonWorkflowMatrix-button.jsp" />
 			</div>
-			<%-- 		<div class="buttonbottom" align="center">
-				<table>
-					<tr>
-						<td><form:button type="submit" id="updateApplication"
-								class="btn btn-primary" value="updateApplication">Submit</form:button> <input
-							type="button" name="button2" id="button2" value="Close"
-							class="btn btn-primary" onclick="window.close();" /></td>
-					</tr>
-				</table>
-			</div> --%>
 		</form:form>
 	</div>
 </div>
 
+<link rel="stylesheet"
+	href="<c:url value='/resources/global/css/bootstrap/bootstrap-tagsinput.css?rnd=${app_release_no}' context='/egi'/>">
+<script
+	src="<c:url value='/resources/global/js/bootstrap/bootstrap-tagsinput.min.js?rnd=${app_release_no}' context='/egi'/>"></script>
+<script
+	src="<c:url value='/resources/global/js/handlebars/handlebars.js?rnd=${app_release_no}' context='/egi'/>"></script>
 <script
 	src="<cdn:url value='/resources/global/js/egov/inbox.js?rnd=${app_release_no}' context='/egi'/>"></script>
 <script
 	src="<cdn:url value='/resources/js/app/application-edit.js?rnd=${app_release_no}'/>"></script>
+<script
+	src="<cdn:url value='/resources/js/app/bpa-ajax-helper.js?rnd=${app_release_no}'/>"></script>
+<script
+	src="<cdn:url value='/resources/js/app/buildingarea-details.js?rnd=${app_release_no}'/>"></script>
+<script
+	src="<cdn:url value='/resources/js/app/bpa-application-validations.js?rnd=${app_release_no}'/>"></script>

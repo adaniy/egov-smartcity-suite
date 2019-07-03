@@ -50,30 +50,38 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-
-
-<c:forEach var="doc" items="${stakeHolderDocumentList}"
-	varStatus="status">
-	<div class="row add-border">
-		
-		<div class="col-sm-3 add-margin">
-			<c:out value="${doc.description}"></c:out>
-		</div>
-		<div class="col-sm-3 add-margin view-content">
-		<c:set value="false" var="isDocFound"></c:set>
-			<c:forEach var="shdoc" items="${stakeHolder.stakeHolderDocument}">
-				<c:if test="${shdoc.checkListDetail.id == doc.id}">
-						<c:set value="true" var="isDocFound"></c:set>
-				<input type="hidden" id="stakeholderfile${status.index}"
-					value="${shdoc.documentId.fileName}|${shdoc.documentId.contentType}|${regdoc.base64EncodedFile}">
-				<a id="shdoc${status.index}"> ${shdoc.documentId.fileName}</a>
-				</c:if>
-			</c:forEach>
-			<c:if test="${!isDocFound}">
-				NA
-			</c:if>
-		</div>
-		
+<div class="panel-heading custom_form_panel_heading">
+	<div class="panel-title">
 	</div>
-</c:forEach>
-
+</div>
+<div class="panel-body">
+	<table class="table">
+		<thead>
+			<tr>
+				<th><spring:message code="lbl.srl.no" /></th>
+				<th><spring:message code="lbl.documentname" /></th>
+				<th><spring:message code="lbl.files" /></th>
+			</tr>
+		</thead>
+		<tbody>
+			<c:forEach var="docs" items="${stakeHolder.stakeHolderDocument}"
+				varStatus="status">
+				<tr>
+					<td><c:out value="${status.index+1}"></c:out></td>
+					<td><c:out value="${docs.checkListDetail.description}"></c:out></td>
+					<td><c:set value="false" var="isDocFound"></c:set> <c:forEach
+							var="bpadoc" items="${docs.supportDocs}" varStatus="loop">
+							<c:if test="${bpadoc.fileStoreId ne null}">
+								<c:set value="true" var="isDocFound"></c:set>
+								<a href="/bpa/application/downloadfile/${bpadoc.fileStoreId}"
+									data-gallery>${bpadoc.fileName} </a>
+								<c:if test="${!loop.last}">,</c:if>&nbsp;
+								</c:if>
+						</c:forEach> <c:if test="${!isDocFound}">
+							N/A
+						</c:if></td>
+				</tr>
+			</c:forEach>
+		</tbody>
+	</table>
+</div>

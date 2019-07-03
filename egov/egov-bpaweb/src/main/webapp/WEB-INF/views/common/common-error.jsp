@@ -60,20 +60,26 @@
 			<div class="panel-heading">
 				<div class="panel-title text-center no-float">
 							<c:if test="${not empty message}">
-                    			<strong><spring:message code="${message}"/></strong>
+                    			<strong>${message}</strong>
                 			</c:if>
 				</div>
 			</div>
-			
-				<div class="row text-center">
-						<div class="row">
-							<div class="text-center">
-								<button type="button" class="btn btn-default" data-dismiss="modal" onclick="self.close()" ><spring:message code="lbl.close"/></button>
-							</div>
-						</div>
-					</div>
-	
+		</div>
+		<div class="row text-center">
+			<div class="row">
+				<div class="text-center">
+					<button type="button" class="btn btn-default" data-dismiss="modal" onclick="window.close();" ><spring:message code="lbl.close"/></button>
+				</div>
+			</div>
 		</div>
 	</div>
-</div>				
+</div>
 
+<script>
+    $(document).ready(function() {
+        window.history.pushState(null, "", window.location.href);
+        window.onpopstate = function() {
+            window.history.pushState(null, "", window.location.href);
+        };
+    });
+</script>

@@ -52,32 +52,22 @@
 
     <display-name>e-governments bpa web</display-name>
 
+    <!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath*:config/spring/applicationContext-bpaweb.xml</param-value>
     </context-param>
-
     <context-param>
         <param-name>locatorFactorySelector</param-name>
         <param-value>classpath*:config/spring/applicationContext-erp.xml</param-value>
     </context-param>
-
     <context-param>
         <param-name>parentContextKey</param-name>
         <param-value>erpApplicationContext</param-value>
     </context-param>
-
-    <context-param>
-        <param-name>defaultHtmlEscape</param-name>
-        <param-value>true</param-value>
-    </context-param>
-
     <!-- Creates the Spring Container shared by all Servlets and Filters -->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-    </listener>
-    <listener>
-        <listener-class>org.egov.infra.web.listener.MDCLoggingCorrelationIDAssigner</listener-class>
     </listener>
 
     <filter>
@@ -105,7 +95,9 @@
 
     <filter>
         <filter-name>openEntityManagerInViewFilter</filter-name>
-        <filter-class>org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter</filter-class>
+        <filter-class>
+            org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter
+        </filter-class>
     </filter>
 
     <filter>
@@ -116,11 +108,6 @@
     <filter>
         <filter-name>mdcLoggingFilter</filter-name>
         <filter-class>org.egov.infra.web.filter.MDCLoggingFilter</filter-class>
-    </filter>
-
-    <filter>
-        <filter-name>multipartFilter</filter-name>
-        <filter-class>org.springframework.web.multipart.support.MultipartFilter</filter-class>
     </filter>
 
     <filter>
@@ -161,11 +148,6 @@
     </filter-mapping>
 
     <filter-mapping>
-        <filter-name>multipartFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
-
-    <filter-mapping>
         <filter-name>securityFilterChain</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
@@ -190,11 +172,6 @@
         </init-param>
         <load-on-startup>1</load-on-startup>
         <async-supported>true</async-supported>
-        <multipart-config>
-            <location>/tmp</location>
-            <max-file-size>20848820</max-file-size>
-            <file-size-threshold>1048576</file-size-threshold>
-        </multipart-config>
     </servlet>
 
     <servlet-mapping>
@@ -238,6 +215,11 @@
     </welcome-file-list>
 
     <error-page>
-        <location>/error</location>
+        <location>/error/500</location>
+    </error-page>
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error/404</location>
     </error-page>
 </web-app>

@@ -1,0 +1,1 @@
+update egbpa_mstr_bpafee set isactive =false where code in ('104','304','604','704','404');

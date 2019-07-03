@@ -1,0 +1,1126 @@
+package org.egov.edcr.feature;
+
+import static org.egov.edcr.constants.DxfFileConstants.BLOCK_NAME_PREFIX;
+import static org.egov.edcr.constants.DxfFileConstants.COLOR_CODE_FEMALE_WATER_CLOSET;
+import static org.egov.edcr.constants.DxfFileConstants.COLOR_CODE_MALE_WATER_CLOSET;
+import static org.egov.edcr.constants.DxfFileConstants.FLOOR_NAME_PREFIX;
+import static org.egov.edcr.constants.DxfFileConstants.LAYER_NAME_BATH;
+import static org.egov.edcr.constants.DxfFileConstants.LAYER_NAME_DRINKING_WATER;
+import static org.egov.edcr.constants.DxfFileConstants.LAYER_NAME_SPECIAL_WATER_CLOSET;
+import static org.egov.edcr.constants.DxfFileConstants.LAYER_NAME_URINAL;
+import static org.egov.edcr.constants.DxfFileConstants.LAYER_NAME_WASH;
+import static org.egov.edcr.constants.DxfFileConstants.LAYER_NAME_WATER_CLOSET;
+import static org.egov.edcr.constants.DxfFileConstants.LAYER_NAME_WC_BATH;
+import static org.egov.edcr.entity.OccupancyType.OCCUPANCY_E;
+import static org.egov.edcr.entity.OccupancyType.OCCUPANCY_F;
+import static org.egov.edcr.entity.OccupancyType.OCCUPANCY_F4;
+import static org.egov.edcr.entity.OccupancyType.OCCUPANCY_I2;
+import static org.egov.edcr.utility.ParametersConstants.BEDS_COUNT;
+import static org.egov.edcr.utility.ParametersConstants.BLOCK_LEVEL_CHECK;
+import static org.egov.edcr.utility.ParametersConstants.BUILDING_TYPE;
+import static org.egov.edcr.utility.ParametersConstants.CARPET_AREA;
+import static org.egov.edcr.utility.ParametersConstants.CHECK_DIMENSION_AREA;
+import static org.egov.edcr.utility.ParametersConstants.CHECK_DIMENSION_SIDE;
+import static org.egov.edcr.utility.ParametersConstants.COMMON_BATH_ROOM;
+import static org.egov.edcr.utility.ParametersConstants.COMMON_BATH_ROOM_WITH_WC;
+import static org.egov.edcr.utility.ParametersConstants.COMMON_WATER_CLOSETS;
+import static org.egov.edcr.utility.ParametersConstants.COUNT_CHECK;
+import static org.egov.edcr.utility.ParametersConstants.DRINKING_WATER;
+import static org.egov.edcr.utility.ParametersConstants.FEMALE_BATH_ROOM;
+import static org.egov.edcr.utility.ParametersConstants.FEMALE_BATH_ROOM_WITH_WC;
+import static org.egov.edcr.utility.ParametersConstants.FEMALE_WATER_CLOSETS;
+import static org.egov.edcr.utility.ParametersConstants.FLOOR_COUNT;
+import static org.egov.edcr.utility.ParametersConstants.FLOOR_LEVEL_CHECK;
+import static org.egov.edcr.utility.ParametersConstants.MALE_BATH_ROOM;
+import static org.egov.edcr.utility.ParametersConstants.MALE_BATH_ROOM_WITH_WC;
+import static org.egov.edcr.utility.ParametersConstants.MALE_WATER_CLOSETS;
+import static org.egov.edcr.utility.ParametersConstants.PERSONS_COUNT;
+import static org.egov.edcr.utility.ParametersConstants.PLOT_AREA;
+import static org.egov.edcr.utility.ParametersConstants.SP_WATER_CLOSETS;
+import static org.egov.edcr.utility.ParametersConstants.URINALS;
+import static org.egov.edcr.utility.ParametersConstants.WASH_BASIN;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+
+import org.apache.log4j.Logger;
+import org.egov.edcr.constants.DxfFileConstants;
+import org.egov.edcr.entity.Block;
+import org.egov.edcr.entity.Floor;
+import org.egov.edcr.entity.Occupancy;
+import org.egov.edcr.entity.OccupancyType;
+import org.egov.edcr.entity.PlanDetail;
+import org.egov.edcr.entity.Result;
+import org.egov.edcr.entity.SanityDetails;
+import org.egov.edcr.entity.SanityHelper;
+import org.egov.edcr.entity.ScrutinyDetail;
+import org.egov.edcr.entity.TypicalFloor;
+import org.egov.edcr.entity.measurement.Measurement;
+import org.egov.edcr.rule.RuleService;
+import org.egov.edcr.utility.DcrConstants;
+import org.egov.edcr.utility.Util;
+import org.kabeja.dxf.DXFCircle;
+import org.kabeja.dxf.DXFDocument;
+import org.kabeja.dxf.DXFLWPolyline;
+import org.springframework.stereotype.Service;
+
+/**
+ * @author mani
+ */
+
+@Service
+public class Sanitation extends GeneralRule implements RuleService {
+
+    public static final String FEMALE = "Female ";
+    public static final String MALE = "Male ";
+    public static final String BLOCK = "Block ";
+    public static final String SANITY_RULE_DESC = "Sanity facility for Occupancy ";
+    public static final String NEWLINE = "\n";
+    public static final String SANITATION = "Sanitation";
+    public static final String BLOCK_U_S = "Block_";
+    private static final String WITH = " with ";
+    private static final String BLDG_PART_WATER_CLOSET = "Water Closet";
+    private static final String BLDG_PART_SPECIAL_WATER_CLOSET = "Special Water Closet";
+    private static final String BLDG_PART_URINAL = "Urinal";
+    private static final String BLDG_PART_BATHROOM = "Bath Room";
+    private static final String MALE_BATH_WITH_WC = BLDG_PART_BATHROOM + WITH + BLDG_PART_WATER_CLOSET;
+    private static final String BLDG_PART_WASHBASIN = "Wash Basin";
+    private static final String MINIMUM_SIDE_DIMENSION_VIOLATED = "Minimum Side Dimension of {0} M violated";
+    private static final String MINIMUM_AREA_DIMENSION_VIOLATED = "Minimum Area of {0} M violated";
+    private static final String DIMESION_DESC_KEY = "msg.sanity.dimension.desc";
+    private static final Logger LOG = Logger.getLogger(Sanitation.class);
+    private static final String FEATURE_NAME = "Sanitary Detail";
+    private static final String RULE_38_1 = "38(1)";
+    private static final String NOOFBEDS = "No Of Beds";
+    public static final String RULE_55_12 = "55(12)";
+    public static final String RULE_40_A_4 = "40A(4)";
+    public static final String RULE_54_6 = "54(6)";
+    public static final BigDecimal MINAREAOFSPWC = BigDecimal.valueOf(2.625);
+    public static final BigDecimal MINDIMENSIONOFSPWC = BigDecimal.valueOf(1.5);
+    public static final String MINIMUM_AREA_SPWC = "2.625 M2";
+    public static final String MINIMUM_DIMENSION_SPWC = "1.5 M";
+
+    /**
+     * Find Water Closets
+     */
+    @Override
+    public PlanDetail extract(PlanDetail planDetail, DXFDocument doc) {
+        for (Block b : planDetail.getBlocks())
+            if (!b.getCompletelyExisting()) {
+                String layerName1 = "BLK_" + b.getNumber() + "_FLR_" + "\\d+_";
+                collectSanityDetails(planDetail, doc, b, layerName1, 1);
+                if (!b.getTypicalFloor().isEmpty())
+                    for (TypicalFloor typicalFloor : b.getTypicalFloor()) {
+                        String layerName = "BLK_" + b.getNumber() + "_FLR_" + typicalFloor.getModelFloorNo() + "_";
+                        collectSanityDetails(planDetail, doc, b, layerName, typicalFloor.getRepetitiveFloorNos().size());
+                    }
+            }
+
+        // Special Water Closets for this will be added floor wise
+
+        for (Block block : planDetail.getBlocks())
+            if (!block.getCompletelyExisting())
+                for (Floor f : block.getBuilding().getFloors()) {
+                    String layerName1 = BLOCK_NAME_PREFIX + block.getNumber() + "_" + FLOOR_NAME_PREFIX + f.getNumber()
+                            + "_" + LAYER_NAME_SPECIAL_WATER_CLOSET;
+                    List<DXFLWPolyline> polyLinesByLayer = Util.getPolyLinesByLayer(doc, layerName1);
+                    if (!polyLinesByLayer.isEmpty())
+                        for (DXFLWPolyline pline : polyLinesByLayer) {
+                            Measurement m = new Measurement(pline, true);
+                            f.getSpecialWaterClosets().add(m);
+                        }
+                }
+
+        // Wash Basins for this will be added floor wise
+
+        for (Block block : planDetail.getBlocks())
+            if (!block.getCompletelyExisting())
+                for (Floor f : block.getBuilding().getFloors()) {
+                    String washBasinLayers = BLOCK_NAME_PREFIX + block.getNumber() + "_" + FLOOR_NAME_PREFIX + f.getNumber()
+                            + "_" + LAYER_NAME_WASH;
+                    List<DXFLWPolyline> polyLinesByLayer = Util.getPolyLinesByLayer(doc, washBasinLayers);
+                    if (polyLinesByLayer.isEmpty()) {
+                        List<DXFCircle> washBasinCircles = Util.getPolyCircleByLayer(doc, washBasinLayers);
+                        for (DXFCircle dxfCircle : washBasinCircles) {
+                            Measurement m = new Measurement();
+                            double radius = dxfCircle.getRadius();
+                            double area = 3.14 * radius * radius;
+                            m.setArea(BigDecimal.valueOf(area));
+                            m.setLength(BigDecimal.valueOf(dxfCircle.getLength()));
+                            m.setPresentInDxf(true);
+                            f.getWashBasins().add(m);
+                        }
+                    } else if (!polyLinesByLayer.isEmpty())
+                        for (DXFLWPolyline pline : polyLinesByLayer) {
+                            Measurement m = new Measurement(pline, true);
+                            f.getWashBasins().add(m);
+                        }
+                }
+        return planDetail;
+    }
+
+    private void collectSanityDetails(PlanDetail planDetail, DXFDocument doc, Block block, String layerPrefix,
+            int typicalCount) {
+        List<DXFLWPolyline> polyLinesByLayer;
+        // 1. Water closets
+        String layerName = layerPrefix + LAYER_NAME_WATER_CLOSET;
+        List<String> layerNames = Util.getLayerNamesLike(doc, layerName);
+        for (String s : layerNames) {
+            polyLinesByLayer = Util.getPolyLinesByLayer(doc, s);
+            if (!polyLinesByLayer.isEmpty())
+                for (DXFLWPolyline pline : polyLinesByLayer)
+                    for (int i = 0; i < typicalCount; i++) {
+                        Measurement measurement = new Measurement(pline, true);
+                        if (pline.getColor() == DxfFileConstants.COLOR_CODE_MALE_WATER_CLOSET)
+                            block.getSanityDetails().getMaleWaterClosets().add(measurement);
+                        if (pline.getColor() == DxfFileConstants.COLOR_CODE_FEMALE_WATER_CLOSET)
+                            block.getSanityDetails().getFemaleWaterClosets().add(measurement);
+                        if (pline.getColor() == DxfFileConstants.COLOR_CODE_COMMON_WATER_CLOSET)
+                            block.getSanityDetails().getCommonWaterClosets().add(measurement);
+                    }
+        }
+
+        // Urinals
+        layerName = layerPrefix + LAYER_NAME_URINAL;
+        layerNames = Util.getLayerNamesLike(doc, layerName);
+        for (String s : layerNames) {
+            polyLinesByLayer = Util.getPolyLinesByLayer(doc, s);
+            if (!polyLinesByLayer.isEmpty())
+                for (DXFLWPolyline pline : polyLinesByLayer)
+                    for (int i = 0; i < typicalCount; i++) {
+                        Measurement measurement = new Measurement(pline, true);
+                        block.getSanityDetails().getUrinals().add(measurement);
+                    }
+        }
+
+        // Bath rooms
+        layerName = layerPrefix + LAYER_NAME_BATH;
+        layerNames = Util.getLayerNamesLike(doc, layerName);
+        for (String s : layerNames) {
+            polyLinesByLayer = Util.getPolyLinesByLayer(doc, s);
+            if (!polyLinesByLayer.isEmpty())
+                for (DXFLWPolyline pline : polyLinesByLayer)
+                    for (int i = 0; i < typicalCount; i++) {
+                        Measurement measurement = new Measurement(pline, true);
+                        if (pline.getColor() == COLOR_CODE_MALE_WATER_CLOSET)
+                            block.getSanityDetails().getMaleBathRooms().add(measurement);
+                        if (pline.getColor() == COLOR_CODE_FEMALE_WATER_CLOSET)
+                            block.getSanityDetails().getFemaleBathRooms().add(measurement);
+                        else
+                            block.getSanityDetails().getMaleBathRooms().add(measurement);
+                    }
+        }
+        // Bath rooms with Water Closet
+        layerName = layerPrefix + LAYER_NAME_WC_BATH;
+        layerNames = Util.getLayerNamesLike(doc, layerName);
+        for (String s : layerNames) {
+            polyLinesByLayer = Util.getPolyLinesByLayer(doc, s);
+            if (!polyLinesByLayer.isEmpty())
+                for (DXFLWPolyline pline : polyLinesByLayer)
+                    for (int i = 0; i < typicalCount; i++) {
+                        Measurement measurement = new Measurement(pline, true);
+                        if (pline.getColor() == COLOR_CODE_MALE_WATER_CLOSET)
+                            block.getSanityDetails().getMaleRoomsWithWaterCloset().add(measurement);
+                        if (pline.getColor() == COLOR_CODE_FEMALE_WATER_CLOSET)
+                            block.getSanityDetails().getFemaleRoomsWithWaterCloset().add(measurement);
+                        else
+                            block.getSanityDetails().getMaleRoomsWithWaterCloset().add(measurement);
+                    }
+        }
+
+        // Drinking water
+        layerName = layerPrefix + LAYER_NAME_DRINKING_WATER;
+        layerNames = Util.getLayerNamesLike(doc, layerName);
+        for (String s : layerNames) {
+            polyLinesByLayer = Util.getPolyLinesByLayer(doc, s);
+            if (!polyLinesByLayer.isEmpty())
+                for (DXFLWPolyline pline : polyLinesByLayer)
+                    for (int i = 0; i < typicalCount; i++) {
+                        Measurement measurement = new Measurement(pline, true);
+
+                        block.getSanityDetails().getDrinkingWater().add(measurement);
+                    }
+        }
+
+    }
+
+    @Override
+    public PlanDetail validate(PlanDetail planDetail) {
+
+        for (Block b : planDetail.getBlocks())
+            if (!b.getCompletelyExisting()) {
+
+                int totalSpecialWC = 0;
+                int totalWashBasins = 0;
+                for (Floor f : b.getBuilding().getFloors()) {
+                    totalSpecialWC += f.getSpecialWaterClosets().size();
+                    totalWashBasins += f.getWashBasins().size();
+                }
+                b.getSanityDetails().setTotalSPWC(totalSpecialWC);
+                b.getSanityDetails().setTotalwashBasins(totalWashBasins);
+
+                /*
+                 * If block is small plot and floors above ground less than or equal to three and occupancy type of entire block
+                 * is either Residential or Commercial then sanitation validation not require.
+                 */
+                if (!Util.singleFamilyWithLessThanOrEqualToThreeFloor(b)) {
+                    List<Occupancy> occupancies = b.getBuilding().getTotalArea();
+                    SanityDetails sanityDetails = b.getSanityDetails();
+                    validateDimensions(planDetail, b, sanityDetails);
+                    for (Occupancy occupancy : occupancies) {
+                        if (OCCUPANCY_I2.equals(occupancy.getType()) && occupancy.getFloorArea().doubleValue() == 0
+                                && occupancy.getCarpetArea().doubleValue() == 0)
+                            break;
+                        switch (occupancy.getType()) {
+                        case OCCUPANCY_A1:
+                        case OCCUPANCY_A2:
+                        case OCCUPANCY_A4:
+                            if (sanityDetails.getTotalSPWC() == 0)
+                                planDetail.addError(BLDG_PART_SPECIAL_WATER_CLOSET, getLocaleMessage(MSG_ERROR_MANDATORY,
+                                        FEATURE_NAME, BLDG_PART_SPECIAL_WATER_CLOSET, b.getNumber()));
+                            break;
+                        case OCCUPANCY_A3:
+                            commonSanitationValidations(planDetail, b, sanityDetails, occupancy.getType());
+                            validateBathRoom(planDetail, b, sanityDetails);
+                            break;
+                        case OCCUPANCY_B1:
+                        case OCCUPANCY_B2:
+                        case OCCUPANCY_B3:
+                            commonSanitationValidations(planDetail, b, sanityDetails, occupancy.getType());
+                            break;
+                        case OCCUPANCY_C1:
+                            commonSanitationValidations(planDetail, b, sanityDetails, occupancy.getType());
+                            if (planDetail.getPlanInformation().getNoOfBeds() == null)
+                                planDetail.addError(NOOFBEDS,
+                                        getLocaleMessage(MSG_ERROR_MANDATORY, FEATURE_NAME, NOOFBEDS, b.getNumber()));
+                            break;
+                        case OCCUPANCY_C2:
+                        case OCCUPANCY_C3:
+                            commonSanitationValidations(planDetail, b, sanityDetails, occupancy.getType());
+                            break;
+                        case OCCUPANCY_D:
+                        case OCCUPANCY_D1:
+                        case OCCUPANCY_D2:
+                            commonSanitationValidations(planDetail, b, sanityDetails, occupancy.getType());
+                            break;
+                        case OCCUPANCY_E:
+                        case OCCUPANCY_F:
+                        case OCCUPANCY_F4:
+                            commonSanitationValidations(planDetail, b, sanityDetails, occupancy.getType());
+                            break;
+                        case OCCUPANCY_F3:
+                            commonSanitationValidations(planDetail, b, sanityDetails, occupancy.getType());
+                            validateBathRoom(planDetail, b, sanityDetails);
+                            break;
+                        case OCCUPANCY_G1:
+                        case OCCUPANCY_G2:
+                        case OCCUPANCY_H:
+                        case OCCUPANCY_I1:
+                        case OCCUPANCY_I2:
+                            if (sanityDetails.getMaleWaterClosets().isEmpty()
+                                    && sanityDetails.getFemaleWaterClosets().isEmpty())
+                                planDetail.addError(BLDG_PART_WATER_CLOSET,
+                                        getLocaleMessage(MSG_ERROR_MANDATORY, FEATURE_NAME, BLDG_PART_WATER_CLOSET,
+                                                b.getNumber()));
+
+                            if (sanityDetails.getUrinals().isEmpty())
+                                planDetail.addError(BLDG_PART_URINAL,
+                                        getLocaleMessage(MSG_ERROR_MANDATORY, FEATURE_NAME, BLDG_PART_URINAL, b.getNumber()));
+                            break;
+                        }
+                    }
+                }
+            }
+        return planDetail;
+    }
+
+    private void validateBathRoom(PlanDetail planDetail, Block b, SanityDetails sanityDetails) {
+        if (sanityDetails.getMaleBathRooms().isEmpty() && sanityDetails.getFemaleBathRooms().isEmpty()
+                && sanityDetails.getMaleRoomsWithWaterCloset().isEmpty()
+                && sanityDetails.getFemaleRoomsWithWaterCloset().isEmpty())
+            planDetail.addError(BLDG_PART_BATHROOM,
+                    getLocaleMessage(MSG_ERROR_MANDATORY, FEATURE_NAME, BLDG_PART_BATHROOM, b.getNumber()));
+    }
+
+    private void commonSanitationValidations(PlanDetail planDetail, Block b, SanityDetails sanityDetails, OccupancyType type) {
+        if (sanityDetails.getMaleWaterClosets().isEmpty() && sanityDetails.getFemaleWaterClosets().isEmpty()
+                && sanityDetails.getMaleRoomsWithWaterCloset().isEmpty()
+                && sanityDetails.getFemaleRoomsWithWaterCloset().isEmpty())
+            planDetail.addError(BLDG_PART_WATER_CLOSET,
+                    getLocaleMessage(MSG_ERROR_MANDATORY, FEATURE_NAME, BLDG_PART_WATER_CLOSET, b.getNumber()));
+
+        if (sanityDetails.getUrinals().isEmpty())
+            planDetail.addError(BLDG_PART_URINAL,
+                    getLocaleMessage(MSG_ERROR_MANDATORY, FEATURE_NAME, BLDG_PART_URINAL, b.getNumber()));
+
+        if (!OCCUPANCY_F.equals(type) && !OCCUPANCY_F4.equals(type) && !OCCUPANCY_E.equals(type)
+                && sanityDetails.getTotalwashBasins() == 0)
+            planDetail.addError(BLDG_PART_WASHBASIN,
+                    getLocaleMessage(MSG_ERROR_MANDATORY, FEATURE_NAME, BLDG_PART_WASHBASIN, b.getNumber()));
+
+        if (sanityDetails.getTotalSPWC() == 0)
+            planDetail.addError(BLDG_PART_SPECIAL_WATER_CLOSET,
+                    getLocaleMessage(MSG_ERROR_MANDATORY, FEATURE_NAME, BLDG_PART_SPECIAL_WATER_CLOSET, b.getNumber()));
+
+    }
+
+    private void validateDimensions(PlanDetail planDetail, Block b, SanityDetails sanityDetails) {
+        if (!sanityDetails.getUrinals().isEmpty()) {
+            int count = 0;
+            for (Measurement m : sanityDetails.getUrinals())
+                if (m.getInvalidReason() != null && m.getInvalidReason().length() > 0)
+                    count++;
+            if (count > 0)
+                planDetail.addError("Sanity_" + BLDG_PART_URINAL + b.getNumber(),
+                        count + " number of " + BLDG_PART_URINAL + " polyline not having only 4 points in block" + b.getNumber());
+        }
+        List<Measurement> wcList = new ArrayList<>();
+        wcList.addAll(sanityDetails.getMaleWaterClosets());
+        wcList.addAll(sanityDetails.getFemaleWaterClosets());
+        wcList.addAll(sanityDetails.getCommonWaterClosets());
+        if (!wcList.isEmpty()) {
+            int count = 0;
+            for (Measurement m : wcList)
+                if (m.getInvalidReason() != null && m.getInvalidReason().length() > 0)
+                    count++;
+            if (count > 0)
+                planDetail.addError("Sanity_" + BLDG_PART_WATER_CLOSET + b.getNumber(), count + " number of "
+                        + BLDG_PART_WATER_CLOSET + " polyline not having only 4 points in block" + b.getNumber());
+        }
+
+        List<Measurement> bath = new ArrayList<>();
+        bath.addAll(sanityDetails.getMaleBathRooms());
+        bath.addAll(sanityDetails.getFemaleBathRooms());
+        bath.addAll(sanityDetails.getCommonBathRooms());
+
+        List<Measurement> wcrList = new ArrayList<>();
+        wcrList.addAll(sanityDetails.getMaleRoomsWithWaterCloset());
+        wcrList.addAll(sanityDetails.getFemaleRoomsWithWaterCloset());
+        wcrList.addAll(sanityDetails.getCommonRoomsWithWaterCloset());
+
+        if (!bath.isEmpty()) {
+            int count = 0;
+            for (Measurement m : bath)
+                if (m.getInvalidReason() != null && m.getInvalidReason().length() > 0)
+                    count++;
+            if (count > 0)
+                planDetail.addError("Sanity_" + BLDG_PART_BATHROOM + b.getNumber(), count + " number of " + BLDG_PART_BATHROOM
+                        + " polyline not having only 4 points in block" + b.getNumber());
+        }
+
+        if (!wcrList.isEmpty()) {
+            int count = 0;
+            for (Measurement m : wcrList)
+                if (m.getInvalidReason() != null && m.getInvalidReason().length() > 0)
+                    count++;
+            if (count > 0)
+                planDetail.addError("Sanity_" + MALE_BATH_WITH_WC + b.getNumber(), count + " number of " + MALE_BATH_WITH_WC
+                        + " polyline not having only 4 points in block" + b.getNumber());
+        }
+    }
+
+    @Override
+    public PlanDetail process(PlanDetail planDetail) {
+        verifyDimesions(planDetail);
+        checkCount(planDetail);
+        return planDetail;
+    }
+
+    @Override
+    public List<String> getLayerNames() {
+        List<String> layers = new ArrayList<>();
+        layers.add("BLK_%_FLR_%_WATER_CLOSET");
+        layers.add("BLK_%_FLR_%_URINAL");
+        layers.add("BLK_%_FLR_%_WASH");
+        layers.add("BLK_%_FLR_%_BATH");
+        layers.add("BLK_%_FLR_%_WC_BATH");
+        layers.add("BLK_%_FLR_%_SP_WC");
+        layers.add("DRINKING_WATER");
+        layers.add("NO_OF_BEDS");
+        return layers;
+    }
+
+    @Override
+    public List<String> getParameters() {
+        List<String> parameters = new ArrayList<>();
+        parameters.add(BLOCK_LEVEL_CHECK);
+        parameters.add(FLOOR_LEVEL_CHECK);
+        parameters.add(BUILDING_TYPE);
+        parameters.add(FLOOR_COUNT);
+        parameters.add(PLOT_AREA);
+        parameters.add(OCCUPANCY);
+        parameters.add(CARPET_AREA);
+        parameters.add(CHECK_DIMENSION_SIDE);
+        parameters.add(CHECK_DIMENSION_AREA);
+        parameters.add(COUNT_CHECK);
+        parameters.add(MALE_WATER_CLOSETS);
+        parameters.add(FEMALE_WATER_CLOSETS);
+        parameters.add(COMMON_WATER_CLOSETS);
+        parameters.add(SP_WATER_CLOSETS);
+        parameters.add(WASH_BASIN);
+        parameters.add(URINALS);
+        parameters.add(MALE_BATH_ROOM);
+        parameters.add(FEMALE_BATH_ROOM);
+        parameters.add(COMMON_BATH_ROOM);
+        parameters.add(MALE_BATH_ROOM_WITH_WC);
+        parameters.add(FEMALE_BATH_ROOM_WITH_WC);
+        parameters.add(COMMON_BATH_ROOM_WITH_WC);
+        parameters.add(BEDS_COUNT);
+        parameters.add(DRINKING_WATER);
+        parameters.add(PERSONS_COUNT);
+        return parameters;
+    }
+
+    private PlanDetail verifyDimesions(PlanDetail pl) {
+        validate(pl);
+
+        for (Block b : pl.getBlocks()) {
+            /*
+             * If block is small plot and floors above ground less than or equal to three and occupancy type of entire block is
+             * either Residential or Commercial then sanitation process not require. if
+             * (!Util.checkExemptionConditionForBuildingParts(b) &&
+             * !Util.checkExemptionConditionForSmallPlotAtBlkLevel(pl.getPlot(), b)) { SanityDetails sanityDetails =
+             * b.getSanityDetails(); ScrutinyDetail scrutinyDetail = getNewScrutinyDetail(BLOCK_U_S + b.getNumber() + "_" +
+             * SANITATION); checkDimension(pl, scrutinyDetail, sanityDetails.getMaleWaterClosets(), 1d, 1.1d, MALE +
+             * BLDG_PART_WATER_CLOSET, DIMESION_DESC_KEY, RULE_38_1); checkDimension(pl, scrutinyDetail,
+             * sanityDetails.getFemaleWaterClosets(), 1d, 1.1d, FEMALE + BLDG_PART_WATER_CLOSET, DIMESION_DESC_KEY, RULE_38_1);
+             * checkDimension(pl, scrutinyDetail, sanityDetails.getUrinals(), 0.6d, 0.5d, BLDG_PART_URINAL, DIMESION_DESC_KEY,
+             * RULE_38_1); checkDimension(pl, scrutinyDetail, sanityDetails.getMaleBathRooms(), 1.1d, 1.5d, MALE +
+             * BLDG_PART_BATHROOM, DIMESION_DESC_KEY, RULE_38_1); checkDimension(pl, scrutinyDetail,
+             * sanityDetails.getFemaleBathRooms(), 1.1d, 1.5d, FEMALE + BLDG_PART_BATHROOM, DIMESION_DESC_KEY, RULE_38_1);
+             * checkDimension(pl, scrutinyDetail, sanityDetails.getMaleRoomsWithWaterCloset(), 1.1d, 2.2d, MALE_BATH_WITH_WC,
+             * DIMESION_DESC_KEY, RULE_38_1); checkDimension(pl, scrutinyDetail, sanityDetails.getMaleRoomsWithWaterCloset(), 1.1,
+             * 2.2d, FEMALE + BLDG_PART_BATHROOM + WITH + BLDG_PART_WATER_CLOSET, DIMESION_DESC_KEY, RULE_38_1); //
+             * checkCount(pl); }
+             */
+        }
+
+        return pl;
+    }
+
+    private ScrutinyDetail getNewScrutinyDetail(String key) {
+        ScrutinyDetail scrutinyDetail = new ScrutinyDetail();
+        scrutinyDetail.addColumnHeading(1, RULE_NO);
+        scrutinyDetail.addColumnHeading(2, DESCRIPTION);
+        scrutinyDetail.addColumnHeading(3, REQUIRED);
+        scrutinyDetail.addColumnHeading(4, PROVIDED);
+        scrutinyDetail.addColumnHeading(5, STATUS);
+        scrutinyDetail.setKey(key);
+        return scrutinyDetail;
+    }
+
+    private void checkCount(PlanDetail pl) {
+
+        Boolean accepted = true;
+        for (Block b : pl.getBlocks())
+            if (!b.getCompletelyExisting()) {
+
+                LOG.info("Starting  Sanitation of ....." + b.getNumber());
+                /*
+                 * If block is small plot and floors above ground less than or equal to three and occupancy type of entire block
+                 * is either Residential or Commercial then sanitation process not require.
+                 */
+
+                if (!Util.singleFamilyWithLessThanOrEqualToThreeFloor(b)) {
+                    ScrutinyDetail scrutinyDetail = getNewScrutinyDetail(BLOCK_U_S + b.getNumber() + "_" + SANITATION);
+                    SanityHelper helper = new SanityHelper();
+                    Map<Integer, Integer> requiredSpWcMap = new ConcurrentHashMap<>();
+                    Map<Integer, Integer> providedSpWcMap = new ConcurrentHashMap<>();
+                    Map<Integer, Integer> failedAreaSpWcMap = new ConcurrentHashMap<>();
+                    Map<Integer, Integer> failedDimensionSpWcMap = new ConcurrentHashMap<>();
+                    for (Occupancy type : b.getBuilding().getTotalArea()) {
+                        double carpetArea = 0d;
+                        if (OCCUPANCY_I2.equals(type.getType()) && type.getFloorArea().doubleValue() == 0
+                                && type.getCarpetArea().doubleValue() == 0)
+                            break;
+                        else if (type.getCarpetArea() != null && type.getCarpetArea().doubleValue() > 0)
+                            carpetArea = type.getCarpetArea().doubleValue();
+                        else {
+                            pl.addError("Invalid carpet area",
+                                    "Carpet area is not calculated . Some thing wrong with builtup area");
+                            return;
+                        }
+                        LOG.info(type.getType() + " area" + carpetArea);
+
+                        switch (type.getType()) {
+
+                        case OCCUPANCY_A1:
+                        case OCCUPANCY_A4:
+                            if (b.getResidentialBuilding())
+                                accepted = processSpecialWaterClosetForResidential(b, helper, scrutinyDetail, requiredSpWcMap,
+                                        providedSpWcMap, failedAreaSpWcMap, failedDimensionSpWcMap);
+                            break;
+                        case OCCUPANCY_A2:
+                            processSpecialWaterCloset(b, requiredSpWcMap, providedSpWcMap, failedAreaSpWcMap,
+                                    failedDimensionSpWcMap);
+                            break;
+                        case OCCUPANCY_A3:
+                            helper.maleWc += carpetArea * 2 / (4.75 * 3 * 10);
+                            helper.femaleWc += carpetArea / (4.75 * 3 * 8);
+                            helper.urinal += carpetArea * 2 / (4.75 * 3 * 25);
+                            helper.maleWash += carpetArea * 2 / (4.75 * 3 * 10);
+                            helper.femaleWash += carpetArea / (4.75 * 3 * 10);
+                            helper.maleBath += carpetArea * 2 / (4.75 * 3 * 10);
+                            helper.femaleBath += carpetArea / (4.75 * 3 * 10);
+                            processSpecialWaterCloset(b, requiredSpWcMap, providedSpWcMap, failedAreaSpWcMap,
+                                    failedDimensionSpWcMap);
+                            helper.ruleNo.add(RULE_54_6);
+                            break;
+                        case OCCUPANCY_B1:
+                        case OCCUPANCY_B2:
+                        case OCCUPANCY_B3:
+                            helper.maleWc += carpetArea * 2 / (4.75 * 3 * 40);
+                            helper.femaleWc += carpetArea / (4.75 * 3 * 25);
+                            helper.urinal += carpetArea * 2 / (4.75 * 3 * 50);
+                            helper.maleWash += carpetArea * 2 / (4.75 * 3 * 40);
+                            helper.femaleWash += carpetArea / (4.75 * 3 * 40);
+                            processSpecialWaterCloset(b, requiredSpWcMap, providedSpWcMap, failedAreaSpWcMap,
+                                    failedDimensionSpWcMap);
+                            helper.ruleNo.add(RULE_54_6);
+                            break;
+                        case OCCUPANCY_C1:
+                            if (pl.getPlanInformation().getNoOfBeds() == null)
+                                break;
+                            double noofBeds = pl.getPlanInformation().getNoOfBeds().doubleValue();
+                            if (pl.getPlanInformation().getNoOfBeds() != null)
+                                helper.maleWc += noofBeds / 8;
+                            helper.femaleWc += noofBeds / 8;
+                            helper.maleWash += 2 + (noofBeds - 30) / 30;
+                            helper.femaleWash += 2 + (noofBeds - 30) / 30;
+                            helper.maleBath += noofBeds / 8;
+                            helper.femaleBath += noofBeds / 8;
+                            helper.abultionTap += helper.maleWc + helper.femaleWc + carpetArea / (4.75 * 3);
+                            processSpecialWaterCloset(b, requiredSpWcMap, providedSpWcMap, failedAreaSpWcMap,
+                                    failedDimensionSpWcMap);
+                            helper.ruleNo.add(RULE_55_12);
+                            break;
+
+                        case OCCUPANCY_C2:
+                            helper.maleWc += carpetArea * 2 / (4.75 * 3 * 100);
+                            helper.femaleWc += carpetArea / (4.75 * 3 * 8);
+                            helper.urinal += carpetArea * 2 / (4.75 * 3 * 50);
+                            helper.maleWash += carpetArea * 2 / (4.75 * 100);
+                            helper.femaleWash += carpetArea / (4.75 * 100);
+                            // helper.maleBath = carpetArea * 2 / (4.75 * 3 * 10);
+                            // helper.femaleBath = carpetArea / (4.75 * 3 * 10);
+                            processSpecialWaterCloset(b, requiredSpWcMap, providedSpWcMap, failedAreaSpWcMap,
+                                    failedDimensionSpWcMap);
+                            helper.ruleNo.add(RULE_55_12);
+                            break;
+
+                        case OCCUPANCY_C3:
+                            helper.ruleNo.add(RULE_55_12);
+                            helper.maleWc += carpetArea * 2 / (4.75 * 3 * 25);
+                            helper.femaleWc += carpetArea / (4.75 * 3 * 15);
+
+                            helper.maleWash += carpetArea * 2 / (4.75 * 3 * 25);
+                            helper.femaleWash += carpetArea * 2 / (4.75 * 3 * 25);
+                            Double noOfPersons = carpetArea * 2 / (4.75 * 3);
+                            BigDecimal noOfPersonsBig = BigDecimal.valueOf(noOfPersons).divide(BigDecimal.ONE,
+                                    RoundingMode.HALF_UP);
+                            int noofPerson = noOfPersonsBig.intValue();
+
+                            if (noofPerson >= 7 && noofPerson <= 20)
+                                helper.urinal += 1d;
+                            else if (noofPerson <= 45)
+                                helper.urinal += 2d;
+                            else if (noofPerson <= 70)
+                                helper.urinal += 3d;
+                            else if (noofPerson <= 100)
+                                helper.urinal += 4d;
+                            else if (noofPerson <= 200)
+                                helper.urinal += 4d + noofPerson * 0.3d;
+                            else if (noofPerson > 200)
+                                helper.urinal += 4d + noofPerson * 0.55d;
+
+                            helper.abultionTap += helper.maleWc + helper.femaleWc + carpetArea / (4.75 * 50);
+                            processSpecialWaterCloset(b, requiredSpWcMap, providedSpWcMap, failedAreaSpWcMap,
+                                    failedDimensionSpWcMap);
+                            break;
+                        case OCCUPANCY_D:
+                        case OCCUPANCY_D1:
+                            helper.maleWc += carpetArea * 2 / (3 * 200);
+                            helper.femaleWc += carpetArea / (3 * 100);
+                            helper.urinal += carpetArea * 2 / (3 * 50);
+                            helper.maleWash += carpetArea * 2 / (3 * 200);
+                            helper.femaleWash += carpetArea / (2 * 3 * 200);
+                            // helper.maleBath += carpetArea * 2 / (4.75 * 3 * 10);
+                            // helper.femaleBath += carpetArea / (4.75 * 3 * 10);
+                            processSpecialWaterCloset(b, requiredSpWcMap, providedSpWcMap, failedAreaSpWcMap,
+                                    failedDimensionSpWcMap);
+                            helper.ruleNo.add(RULE_55_12);
+                            break;
+                        case OCCUPANCY_D2:
+                            helper.ruleNo.add(RULE_55_12);
+                            if (carpetArea <= 1000)
+                                helper.maleWc += 4d;
+                            else
+                                helper.maleWc += 4d + (carpetArea - 1000);
+
+                            if (carpetArea <= 1000)
+                                helper.urinal += 6d;
+                            else
+                                helper.urinal += 6d + (carpetArea - 1000) / 6;
+                            helper.maleWc += carpetArea * 2 / (3 * 200);
+                            helper.femaleWc += carpetArea / (3 * 100);
+                            helper.urinal += carpetArea * 2 / (3 * 50);
+                            helper.maleWash += 4d;
+                            helper.femaleWash += 4d;
+                            processSpecialWaterCloset(b, requiredSpWcMap, providedSpWcMap, failedAreaSpWcMap,
+                                    failedDimensionSpWcMap);
+                            // helper.maleBath += carpetArea * 2 / (4.75 * 3 * 10);
+                            // helper.femaleBath += carpetArea / (4.75 * 3 * 10);
+                            helper.ruleNo.add(RULE_54_6);
+                            break;
+                        case OCCUPANCY_E:
+                        case OCCUPANCY_F:
+                        case OCCUPANCY_F4:
+                            helper.maleWc += carpetArea * 2 / (4.75 * 3 * 25);
+                            helper.femaleWc += carpetArea / (4.75 * 3 * 15);
+                            helper.urinal += carpetArea * 2 / (4.75 * 3 * 25);
+
+                            helper.ruleNo.add("56(3C)");
+                            helper.ruleDescription = SANITY_RULE_DESC + type.getType().getOccupancyTypeVal();
+                            if ((type.getType().equals(OCCUPANCY_F) || type.getType().equals(OCCUPANCY_F4))
+                                    && !Util.checkExemptionConditionForSmallPlotAtBlkLevel(pl.getPlot(), b))
+                                processSpecialWaterCloset(b, requiredSpWcMap, providedSpWcMap, failedAreaSpWcMap,
+                                        failedDimensionSpWcMap);
+
+                            break;
+                        case OCCUPANCY_H:
+                            helper.maleWc += carpetArea * 2 / (3 * 30 * 50);
+                            helper.femaleWc += carpetArea / (3 * 30 * 25);
+                            helper.urinal += carpetArea * 2 / (3 * 30 * 100);
+                            helper.ruleNo.add("58(6)");
+                            break;
+                        case OCCUPANCY_F3:
+                            helper.maleWc += carpetArea * 2 / (4.75 * 3 * 100);
+                            helper.femaleWc += carpetArea / (4.75 * 3 * 100);
+                            helper.urinal += carpetArea * 2 / (4.75 * 3 * 100);
+                            // preferable one on each floor to be implemented
+                            helper.maleWash += carpetArea * 2 / (4.75 * 3 * 100);
+                            helper.femaleWash += carpetArea / (4.75 * 3 * 100);
+                            helper.commonBath += carpetArea / (4.75 * 100);
+                            processSpecialWaterCloset(b, requiredSpWcMap, providedSpWcMap, failedAreaSpWcMap,
+                                    failedDimensionSpWcMap);
+                            Double totalSpecialWc = 0.0;
+                            for (Map.Entry<Integer, Integer> req : requiredSpWcMap.entrySet())
+                                totalSpecialWc += req.getValue();
+                            if (totalSpecialWc > 0 && totalSpecialWc <= helper.maleWc)
+                                helper.maleWc = helper.maleWc - totalSpecialWc;
+                            helper.ruleNo.add(RULE_54_6);
+                            break;
+                        case OCCUPANCY_G1:
+                        case OCCUPANCY_G2:
+                            helper.maleWc += carpetArea * 2 / (4.75 * 3 * 25);
+                            helper.femaleWc += carpetArea / (4.75 * 3 * 15);
+                            helper.urinal += carpetArea * 2 / (4.75 * 3 * 25);
+                            // preferable one on each floor to be implemented
+                            helper.ruleNo.add("57(13)");
+                            // accepted = processSanity(pl, b, carpetArea, helper, scrutinyDetail, type);
+                            break;
+                        case OCCUPANCY_I1:
+                        case OCCUPANCY_I2:
+                            double floorArea = carpetArea + carpetArea * 25 / 100;
+                            Double maleOccupant = floorArea * 2 / (3 * 30);
+                            Double femaleOccupant = floorArea / (3 * 30);
+                            if (maleOccupant.intValue() <= 50)
+                                helper.maleWc += 1d;
+                            else
+                                helper.maleWc += 1 + (maleOccupant - 50) / 70;
+
+                            if (femaleOccupant.intValue() <= 50)
+                                helper.femaleWc += 2d;
+                            else
+                                helper.femaleWc += 2 + (maleOccupant - 50) / 70;
+                            helper.maleWash += floorArea / (30 * 50);
+                            double noOfPerson = floorArea * 2 / (3 * 30);
+                            helper.urinal += noOfPerson / 100;
+                            helper.ruleNo.add("59(7)");
+                            // accepted = processSanity(pl, b, floorArea, helper, scrutinyDetail, type);
+                            break;
+
+                        }
+                        if (!accepted) {
+                        }
+
+                    }
+                    for (Map.Entry<Integer, Integer> req : requiredSpWcMap.entrySet())
+                        helper.requiredSpecialWc += req.getValue();
+                    for (Map.Entry<Integer, Integer> pro : providedSpWcMap.entrySet())
+                        helper.providedSpecialWc += pro.getValue();
+                    for (Map.Entry<Integer, Integer> pro : failedAreaSpWcMap.entrySet())
+                        helper.failedAreaSpecialWc += pro.getValue();
+                    for (Map.Entry<Integer, Integer> pro : failedDimensionSpWcMap.entrySet())
+                        helper.failedDimensionSpecialWc += pro.getValue();
+
+                    if (helper.requiredSpecialWc > 0) {
+                        Set<String> ruleNo = new HashSet<>();
+                        ruleNo.add(RULE_40_A_4);
+                        if (helper.providedSpecialWc < helper.requiredSpecialWc)
+                            addReportDetail(ruleNo, BLDG_PART_SPECIAL_WATER_CLOSET
+                                    + " - Minimum one at Ground Floor + Minimum 1 at every floors in multiples of 3, (GF, 3rd, 6th etc)",
+                                    String.valueOf(helper.requiredSpecialWc.intValue()),
+                                    String.valueOf(helper.providedSpecialWc.intValue()),
+                                    Result.Not_Accepted.getResultVal(), scrutinyDetail);
+                        else
+                            addReportDetail(ruleNo, BLDG_PART_SPECIAL_WATER_CLOSET
+                                    + " - Minimum one at Ground Floor + Minimum 1 at every floors in multiples of 3, (GF, 3rd, 6th etc)",
+                                    String.valueOf(helper.requiredSpecialWc.intValue()),
+                                    String.valueOf(helper.providedSpecialWc.intValue()),
+                                    Result.Accepted.getResultVal(), scrutinyDetail);
+                        if (helper.failedAreaSpecialWc > 0 && helper.failedAreaSpecialWc <= helper.requiredSpecialWc)
+                            addReportDetail(ruleNo, BLDG_PART_SPECIAL_WATER_CLOSET + " - Minimum Area", MINIMUM_AREA_SPWC,
+                                    String.valueOf(helper.failedAreaSpecialWc.intValue()) + " not having area 2.625 M2",
+                                    Result.Not_Accepted.getResultVal(), scrutinyDetail);
+                        else
+                            addReportDetail(ruleNo, BLDG_PART_SPECIAL_WATER_CLOSET + " - Minimum Area", MINIMUM_AREA_SPWC,
+                                    String.valueOf(helper.providedSpecialWc.intValue() - helper.failedAreaSpecialWc.intValue())
+                                            + " having area 2.625 M2",
+                                    Result.Accepted.getResultVal(), scrutinyDetail);
+
+                        if (helper.failedDimensionSpecialWc > 0 && helper.failedDimensionSpecialWc <= helper.requiredSpecialWc)
+                            addReportDetail(ruleNo, BLDG_PART_SPECIAL_WATER_CLOSET + " - Minimum Dimension",
+                                    MINIMUM_DIMENSION_SPWC,
+                                    String.valueOf(helper.failedDimensionSpecialWc.intValue()) + " not having dimension 1.5M",
+                                    Result.Not_Accepted.getResultVal(), scrutinyDetail);
+                        else
+                            addReportDetail(ruleNo, BLDG_PART_SPECIAL_WATER_CLOSET + " - Minimum Dimension",
+                                    MINIMUM_DIMENSION_SPWC,
+                                    String.valueOf(
+                                            helper.providedSpecialWc.intValue() - helper.failedDimensionSpecialWc.intValue())
+                                            + " having dimension 1.5M",
+                                    Result.Accepted.getResultVal(), scrutinyDetail);
+
+                    }
+                    accepted = processSanity(pl, b, helper, scrutinyDetail);
+
+                    pl.getReportOutput().getScrutinyDetails().add(scrutinyDetail);
+                    LOG.info("Keys of the Sanitation Message ....." + scrutinyDetail.getKey() + "   "
+                            + scrutinyDetail.getDetail().size());
+                }
+            }
+    }
+
+    /*
+     * private Boolean processSpecialWaterCloset(Block block, SanityHelper helper, ScrutinyDetail detail, Map<Integer, Integer>
+     * spWcMap) { boolean notFound = false; StringBuilder expectedResult = new StringBuilder(); StringBuilder actualResult = new
+     * StringBuilder(); expectedResult.append(
+     * " Minimum one at Ground Floor + Minimum 1 at every floors in multiples of 3, (GF, 3rd, 6th etc)"); StringBuilder
+     * notFoundFloors = new StringBuilder(); StringBuilder foundFloors = new StringBuilder(); int required = 0; int provided = 0;
+     * for (Floor f : block.getBuilding().getFloors()) { if (f.getNumber().intValue() < 0) continue; if (f.getNumber() % 3 == 0) {
+     * if(spWcMap.containsKey(f.getNumber())) continue; else spWcMap.put(f.getNumber(), 1); required++; if
+     * (f.getSpecialWaterClosets().isEmpty()) { notFound = true; if (notFoundFloors.length() != 0) notFoundFloors.append(", ");
+     * notFoundFloors.append(" Floor " + f.getNumber()); } else { provided++; foundFloors.append(" Floor " + f.getNumber()); } } }
+     * if (notFound) { actualResult.append("Not found at following Mandatory levels " + notFoundFloors);
+     * addReportDetail(RULE_40_A_4, BLDG_PART_SPECIAL_WATER_CLOSET +
+     * " - Minimum one at Ground Floor + Minimum 1 at every floors in multiples of 3, (GF, 3rd, 6th etc)",
+     * String.valueOf(required), String.valueOf(provided), Result.Not_Accepted.getResultVal(), detail); } else {
+     * actualResult.append(" found at following Mandatory levels " + foundFloors); addReportDetail(RULE_40_A_4,
+     * BLDG_PART_SPECIAL_WATER_CLOSET +
+     * " - Minimum one at Ground Floor + Minimum 1 at every floors in multiples of 3, (GF, 3rd, 6th etc)",
+     * String.valueOf(required), String.valueOf(provided), Result.Accepted.getResultVal(), detail); } return !notFound; }
+     */
+
+    private void processSpecialWaterCloset(Block block, Map<Integer, Integer> requiredSpWcMap,
+            Map<Integer, Integer> providedSpWcMap, Map<Integer, Integer> failedAreaSpWcMap,
+            Map<Integer, Integer> failedDimensionSpWcMap) {
+        for (Floor f : block.getBuilding().getFloors()) {
+            if (f.getNumber().intValue() < 0)
+                continue;
+            if (!f.getTerrace() && f.getNumber() % 3 == 0) {
+                if (requiredSpWcMap.containsKey(f.getNumber()))
+                    continue;
+                else
+                    requiredSpWcMap.put(f.getNumber(), 1);
+                if (f.getSpecialWaterClosets().isEmpty()) {
+                    // not defined
+                } else if (providedSpWcMap.containsKey(f.getNumber()))
+                    continue;
+                else
+                    providedSpWcMap.put(f.getNumber(), 1);
+
+                validateDimensionOfSPWC(f.getSpecialWaterClosets(), f.getNumber(), failedAreaSpWcMap, failedDimensionSpWcMap,
+                        providedSpWcMap);
+            }
+        }
+    }
+
+    private Boolean processSpecialWaterClosetForResidential(Block block, SanityHelper helper, ScrutinyDetail detail,
+            Map<Integer, Integer> requiredSpWcMap, Map<Integer, Integer> providedSpWcMap, Map<Integer, Integer> failedAreaSpWcMap,
+            Map<Integer, Integer> failedDimensionSpWcMap) {
+        boolean notFound = false;
+        StringBuilder expectedResult = new StringBuilder();
+        StringBuilder actualResult = new StringBuilder();
+        expectedResult.append(" Minimum one at Ground Floor");
+        int required = 0;
+        int provided = 0;
+        for (Floor f : block.getBuilding().getFloors()) {
+            if (f.getNumber().intValue() < 0)
+                continue;
+            if (f.getNumber() == 0) {
+                required++;
+                provided++;
+                if (f.getSpecialWaterClosets().isEmpty())
+                    notFound = true;
+
+                validateDimensionOfSPWC(f.getSpecialWaterClosets(), f.getNumber(), failedAreaSpWcMap, failedDimensionSpWcMap,
+                        providedSpWcMap);
+
+            }
+        }
+        Set<String> ruleNo = new HashSet<>();
+        ruleNo.add(RULE_40_A_4);
+        if (notFound) {
+            actualResult.append("Not Found");
+            addReportDetail(ruleNo, BLDG_PART_SPECIAL_WATER_CLOSET + " - Minimum one at Ground Floor", String.valueOf(required),
+                    String.valueOf(provided),
+                    Result.Not_Accepted.getResultVal(), detail);
+        } else {
+            actualResult.append("Found");
+            addReportDetail(ruleNo, BLDG_PART_SPECIAL_WATER_CLOSET + " - Minimum one at Ground Floor", String.valueOf(required),
+                    String.valueOf(provided),
+                    Result.Accepted.getResultVal(), detail);
+        }
+
+        return !notFound;
+    }
+
+    private Boolean processSanity(PlanDetail pl, Block b, SanityHelper helper, ScrutinyDetail detail) {
+
+        // int specialWC = sanityDetails.getTotalSpecialWC().size();
+
+        Boolean accepted = true;
+        String description = "";
+        String expected = "";
+        String actual = "";
+        SanityDetails sanityDetails = b.getSanityDetails();
+
+        if (helper.maleWc > 0 || helper.femaleWc > 0) {
+
+            int maleWcActual = sanityDetails.getMaleWaterClosets().size()
+                    + sanityDetails.getMaleRoomsWithWaterCloset().size();
+            int femaleWcActual = sanityDetails.getFemaleWaterClosets().size()
+                    + sanityDetails.getFemaleRoomsWithWaterCloset().size();
+            int commonWcActual = sanityDetails.getCommonWaterClosets().size()
+                    + sanityDetails.getCommonRoomsWithWaterCloset().size();
+            Double specialWC = helper.providedSpecialWc;
+
+            Double totalWCActual = Math.ceil(maleWcActual + femaleWcActual + commonWcActual + specialWC);
+            Double totalWCExpected = Math.ceil(helper.maleWc + helper.femaleWc);
+            if (totalWCExpected >= 0) {
+                List<Measurement> wcList = new ArrayList<>();
+                wcList.addAll(sanityDetails.getMaleWaterClosets());
+                wcList.addAll(sanityDetails.getFemaleWaterClosets());
+                wcList.addAll(sanityDetails.getCommonWaterClosets());
+                checkDimension(totalWCExpected.intValue(), detail, wcList, 1d, 1.1d, BLDG_PART_WATER_CLOSET,
+                        DIMESION_DESC_KEY, RULE_38_1);
+
+                expected = "" + totalWCExpected.intValue();
+                actual = "" + totalWCActual.intValue();
+                description = BLDG_PART_WATER_CLOSET + " - Count";
+                if (totalWCExpected.intValue() > totalWCActual.intValue())
+                    addReportDetail(helper.ruleNo, description, expected, actual, Result.Not_Accepted.getResultVal(), detail);
+                else
+                    addReportDetail(helper.ruleNo, description, expected, actual, Result.Accepted.getResultVal(), detail);
+            }
+        }
+        if (helper.urinal > 0) {
+            helper.urinal = Math.ceil(helper.urinal);
+            description = BLDG_PART_URINAL + " - Count";
+            Integer urinalActual = sanityDetails.getUrinals().size();
+            expected = "" + helper.urinal.intValue();
+            actual = "" + urinalActual.intValue();
+            if (helper.urinal.intValue() >= 0) {
+                checkDimension(helper.urinal.intValue(), detail, sanityDetails.getUrinals(), 0.6d, 0.42d,
+                        BLDG_PART_URINAL, DIMESION_DESC_KEY, RULE_38_1);
+                if (helper.urinal.intValue() > urinalActual.intValue())
+                    addReportDetail(helper.ruleNo, description, expected, actual, Result.Not_Accepted.getResultVal(), detail);
+                else
+                    addReportDetail(helper.ruleNo, description, expected, actual, Result.Accepted.getResultVal(), detail);
+            }
+        }
+
+        if (helper.maleWash > 0 || helper.femaleWash > 0) {
+
+            int actualWash = 0;
+            for (Floor f : b.getBuilding().getFloors())
+                actualWash += f.getWashBasins().size();
+            description = BLDG_PART_WASHBASIN + " - Count";
+            Double totalWashExpected = Math.ceil(helper.maleWash + helper.femaleWash);
+            expected = "" + totalWashExpected.intValue();
+            actual = "" + actualWash;
+            if (totalWashExpected.intValue() >= 0)
+                if (totalWashExpected.intValue() > actualWash)
+                    addReportDetail(helper.ruleNo, description, expected, actual, Result.Not_Accepted.getResultVal(), detail);
+                else
+                    addReportDetail(helper.ruleNo, description, expected, actual, Result.Accepted.getResultVal(), detail);
+        }
+
+        if (helper.maleBath > 0 || helper.femaleBath > 0 || helper.commonBath > 0) {
+            description = BLDG_PART_BATHROOM + " - Count";
+            int maleBathActual = sanityDetails.getMaleBathRooms().size()
+                    + sanityDetails.getMaleRoomsWithWaterCloset().size();
+            int femaleBathActual = sanityDetails.getFemaleBathRooms().size()
+                    + sanityDetails.getFemaleRoomsWithWaterCloset().size();
+            int commomBathActual = sanityDetails.getCommonBathRooms().size()
+                    + sanityDetails.getCommonRoomsWithWaterCloset().size();
+            int totalActualBath = maleBathActual + femaleBathActual + commomBathActual;
+            Double totalBathExpected = Math.ceil(helper.maleBath + helper.femaleBath + helper.commonBath);
+
+            expected = "" + totalBathExpected.intValue();
+            actual = "" + totalActualBath;
+            List<Measurement> wcList = new ArrayList<>();
+            wcList.addAll(sanityDetails.getMaleBathRooms());
+            wcList.addAll(sanityDetails.getFemaleBathRooms());
+            wcList.addAll(sanityDetails.getCommonBathRooms());
+
+            List<Measurement> wcrList = new ArrayList<>();
+            wcrList.addAll(sanityDetails.getMaleRoomsWithWaterCloset());
+            wcrList.addAll(sanityDetails.getFemaleRoomsWithWaterCloset());
+            wcrList.addAll(sanityDetails.getCommonRoomsWithWaterCloset());
+            if (totalBathExpected.intValue() >= 0) {
+                checkDimension(totalBathExpected.intValue(), detail, wcList, 1.1d, 1.5d,
+                        BLDG_PART_BATHROOM, DIMESION_DESC_KEY, RULE_38_1);
+
+                checkDimension(totalBathExpected.intValue(), detail, wcrList, 1.1d, 2.2d, MALE_BATH_WITH_WC,
+                        DIMESION_DESC_KEY, RULE_38_1);
+
+                if (totalBathExpected.intValue() > totalActualBath)
+                    addReportDetail(helper.ruleNo, description, expected, actual, Result.Not_Accepted.getResultVal(), detail);
+                else
+                    addReportDetail(helper.ruleNo, description, expected, actual, Result.Accepted.getResultVal(), detail);
+            }
+        }
+
+        /*
+         * if (pl.getPlanInformation().getNoOfBeds() != null && OCCUPANCY_C1.equals(occupancy.getType()))
+         * addReportDetail(RULE_55_12, NOOFBEDS, "-", pl.getPlanInformation().getNoOfBeds().toString(),
+         * Result.Accepted.getResultVal(), detail);
+         */
+        return accepted;
+    }
+
+    private boolean checkDimension(Integer required, ScrutinyDetail scrutinyDetail, List<Measurement> list,
+            double minSide, double minArea, String type, String desc, String ruleNum) {
+        if (!list.isEmpty()) {
+            int wcNotMeetingSide = checkDimensionSide(list, minSide);
+            int wcNotMeetingArea = checkDimensionArea(list, minArea);
+
+            int totalSize = list.size();
+            desc = type + "- Minimum Dimension";
+
+            String expectedResult = minSide + " M";
+            String actualResult = "";
+            Set<String> ruleNo = new HashSet<>();
+            ruleNo.add(ruleNum);
+            if (totalSize - wcNotMeetingSide < required && wcNotMeetingSide > 0) {
+                actualResult = wcNotMeetingSide + " not having " + expectedResult;
+                addReportDetail(ruleNo, desc, expectedResult, actualResult, Result.Not_Accepted.getResultVal(), scrutinyDetail);
+
+            } else {
+                actualResult = totalSize + " having " + expectedResult;
+                addReportDetail(ruleNo, desc, expectedResult, actualResult, Result.Accepted.getResultVal(), scrutinyDetail);
+            }
+
+            desc = type + "- Minimum Area";
+            expectedResult = minArea + " M2";
+            if (totalSize - wcNotMeetingArea < required && wcNotMeetingArea > 0) {
+                actualResult = wcNotMeetingArea + " not having " + expectedResult;
+                addReportDetail(ruleNo, desc, expectedResult, actualResult, Result.Not_Accepted.getResultVal(), scrutinyDetail);
+
+            } else {
+                actualResult = totalSize + "  having " + expectedResult;
+                addReportDetail(ruleNo, desc, expectedResult, actualResult, Result.Accepted.getResultVal(), scrutinyDetail);
+            }
+
+        }
+        return true;
+    }
+
+    private int checkDimensionSide(List<Measurement> measurements, Double minValue) {
+        int failedCount = 0;
+        for (Measurement m : measurements) {
+            if (minValue == 0) {
+
+            }
+            double minSide = m.getMinimumSide()
+                    .setScale(DcrConstants.ONE_DECIMALDIGITS_MEASUREMENTS, DcrConstants.ROUNDMODE_MEASUREMENTS).doubleValue();
+            if (minSide < minValue) {
+                m.setIsValid(false);
+                m.appendInvalidReason(String.format(MINIMUM_SIDE_DIMENSION_VIOLATED, minValue));
+                failedCount++;
+            }
+        }
+        return failedCount;
+    }
+
+    private int checkDimensionArea(List<Measurement> measurements, Double minValue) {
+        int failedCount = 0;
+        for (Measurement m : measurements) {
+
+            double area = m.getArea().setScale(DcrConstants.THREE_DECIMALDIGITS_MEASUREMENTS, DcrConstants.ROUNDMODE_MEASUREMENTS)
+                    .doubleValue();
+            if (area < minValue) {
+                m.setIsValid(false);
+                m.appendInvalidReason(String.format(MINIMUM_AREA_DIMENSION_VIOLATED, minValue));
+                failedCount++;
+                LOG.debug("Area not matching is " + m.getArea());
+            }
+        }
+        return failedCount;
+    }
+
+    private void addReportDetail(Set<String> ruleNo, String ruleDesc, String expected, String actual, String status,
+            ScrutinyDetail detail) {
+        Map<String, String> details = new HashMap<>();
+        details.put(RULE_NO, ruleNo.stream().map(String::new).collect(Collectors.joining(",")));
+        details.put(DESCRIPTION, ruleDesc);
+        details.put(REQUIRED, expected);
+        details.put(PROVIDED, actual);
+        details.put(STATUS, status);
+        detail.getDetail().add(details);
+
+    }
+
+    private void validateDimensionOfSPWC(List<Measurement> spwcs, int flrNo, Map<Integer, Integer> failedAreaSpWcMap,
+            Map<Integer, Integer> failedDimensionSpWcMap, Map<Integer, Integer> providedSpWcMap) {
+
+        Integer failedAreaCount = 0;
+        Integer failedDimensionCount = 0;
+        Integer providedSpecialWc = 0;
+
+        for (Map.Entry<Integer, Integer> pro : providedSpWcMap.entrySet())
+            providedSpecialWc += pro.getValue();
+
+        for (Measurement spwc : spwcs) {
+            BigDecimal area = spwc.getArea().setScale(DcrConstants.THREE_DECIMALDIGITS_MEASUREMENTS,
+                    DcrConstants.ROUNDMODE_MEASUREMENTS);
+            BigDecimal width = spwc.getWidth().setScale(DcrConstants.ONE_DECIMALDIGITS_MEASUREMENTS,
+                    DcrConstants.ROUNDMODE_MEASUREMENTS);
+            if (area.compareTo(MINAREAOFSPWC.setScale(DcrConstants.THREE_DECIMALDIGITS_MEASUREMENTS,
+                    DcrConstants.ROUNDMODE_MEASUREMENTS)) < 0)
+                failedAreaCount++;
+            if (width.compareTo(MINDIMENSIONOFSPWC.setScale(DcrConstants.ONE_DECIMALDIGITS_MEASUREMENTS,
+                    DcrConstants.ROUNDMODE_MEASUREMENTS)) < 0)
+                failedDimensionCount++;
+
+            if (providedSpecialWc == failedAreaCount)
+                failedAreaSpWcMap.put(flrNo, failedAreaCount);
+
+            if (providedSpecialWc == failedDimensionCount)
+                failedDimensionSpWcMap.put(flrNo, failedAreaCount);
+
+        }
+
+    }
+
+}

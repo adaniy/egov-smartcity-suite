@@ -50,40 +50,85 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn" %>
-<form:form role="form" action="/bpa/stakeholder/update" modelAttribute="stakeHolder"
-	id="stakeHolderUpdateform" cssClass="form-horizontal form-groups-bordered"
-	enctype="multipart/form-data">
-	<input type="hidden" name="stakeHolder" value="${stakeHolder.id}" >
-	<ul class="nav nav-tabs" id="settingstab">
-		<li class="active"><a data-toggle="tab" href="#applicant-info"
-			data-tabidx=0><spring:message code='lbl.applicant.info'/></a></li>
-		<li><a data-toggle="tab" href="#checklist-info" data-tabidx=1><spring:message code='lbl.checklist' /></a></li>
-	</ul>
-	<div class="tab-content">
-		<div id="applicant-info" class="tab-pane fade in active">
-			<div class="panel panel-primary" data-collapsed="0">
 
-				<jsp:include page="stakeholder-form.jsp"></jsp:include>
+<div class="row">
+	<div class="col-md-12">
+		<form:form role="form" action="/bpa/stakeholder/update" modelAttribute="stakeHolder"
+				   id="stakeHolderUpdateform" cssClass="form-horizontal form-groups-bordered"
+				   enctype="multipart/form-data">
+			<input type="hidden" name="stakeHolder" id="stakeHolderId" value="${stakeHolder.id}">
+			<input type="hidden" id="workFlowAction" name="workFlowAction" value="">
+			<ul class="nav nav-tabs" id="settingstab">
+				<li class="active"><a data-toggle="tab" href="#applicant-info"
+									  data-tabidx=0><spring:message code='lbl.applicant.info'/></a></li>
+				<li><a data-toggle="tab" href="#checklist-info" data-tabidx=1><spring:message
+						code='title.documentdetail'/></a></li>
+			</ul>
+			<div class="tab-content">
+				<div id="applicant-info" class="tab-pane fade in active">
+					<div class="panel panel-primary" data-collapsed="0">
+						<jsp:include page="stakeholder-form.jsp"></jsp:include>
+					</div>
+					<div class="panel panel-primary" data-collapsed="0">
+						<jsp:include page="stakeholder-addnlinfo.jsp"></jsp:include>
+					</div>
+					<div class="panel panel-primary" data-collapsed="0">
+						<jsp:include page="../application/applicationhistory-view.jsp"></jsp:include>
+					</div>
+				</div>
+				<div id="checklist-info" class="tab-pane fade">
+					<div class="panel panel-primary" data-collapsed="0">
+						<jsp:include page="checklist.jsp"></jsp:include>
+					</div>
+				</div>
+				<div class="panel panel-primary" data-collapsed="0">
+					<div class="panel-heading">
+						<div class="panel-title">
+							Approver Comments
+						</div>
+					</div>
+					<div class="panel-body">
+						<div class="form-group">
+							<label class="col-sm-3 control-label text-right"><spring:message
+									code="lbl.comments"/> </label>
+							<div class="col-sm-9 add-margin">
+								<form:textarea class="form-control" rows="3" path="comments" id="comments"
+											   maxlength="1024"/>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
-		</div>
-		<div id="checklist-info" class="tab-pane fade">
-			<div class="panel panel-primary" data-collapsed="0">
-				<jsp:include page="checklist.jsp"></jsp:include>
+			<div class="text-center">
+				<button type='submit' class='btn btn-primary' id="buttonUpdate" value="Update">
+					<spring:message code='lbl.update'/>
+				</button>
+				<c:choose>
+					<c:when test="${stakeHolder.status eq 'BLOCKED'}">
+						<button type="submit" class='btn btn-danger' id="btnUnblock"
+								value="Unblock">
+							<spring:message code='lbl.unblock'/>
+						</button>
+					</c:when>
+					<c:otherwise>
+						<button type="submit" class='btn btn-danger' id="btnBlock"
+								value="Block">
+							<spring:message code='lbl.block'/>
+						</button>
+					</c:otherwise>
+				</c:choose>
+
+				<a href='javascript:void(0)' class='btn btn-default'
+				   onclick='self.close()'><spring:message code='lbl.close'/></a>
 			</div>
-		</div>
+		</form:form>
 	</div>
-	<div class="text-center">
-		<button type='submit' class='btn btn-primary' id="buttonSubmit">
-			<spring:message code='lbl.update' />
-		</button>
-		<a href='javascript:void(0)' class='btn btn-default'
-			onclick='self.close()'><spring:message code='lbl.close' /></a>
-	</div>
-</form:form>
+</div>
 
 <script
-	src="<cdn:url value='/resources/global/js/bootstrap/bootstrap-datepicker.js' context='/egi'/>"></script>
+		src="<cdn:url value='/resources/global/js/bootstrap/bootstrap-datepicker.js' context='/egi'/>"></script>
 <link rel="stylesheet"
-	href="<cdn:url value='/resources/global/css/bootstrap/bootstrap-datepicker.css' context='/egi'/>">
+	  href="<cdn:url value='/resources/global/css/bootstrap/bootstrap-datepicker.css' context='/egi'/>">
 <script src="<cdn:url value='/resources/js/app/stakeholder.js?rnd=${app_release_no}'/> "></script>
+<script src="<cdn:url value='/resources/js/app/stakeholder-common.js?rnd=${app_release_no}'/> "></script>
 <script src="<cdn:url value='/resources/js/app/viewdocumentsupload.js?rnd=${app_release_no}'/> "></script>

@@ -46,62 +46,108 @@
   ~
   --%>
 
-<%@page import="org.python.modules.jarray"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn" %>
-<div class="panel-heading custom_form_panel_heading">
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
+<div class="panel-heading toggle-header custom_form_panel_heading">
 	<div class="panel-title">
 		<spring:message code="lbl.site.details" />
 	</div>
+	<div class="history-icon toggle-icon">
+		<i class="fa fa-angle-up fa-2x"></i>
+	</div>
 </div>
-<div class="panel-body">
+<div class="panel-body display-hide">
+	
+	<jsp:include page="view-amenities-details.jsp"></jsp:include>
+	
 	<div class="row add-border">
 		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.plot.door.no" />
+			<spring:message code="lbl.zonal.office" />
 		</div>
 		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.siteDetail[0].plotdoornumber}" default="N/A"></c:out>
+			<c:out
+				value="${bpaApplication.siteDetail[0].adminBoundary.parent.name}"
+				default="N/A"></c:out>
 		</div>
 		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.plot.landmark" />
+			<spring:message code="lbl.rev.ward" />
 		</div>
 		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.siteDetail[0].plotlandmark}"
+			<c:out value="${bpaApplication.siteDetail[0].adminBoundary.name}"
 				default="N/A"></c:out>
 		</div>
 	</div>
 
 	<div class="row add-border">
 		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.plot.no" />
+			<spring:message code="lbl.locality" />
 		</div>
 		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.siteDetail[0].plotnumber}" default="N/A"></c:out>
+			<c:out value="${bpaApplication.siteDetail[0].locationBoundary.name}"
+				default="N/A"></c:out>
 		</div>
 		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.plot.survey.no" />
+			<spring:message code="lbl.election.ward" />
 		</div>
 		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.siteDetail[0].plotsurveynumber}"
+			<c:out value="${bpaApplication.siteDetail[0].electionBoundary.name}"
 				default="N/A"></c:out>
 		</div>
 	</div>
 
 	<div class="row add-border">
 		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.survey.no.type" />
+			<spring:message code="lbl.re.survey.no" />
 		</div>
 		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.siteDetail[0].surveynumberType}" default="N/A"></c:out>
+			<c:out value="${bpaApplication.siteDetail[0].reSurveyNumber}"
+				default="N/A"></c:out>
 		</div>
 		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.old.survey.no.type" />
+			<spring:message code="lbl.nature.of.ownership" />
 		</div>
 		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.siteDetail[0].oldSurveyNumber}"
+			<c:out value="${bpaApplication.siteDetail[0].natureofOwnership}"
 				default="N/A"></c:out>
+		</div>
+	</div>
+
+	<div class="row add-border">
+		<%-- <div class="col-sm-3 add-margin">
+			<spring:message code="lbl.subdiv.no" />
+		</div>
+		<div class="col-sm-3 add-margin view-content">
+			<c:out value="${bpaApplication.siteDetail[0].subdivisionNumber}"
+				default="N/A"></c:out>
+		</div> --%>
+		<div class="col-sm-3 add-margin">
+			<spring:message code="lbl.registrar.office" />
+		</div>
+		<div class="col-sm-3 add-margin view-content">
+			<c:out value="${bpaApplication.siteDetail[0].registrarOffice.registrarOffice.name}"
+				default="N/A"></c:out>
+		</div>
+		<div class="col-sm-3 add-margin">
+			<spring:message code="lbl.nearest.build.no" />
+		</div>
+		<div class="col-sm-3 add-margin view-content">
+			<c:out value="${bpaApplication.siteDetail[0].nearestbuildingnumber}"
+				default="N/A"></c:out>
+		</div>
+	</div>
+	<div class="doorNo">
+		<div class="row add-border">
+			<div class="col-sm-3 add-margin">
+				<spring:message code="lbl.addr.dno" />
+			</div>
+			<div class="col-sm-3 add-margin view-content">
+				<c:out value="${bpaApplication.siteDetail[0].plotdoornumber}"
+					default="N/A"></c:out>
+			</div>
 		</div>
 	</div>
 
@@ -110,7 +156,8 @@
 			<spring:message code="lbl.street.address1" />
 		</div>
 		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.siteDetail[0].streetaddress1}" default="N/A"></c:out>
+			<c:out value="${bpaApplication.siteDetail[0].streetaddress1}"
+				default="N/A"></c:out>
 		</div>
 		<div class="col-sm-3 add-margin">
 			<spring:message code="lbl.street.address2" />
@@ -123,16 +170,33 @@
 
 	<div class="row add-border">
 		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.area" />
-		</div>
-		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.siteDetail[0].area}" default="N/A"></c:out>
-		</div>
-		<div class="col-sm-3 add-margin">
 			<spring:message code="lbl.city" />
 		</div>
 		<div class="col-sm-3 add-margin view-content">
 			<c:out value="${bpaApplication.siteDetail[0].citytown}" default="N/A"></c:out>
+		</div>
+		<div class="col-sm-3 add-margin">
+			<spring:message code="lbl.site.pincode" />
+		</div>
+		<div class="col-sm-3 add-margin view-content">
+			<c:out value="${bpaApplication.siteDetail[0].postalAddress.pincode}"
+				default="N/A"></c:out>
+		</div>
+	</div>
+	<div class="row add-border">
+		<div class="col-sm-3 add-margin">
+			<spring:message code="lbl.taluk" />
+		</div>
+		<div class="col-sm-3 add-margin view-content">
+			<c:out value="${bpaApplication.siteDetail[0].postalAddress.taluk}" default="N/A"></c:out>
+		</div>
+		<div class="col-sm-3 add-margin">
+			<spring:message code="lbl.post.office" />
+		</div>
+		<div class="col-sm-3 add-margin view-content">
+			<c:out
+				value="${bpaApplication.siteDetail[0].postalAddress.postOffice}"
+				default="N/A"></c:out>
 		</div>
 	</div>
 
@@ -141,71 +205,18 @@
 			<spring:message code="lbl.district" />
 		</div>
 		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.siteDetail[0].district}" default="N/A"></c:out>
+			<c:out value="${bpaApplication.siteDetail[0].postalAddress.district}"
+				default="N/A"></c:out>
 		</div>
-		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.taluk" />
-		</div>
-		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.siteDetail[0].taluk}" default="N/A"></c:out>
-		</div>
-	</div>
-
-	<div class="row add-border">
 		<div class="col-sm-3 add-margin">
 			<spring:message code="lbl.state" />
 		</div>
 		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.siteDetail[0].state}" default="N/A"></c:out>
-		</div>
-		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.pincode" />
-		</div>
-		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.siteDetail[0].sitePincode}"
-				default="N/A"></c:out>
+			<c:out value="${bpaApplication.siteDetail[0].postalAddress.state}" default="N/A"></c:out>
 		</div>
 	</div>
 
-	<div class="row add-border">
-		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.nature.of.ownership" />
-		</div>
-		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.siteDetail[0].natureofOwnership}" default="N/A"></c:out>
-		</div>
-		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.extentin.sqmts" />
-		</div>
-		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.siteDetail[0].extentinsqmts}"
-				default="N/A"></c:out>
-		</div>
-	</div>
-
-	<div class="row add-border">
-		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.registrar.office" />
-		</div>
-		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.siteDetail[0].registrarOffice}" default="N/A"></c:out>
-		</div>
-		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.nearest.build.no" />
-		</div>
-		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.siteDetail[0].nearestbuildingnumber}"
-				default="N/A"></c:out>
-		</div>
-	</div>
-
-	<div class="row add-border">
-		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.subdiv.no" />
-		</div>
-		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.siteDetail[0].subdivisionNumber}" default="N/A"></c:out>
-		</div>
+	<%-- <div class="row add-border">
 		<div class="col-sm-3 add-margin">
 			<spring:message code="lbl.approved.layout.details" />
 		</div>
@@ -213,15 +224,112 @@
 			<c:out value="${bpaApplication.siteDetail[0].approvedLayoutDetail}"
 				default="N/A"></c:out>
 		</div>
-	</div>
-
-	<div class="row add-border">
 		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.encroach.remarks" />
+			<spring:message code="lbl.crz.zone" />
 		</div>
 		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.siteDetail[0].encroachmentRemarks}" default="N/A"></c:out>
+			<c:out value="${bpaApplication.buildingDetail[0].crzZone}"
+				default="N/A"></c:out>
 		</div>
+	</div> --%>
+	
+	<div class="row add-border">
+		<div class="col-sm-3 add-margin">
+			<spring:message code="lbl.town.plan.zone" />
+		</div>
+		<div class="col-sm-3 add-margin view-content">
+			<c:out value="${bpaApplication.siteDetail[0].scheme.description}"
+				default="N/A"></c:out>
+		</div>
+		<div class="col-sm-3 add-margin">
+			<spring:message code="lbl.proposed.land.use" />
+		</div>
+		<div class="col-sm-3 add-margin view-content">
+			<c:out value="${bpaApplication.siteDetail[0].landUsage.description}"
+				default="N/A"></c:out>
+		</div>
+	</div>
+	
+	<div class="row add-border">
+		<div class="col-sm-3 add-margin">
+			<spring:message code="lbl.government.type" />
+		</div>
+		<div class="col-sm-3 add-margin view-content">
+			<input type="hidden" id="governmentType" value="${bpaApplication.governmentType}">
+			<c:out value="${bpaApplication.governmentType.governmentTypeVal}" default="N/A"></c:out>
+		</div>
+		<div id="isEconomicallyWeakerSec">
+			<div class="col-sm-3 add-margin">
+				<spring:message code="lbl.is.econ.weaker.sec" />
+			</div>
+			<div class="col-sm-3 add-margin view-content">
+				<c:out value="${bpaApplication.isEconomicallyWeakerSection ? 'YES' : 'NO'}" default="N/A"></c:out>
+			</div>
+		</div>
+	</div>
+
+	<%--<c:if test="${bpaApplication.siteDetail[0].isappForRegularization}">
+		<div class="row add-border">
+			<div class="col-sm-3 add-margin">
+				<spring:message code="lbl.if.regularized" />
+			</div>
+			<div class="col-sm-3 add-margin view-content">
+				<c:out
+						value="${bpaApplication.siteDetail[0].isappForRegularization ? 'YES' : 'NO'}"></c:out>
+			</div>
+		</div>
+		<div class="row add-border">
+			<div class="col-sm-3 add-margin">
+				<spring:message code="lbl.cons.stages" />
+			</div>
+			<div class="col-sm-3 add-margin view-content">
+				<c:out
+						value="${bpaApplication.siteDetail[0].constStages.description}"
+						default="N/A"></c:out>
+			</div>
+			<c:if
+					test="${bpaApplication.siteDetail[0].constStages.description eq 'In Progress'}">
+				<div class="col-sm-3 add-margin">
+					<spring:message code="lbl.if.cons.not.cmplted" />
+				</div>
+				<div class="col-sm-3 add-margin view-content">
+					<c:out value="${bpaApplication.siteDetail[0].stateOfConstruction}"
+						   default="N/A"></c:out>
+				</div>
+			</c:if>
+		</div>
+		<div class="row add-border">
+			<c:choose>
+				<c:when test="${bpaApplication.siteDetail[0].constStages.description eq 'In Progress'}">
+					<div class="col-sm-3 add-margin">
+						<spring:message code="lbl.work.commence.date" />
+					</div>
+					<div class="col-sm-3 add-margin view-content">
+						<fmt:formatDate value="${bpaApplication.siteDetail[0].workCommencementDate}" pattern="dd/MM/yyyy" var="workCommencementDate" />
+						<c:out value="${workCommencementDate}" default="N/A"></c:out>
+					</div>
+				</c:when>
+				<c:otherwise>
+					<div class="col-sm-3 add-margin">
+						<spring:message code="lbl.work.commence.date" />
+					</div>
+					<div class="col-sm-3 add-margin view-content">
+						<fmt:formatDate value="${bpaApplication.siteDetail[0].workCommencementDate}" pattern="dd/MM/yyyy" var="workCommencementDate1" />
+						<c:out value="${workCommencementDate1}" default="N/A"></c:out>
+					</div>
+					<div class="col-sm-3 add-margin">
+						<spring:message code="lbl.work.completion.date" />
+					</div>
+					<div class="col-sm-3 add-margin view-content">
+						<fmt:formatDate value="${bpaApplication.siteDetail[0].workCompletionDate}" pattern="dd/MM/yyyy" var="workCompletionDate" />
+						<c:out value="${workCompletionDate}" default="N/A"></c:out>
+					</div>
+				</c:otherwise>
+			</c:choose>
+		</div>
+	</c:if>--%>
+
+	<%-- <div class="row add-border">
 		<div class="col-sm-3 add-margin">
 			<spring:message code="lbl.set.back.front" />
 		</div>
@@ -229,15 +337,16 @@
 			<c:out value="${bpaApplication.siteDetail[0].setBackFront}"
 				default="N/A"></c:out>
 		</div>
-	</div>
-
-	<div class="row add-border">
 		<div class="col-sm-3 add-margin">
 			<spring:message code="lbl.set.back.rear" />
 		</div>
 		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.siteDetail[0].setBackRear}" default="N/A"></c:out>
+			<c:out value="${bpaApplication.siteDetail[0].setBackRear}"
+				default="N/A"></c:out>
 		</div>
+	</div>
+
+	<div class="row add-border">
 		<div class="col-sm-3 add-margin">
 			<spring:message code="lbl.set.back.side1" />
 		</div>
@@ -245,15 +354,16 @@
 			<c:out value="${bpaApplication.siteDetail[0].setBackSide1}"
 				default="N/A"></c:out>
 		</div>
-	</div>
-
-	<div class="row add-border">
 		<div class="col-sm-3 add-margin">
 			<spring:message code="lbl.set.back.side2" />
 		</div>
 		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.siteDetail[0].setBackSide2}" default="N/A"></c:out>
+			<c:out value="${bpaApplication.siteDetail[0].setBackSide2}"
+				default="N/A"></c:out>
 		</div>
+	</div> --%>
+
+	<%-- <div class="row add-border">
 		<div class="col-sm-3 add-margin">
 			<spring:message code="lbl.encroch.issue.present" />
 		</div>
@@ -262,5 +372,12 @@
 				value="${bpaApplication.siteDetail[0].encroachmentIssuesPresent ? 'Yes' : 'No'}"
 				default="N/A"></c:out>
 		</div>
-	</div>
+		<div class="col-sm-3 add-margin">
+			<spring:message code="lbl.encroach.remarks" />
+		</div>
+		<div class="col-sm-3 add-margin view-content">
+			<c:out value="${bpaApplication.siteDetail[0].encroachmentRemarks}"
+				default="N/A"></c:out>
+		</div>
+	</div> --%>
 </div>

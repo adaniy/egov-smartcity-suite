@@ -61,6 +61,18 @@
 		value="${applicationNumber}">
 	
 	<div class="panel panel-primary" data-collapsed="0">
+		<div class="panel-heading custom_form_panel_heading">
+			<c:if test="${bpaAppointmentSchedule.purpose eq 'DOCUMENTSCRUTINY'}">
+				<div class="panel-title">
+					<spring:message code="lbl.schedule.doc.scrutiny" />
+				</div>
+			</c:if>
+			<c:if test="${bpaAppointmentSchedule.purpose eq 'INSPECTION'}">
+				<div class="panel-title">
+					<spring:message code="title.schedule.inspection" />
+				</div>
+			</c:if>
+		</div>
 		<div class="panel-body custom-form ">
 			<jsp:include page="schedule-appiontment-form.jsp"></jsp:include>
 		</div>

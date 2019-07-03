@@ -45,22 +45,623 @@
  *   In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  *
  */
-jQuery(document).ready(function($) {
+jQuery(document)
+    .ready(
+        function () {
 
-	$("#applicantdet").prop("disabled",true);
-	$("#appDet").prop("disabled",true);
-	$("#serviceType").prop("disabled",true);
-	$(".btn-primary")
-	.click(
-			function() {
-	document.forms[0].submit();
-			});
-
-});
-
-
-
-
+            if ($('#sentToPreviousOwner').val() === 'true' &&
+                $('#approveComments').val() &&
+                $('#wfstateDesc').val() !== 'LP Created' &&
+                $('#wfstateDesc').val() !== 'LP Reply Received') {
+                $('#showCommentsModal').html($('#approveComments').val());
+                $('#commentsModal').modal('show');
+            }
+            var tbody = $('#bpaAdditionalPermitConditions').children('tbody');
+            var table = tbody.length ? tbody : $('#bpaAdditionalPermitConditions');
+            var row = '<tr>' +
+                '<td class="text-center"><span class="serialNo text-center" id="slNoInsp">{{sno}}</span><input type="hidden" name="additionalPermitConditionsTemp[{{idx}}].application" value="{{applicationId}}" /><input type="hidden" class="additionalPermitCondition" name="additionalPermitConditionsTemp[{{idx}}].permitConditionType" value="ADDITIONAL_PERMITCONDITION"/><input type="hidden" class="additionalPermitCondition" name="additionalPermitConditionsTemp[{{idx}}].permitCondition" value="{{permitConditionId}}"/><input type="hidden" class="serialNo" data-sno name="additionalPermitConditionsTemp[{{idx}}].orderNumber"/></td>' +
+                '<td><textarea class="form-control patternvalidation additionalPermitCondition" data-pattern="alphanumericspecialcharacters" rows="2" maxlength="500" name="additionalPermitConditionsTemp[{{idx}}].additionalPermitCondition"/></td>';
 
 
+            $('#addAddnlPermitRow').click(function () {
+                var idx = $(tbody).find('tr').length;
+                //Add row
+                var row = {
+                    'sno': idx + 1,
+                    'idx': idx,
+                    'permitConditionId': $('#additionalPermitCondition').val(),
+                    'applicationId': $('#applicationId').val()
+                };
+                addRowFromObject(row);
+                patternvalidation();
+            });
 
+            var tbody1 = $('#bpaAdditionalRejectionReasons').children('tbody');
+            var table1 = tbody1.length ? tbody1 : $('#bpaAdditionalRejectionReasons');
+            var row1 = '<tr>' +
+                '<td class="text-center"><span class="serialNo text-center" id="slNoInsp">{{sno}}</span><input type="hidden" name="additionalRejectReasonsTemp[{{idx}}].application" value="{{applicationId}}" /><input type="hidden" class="additionalPermitCondition" name="additionalRejectReasonsTemp[{{idx}}].permitConditionType" value="ADDITIONAL_PERMITCONDITION"/><input type="hidden" class="additionalPermitCondition" name="additionalRejectReasonsTemp[{{idx}}].permitCondition" value="{{permitConditionId}}"/><input type="hidden" class="serialNo" data-sno name="additionalRejectReasonsTemp[{{idx}}].orderNumber"/></td>' +
+                '<td><textarea class="form-control patternvalidation additionalPermitCondition" data-pattern="alphanumericspecialcharacters" rows="2" maxlength="500" name="additionalRejectReasonsTemp[{{idx}}].additionalPermitCondition"/></td>';
+            $('#addAddnlRejectRow').click(function () {
+                var idx = $(tbody1).find('tr').length;
+                //Add row
+                var row = {
+                    'sno': idx + 1,
+                    'idx': idx,
+                    'permitConditionId': $('#additionalPermitCondition').val(),
+                    'applicationId': $('#scrutinyapplicationid').val()
+                };
+                addRowFromObject1(row);
+                patternvalidation();
+            });
+
+            function addRowFromObject(rowJsonObj) {
+                table.append(row.compose(rowJsonObj));
+            }
+
+            function addRowFromObject1(rowJsonObj) {
+                table1.append(row1.compose(rowJsonObj));
+            }
+
+            String.prototype.compose = (function () {
+                var re = /\{{(.+?)\}}/g;
+                return function (o) {
+                    return this.replace(re, function (_, k) {
+                        return typeof o[k] != 'undefined' ? o[k] : '';
+                    });
+                }
+            }());
+
+            // If fee collection is pending disable updating permit conditions
+            if ($('#showPermitConditions').val() === 'true' && $('#isFeeCollectionPending').val() === 'true' && $('#status').val() === 'Approved')
+                $('#permitConditions').find(':input', ':checkbox', ':textarea', ':button').each(function () {
+                    $(this).attr("disabled", "disabled");
+                });
+            else
+                $('#permitConditions').find(':input', ':checkbox', ':textarea', ':button').each(function () {
+                    $(this).removeAttr("disabled");
+                });
+
+            $('.modifiablePermitConditions').each(function () {
+                var $hiddenName = $(this).data('change-to');
+                var rowObj = $(this).closest('tr');
+                if ($(this).is(':checked')) {
+                    $('input[name="' + $hiddenName + '"]').val(true);
+                    $(rowObj).find('.addremovemandatory').attr('required', true);
+                    //$(rowObj).find("span").removeClass('display-hide');
+                }
+            });
+
+            $(".modifiablePermitConditions").change(function () {
+                var $hiddenName = $(this).data('change-to');
+                var rowObj = $(this).closest('tr');
+                if ($(this).is(':checked')) {
+                    $('input[name="' + $hiddenName + '"]').val(true);
+                    $(rowObj).find('.addremovemandatory').attr('required', true);
+                    //$(rowObj).find("span").removeClass('display-hide');
+                } else {
+                    $('input[name="' + $hiddenName + '"]').val(false);
+                    $(rowObj).find('.addremovemandatory').removeAttr('required');
+                    $(rowObj).find('.addremovemandatory').val('');
+                    //$(rowObj).find("span").addClass('display-hide');
+                }
+            });
+            if ($('#townSurveyorInspectionRequire:checked').length == 0) {
+                $('#townSurveyorInspectionRequire').val(false);
+            }
+            $("#townSurveyorInspectionRequire").click(function () {
+                if ($('#townSurveyorInspectionRequire').is(':checked')) {
+                    $('#townSurveyorInspectionRequire').attr('checked', 'true');
+                    $('#townSurveyorInspectionRequire').val(true);
+                } else {
+                    $('#townSurveyorInspectionRequire').attr('checked', 'false');
+                    $('#townSurveyorInspectionRequire').val(false);
+                }
+            });
+
+            $(".staticPermitConditions").change(function () {
+                setCheckBoxValue($(this));
+            });
+
+            $(".rejectionReasons").change(function () {
+                setCheckBoxValue($(this));
+            });
+
+            function setCheckBoxValue(currentVal) {
+                var $hiddenName = currentVal.data('change-to');
+                if (currentVal.is(':checked')) {
+                    $('input[name="' + $hiddenName + '"]').val(true);
+                } else {
+                    $('input[name="' + $hiddenName + '"]').val(false);
+                }
+            }
+
+            // show mandatory fields on select of dynamic permit conditions
+            $(".addremovemandatory").keyup(function () {
+                if ($(this).val()) {
+                    $(this).closest('td').find("span").addClass('display-hide');
+                } else {
+                    $(this).closest('td').find("span").removeClass('display-hide');
+                }
+            });
+
+            $('.permitConditiondDate').change(function () {
+                if ($(this).val()) {
+                    $(this).closest('td').find("span").addClass('display-hide');
+                } else {
+                    $(this).closest('td').find("span").removeClass('display-hide');
+                }
+            });
+
+            // toggle between multiple tab
+            jQuery('form')
+                .validate(
+                    {
+                        ignore: ".ignore",
+                        invalidHandler: function (e, validator) {
+                            if (validator.errorList.length)
+                                $(
+                                    '#settingstab a[href="#'
+                                    + jQuery(
+                                    validator.errorList[0].element)
+                                        .closest(
+                                            ".tab-pane")
+                                        .attr(
+                                            'id')
+                                    + '"]').tab(
+                                    'show');
+                        }
+                    });
+
+            var validator = $("#viewBpaApplicationForm").validate({
+                highlight: function (element, errorClass) {
+                    $(element).fadeOut(function () {
+                        $(element).fadeIn();
+                    });
+                }
+            });
+
+            $('.upload-file').removeAttr('required');
+            $("#mobileNumber").prop("readOnly", true);
+            $("#name").prop("readOnly", true);
+            $("#emailId").prop("readOnly", true);
+            $('#gender').attr("style", "pointer-events: none;");
+            $("#address").prop("readOnly", true);
+            $("#admissionfeeAmount").prop("disabled", true);
+            $("#applicationDate").prop("disabled", true);
+            $("#stakeHolderTypeHead").prop("disabled", true);
+            $("#stakeHolderType").prop("disabled", true);
+            $("#applicantdet").prop("disabled", true);
+            $("#appDet").prop("disabled", true);
+            $("#serviceType").prop("disabled", true);
+
+            $(".workAction")
+                .click(
+                    function (e) {
+                        var action = document
+                            .getElementById("workFlowAction").value;
+                        if (action == 'Reject') {
+                            $('#Reject').attr('formnovalidate', 'true');
+                            if (validateOnReject(true) && validateForm(validator)) {
+                                bootbox
+                                    .confirm({
+                                        message: 'Please confirm, Do you really want to Reject the application ?',
+                                        buttons: {
+                                            'cancel': {
+                                                label: 'No',
+                                                className: 'btn-danger'
+                                            },
+                                            'confirm': {
+                                                label: 'Yes',
+                                                className: 'btn-primary'
+                                            }
+                                        },
+                                        callback: function (result) {
+                                            if (result) {
+                                                $('#viewBpaApplicationForm').trigger('submit');
+                                            } else {
+                                                e.stopPropagation();
+                                                e.preventDefault();
+                                            }
+                                        }
+                                    });
+                            } else {
+                                e.preventDefault();
+                            }
+                            return false;
+                        } else if (action == 'Initiate Rejection') {
+                            $('#Initiate Rejection').attr('formnovalidate', 'true');
+                            if (validateOnReject(true) && validateForm(validator)) {
+                                bootbox
+                                    .confirm({
+                                        message: 'Please confirm, Do you really want to initiate rejection for this the application ?',
+                                        buttons: {
+                                            'cancel': {
+                                                label: 'No',
+                                                className: 'btn-danger'
+                                            },
+                                            'confirm': {
+                                                label: 'Yes',
+                                                className: 'btn-primary'
+                                            }
+                                        },
+                                        callback: function (result) {
+                                            if (result) {
+                                                $('#viewBpaApplicationForm').trigger('submit');
+                                            } else {
+                                                e.stopPropagation();
+                                                e.preventDefault();
+                                            }
+                                        }
+                                    });
+                            } else {
+                                e.preventDefault();
+                            }
+                            return false;
+                        } else if (action == 'Revert') {
+                            if (validateOnRevert() && validateForm(validator)) {
+                                bootbox
+                                    .confirm({
+                                        message: 'Please confirm, Do you really want to send back this application to previous approved official ?',
+                                        buttons: {
+                                            'cancel': {
+                                                label: 'No',
+                                                className: 'btn-danger'
+                                            },
+                                            'confirm': {
+                                                label: 'Yes',
+                                                className: 'btn-primary'
+                                            }
+                                        },
+                                        callback: function (result) {
+                                            if (result) {
+                                                $('#viewBpaApplicationForm').trigger('submit');
+                                            } else {
+                                                e.stopPropagation();
+                                                e.preventDefault();
+                                            }
+                                        }
+                                    });
+                            } else {
+                                e.preventDefault();
+                            }
+                            return false;
+                        } else if (action == 'Approve') {
+                            if (validateOnApproveAndForward(validator, action)) {
+                                bootbox
+                                    .confirm({
+                                        message: 'Please confirm, Do you really want to approve this application ?',
+                                        buttons: {
+                                            'cancel': {
+                                                label: 'No',
+                                                className: 'btn-danger'
+                                            },
+                                            'confirm': {
+                                                label: 'Yes',
+                                                className: 'btn-primary'
+                                            }
+                                        },
+                                        callback: function (result) {
+                                            if (result) {
+                                                $('#viewBpaApplicationForm').trigger('submit');
+                                            } else {
+                                                e.stopPropagation();
+                                                e.preventDefault();
+                                            }
+                                        }
+                                    });
+                            } else {
+                                e.preventDefault();
+                            }
+                            return false;
+                        } else if (action == 'Forward to Overseer') {
+                            if (validateOnNocVerifyForward()) {
+                                bootbox
+                                    .confirm({
+                                        message: 'Please confirm, Do you really want to forward this application to overseer ?',
+                                        buttons: {
+                                            'cancel': {
+                                                label: 'No',
+                                                className: 'btn-danger'
+                                            },
+                                            'confirm': {
+                                                label: 'Yes',
+                                                className: 'btn-primary'
+                                            }
+                                        },
+                                        callback: function (result) {
+                                            if (result) {
+                                                $('#viewBpaApplicationForm').trigger('submit');
+                                            } else {
+                                                e.stopPropagation();
+                                                e.preventDefault();
+                                            }
+                                        }
+                                    });
+                            } else {
+                                e.preventDefault();
+                            }
+                            return false;
+                        } else if (action == 'Forward to Superintendent') {
+                            if (validateOnNocVerifyForward()) {
+                                bootbox
+                                    .confirm({
+                                        message: 'Please confirm, Do you really want to forward this application to superintendent ?',
+                                        buttons: {
+                                            'cancel': {
+                                                label: 'No',
+                                                className: 'btn-danger'
+                                            },
+                                            'confirm': {
+                                                label: 'Yes',
+                                                className: 'btn-primary'
+                                            }
+                                        },
+                                        callback: function (result) {
+                                            if (result) {
+                                                $('#viewBpaApplicationForm').trigger('submit');
+                                            } else {
+                                                e.stopPropagation();
+                                                e.preventDefault();
+                                            }
+                                        }
+                                    });
+                            } else {
+                                e.preventDefault();
+                            }
+                            return false;
+                        } else if (action == 'Forward to Initiator') {
+                            if (validateForm(validator)) {
+                                bootbox
+                                    .confirm({
+                                        message: 'Please confirm, Do you really want to forward this application to initiator ?',
+                                        buttons: {
+                                            'cancel': {
+                                                label: 'No',
+                                                className: 'btn-danger'
+                                            },
+                                            'confirm': {
+                                                label: 'Yes',
+                                                className: 'btn-primary'
+                                            }
+                                        },
+                                        callback: function (result) {
+                                            if (result) {
+                                                $('#viewBpaApplicationForm').trigger('submit');
+                                            } else {
+                                                e.stopPropagation();
+                                                e.preventDefault();
+                                            }
+                                        }
+                                    });
+                            } else {
+                                e.preventDefault();
+                            }
+                            return false;
+                        } else if (action == 'Forward') {
+                            if (validateOnApproveAndForward(validator, action) && validateAdditionalConditionsOnFwd()) {
+                                bootbox
+                                    .confirm({
+                                        message: 'Please confirm, Do you really want to forward this application ?',
+                                        buttons: {
+                                            'cancel': {
+                                                label: 'No',
+                                                className: 'btn-danger'
+                                            },
+                                            'confirm': {
+                                                label: 'Yes',
+                                                className: 'btn-primary'
+                                            }
+                                        },
+                                        callback: function (result) {
+                                            if (result) {
+                                                $('#viewBpaApplicationForm').trigger('submit');
+                                            } else {
+                                                e.stopPropagation();
+                                                e.preventDefault();
+                                            }
+                                        }
+                                    });
+                            } else {
+                                e.preventDefault();
+                            }
+                            return false;
+                        } else if (action == 'Generate Permit Order') {
+                            $('#Generate Permit Order').attr('formnovalidate', 'true');
+                            if (validateOnApproveAndForward(validator, action)) {
+                                bootbox
+                                    .confirm({
+                                        message: 'Please confirm, All required permit conditions are added and going to generate permit order with selected permit conditions.',
+                                        buttons: {
+                                            'cancel': {
+                                                label: 'No',
+                                                className: 'btn-danger'
+                                            },
+                                            'confirm': {
+                                                label: 'Yes',
+                                                className: 'btn-primary'
+                                            }
+                                        },
+                                        callback: function (result) {
+                                            if (result) {
+                                                $('#viewBpaApplicationForm').trigger('submit');
+                                            } else {
+                                                e.stopPropagation();
+                                                e.preventDefault();
+                                            }
+                                        }
+                                    });
+                            } else {
+                                e.preventDefault();
+                            }
+                            return false;
+                        } else if (action == 'Generate Rejection Notice') {
+                            if (validateOnReject(false) && validateOnApproveAndForward(validator, action)) {
+                                bootbox
+                                    .confirm({
+                                        message: 'Please confirm, All required rejection conditions are added and going to generate rejection notice with selected rejection conditions.',
+                                        buttons: {
+                                            'cancel': {
+                                                label: 'No',
+                                                className: 'btn-danger'
+                                            },
+                                            'confirm': {
+                                                label: 'Yes',
+                                                className: 'btn-primary'
+                                            }
+                                        },
+                                        callback: function (result) {
+                                            if (result) {
+                                                $('#viewBpaApplicationForm').trigger('submit');
+                                            } else {
+                                                e.stopPropagation();
+                                                e.preventDefault();
+                                            }
+                                        }
+                                    });
+                            } else {
+                                e.preventDefault();
+                            }
+                            return false;
+                        } else {
+                            validateOnApproveAndForward(validator, action);
+                        }
+                    });
+
+            $("#btnSave")
+                .click(
+                    function (e) {
+                        document
+                            .getElementById("workFlowAction").value = 'Save';
+                        if(validateForm(validator))
+                            $('#viewBpaApplicationForm').trigger('submit');
+                    });
+
+            // mobile number validation
+            $('#mobileNumber')
+                .blur(
+                    function () {
+                        var mobileno = $(this).val();
+                        if (mobileno.length < 10) {
+                            bootbox
+                                .alert("Please enter 10 digit mobile number");
+                            $(this).val('');
+                        }
+                    });
+
+            $('#zone').trigger('change');
+            //$('#ward').trigger('change');
+            $('#schemes').trigger('change');
+
+        });
+
+function validateAdditionalConditionsOnFwd() {
+    var approvalComent = $('#approvalComent').val();
+    if (($("#approvalDesignation option:selected").text() == 'Superintendent' && $('#townSurveyorInspectionRequire').val() == 'true')) {
+        bootbox.alert("Please make sure, Request for town surveyor field inspection is recommended but you are trying to forward the application to Superintendent, please select Town Surveyor as approver designation from below otherwise uncheck Request for town surveyor field inspection if town surveyor field inspection not require,");
+        return false;
+    } else if (($("#approvalDesignation option:selected").text() == 'Town Surveyor' && $('#townSurveyorInspectionRequire').val() == 'false')) {
+        bootbox.alert("Please select checkbox Request for town surveyor field inspection if you want to forward the application to Town Surveyor");
+        return false;
+    } else if (($("#approvalDesignation option:selected").text() == 'Town Surveyor' || $('#townSurveyorInspectionRequire').val() == 'true') && approvalComent == "") {
+        $('#approvalComent').focus();
+        bootbox.alert("Please enter comments/reason for town surveyor inspection");
+        return false;
+    }
+    return true;
+}
+
+function validateOnReject(isCommentsRequire) {
+    makePermitConditionsNotMandatory();
+    var approvalComent = $('#approvalComent').val();
+    var rejectionReasonsLength = $('.rejectionReasons:checked').length;
+    if (rejectionReasonsLength <= 0) {
+        $('.rejectionReason').show();
+        bootbox.alert('Please select at least one rejection reason is mandatory');
+        return false;
+    } else if (approvalComent == "" && isCommentsRequire) {
+        bootbox.alert("Please enter rejection comments/reason");
+        $('#approvalComent').focus();
+        return false;
+    }
+    return true;
+}
+
+function validateOnNocVerifyForward() {
+	makePermitConditionsNotMandatory();
+    var approvalComent = $('#approvalComent').val();
+    if (approvalComent == "") {
+        $('#approvalComent').focus();
+        bootbox.alert("Please enter comments/reason for sending to overseer or superintendent");
+        return false;
+    }
+    return true;
+}
+
+function validateOnRevert() {
+    makePermitConditionsNotMandatory();
+    var approvalComent = $('#approvalComent').val();
+    if (approvalComent == "") {
+        $('#approvalComent').focus();
+        bootbox.alert("Please enter comments/reason for sending back to previous official");
+        return false;
+    }
+    return true;
+}
+
+function validateForm(validator) {
+    if ($('#viewBpaApplicationForm').valid()) {
+        return true;
+    } else {
+        $errorInput = undefined;
+
+        $.each(validator.invalidElements(), function (index, elem) {
+
+            if (!$(elem).is(":visible") && !$(elem).val() && index == 0
+                && $(elem).closest('div').find('.bootstrap-tagsinput').length > 0) {
+                $errorInput = $(elem);
+            }
+
+            if (!$(elem).is(":visible") && !$(elem).closest('div.panel-body').is(":visible")) {
+                $(elem).closest('div.panel-body').show();
+                console.log("elem", $(elem));
+            }
+        });
+
+        if ($errorInput)
+            $errorInput.tagsinput('focus');
+
+        validator.focusInvalid();
+        return false;
+    }
+}
+
+
+function validateOnApproveAndForward(validator, action) {
+    validateWorkFlowApprover(action);
+    if ($('#wfstateDesc').val() == 'NEW') {
+        $('#approvalDepartment').removeAttr('required');
+        $('#approvalDesignation').removeAttr('required');
+        $('#approvalPosition').removeAttr('required');
+        return true;
+    } else {
+        var serviceTypeName = $("#serviceType").val();
+        if ($('#showPermitConditions').val() && serviceTypeName != 'Tower Construction'
+            && serviceTypeName != 'Pole Structures') {
+            var chkbxLength = $('.modifiablePermitConditions:checked').length;
+            var chkbxLength1 = $('.staticPermitConditions:checked').length;
+            if (chkbxLength <= 0 && chkbxLength1 <= 0) {
+                bootbox.alert('Please select at least one permit condition is mandatory');
+                return false;
+            }
+        }
+        return validateForm(validator);
+    }
+}
+
+function makePermitConditionsNotMandatory() {
+    if($('#showPermitConditions').val()) {
+        $(".modifiablePermitConditions").prop('checked', false);
+        $(".staticPermitConditions").prop('checked', false);
+        $(".modifiablePermitConditions").trigger('change');
+    }
+}

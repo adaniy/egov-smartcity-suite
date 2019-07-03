@@ -48,6 +48,13 @@
 
 package org.egov.infra.admin.master.repository;
 
+import static org.hibernate.jpa.QueryHints.HINT_CACHEABLE;
+
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.QueryHint;
+
 import org.egov.infra.admin.master.entity.Role;
 import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.persistence.entity.enums.Gender;
@@ -59,19 +66,13 @@ import org.springframework.data.repository.history.RevisionRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.QueryHint;
-import java.util.List;
-import java.util.Set;
-
-import static org.hibernate.jpa.QueryHints.HINT_CACHEABLE;
-
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>, RevisionRepository<User, Long, Integer> {
 
-    @QueryHints({@QueryHint(name = HINT_CACHEABLE, value = "true")})
+    @QueryHints({ @QueryHint(name = HINT_CACHEABLE, value = "true") })
     User findByUsername(String userName);
 
-    @QueryHints({@QueryHint(name = HINT_CACHEABLE, value = "true")})
+    @QueryHints({ @QueryHint(name = HINT_CACHEABLE, value = "true") })
     User findByUid(String uid);
 
     List<User> findByNameContainingIgnoreCase(String userName);
@@ -93,7 +94,7 @@ public interface UserRepository extends JpaRepository<User, Long>, RevisionRepos
     Set<User> findUsersByRoleName(@Param("roleName") String roleName);
 
     @Query("select distinct usr from User usr, IN (usr.roles) role where role.name IN (:roleName)")
-    Set<User> findUsersByRoleNames(@Param("roleName") String [] roleName);
+    Set<User> findUsersByRoleNames(@Param("roleName") String[] roleName);
 
     @Query("select distinct usr from User usr, IN (usr.roles) role where role.name = :roleName and usr.username = :usrName ")
     List<User> findUsersByUserAndRoleName(@Param("usrName") String userName, @Param("roleName") String roleName);
@@ -107,4 +108,12 @@ public interface UserRepository extends JpaRepository<User, Long>, RevisionRepos
 
     @Query("select distinct usr.roles from User usr where usr.username = :usrName and usr.type = :type")
     Set<Role> findUserRolesByUserNameAndType(@Param("usrName") String userName, @Param("type") UserType type);
+
+    List<User> findByEmailIdAndTypeOrderById(String emailId, UserType type);
+
+    User findByPan(String pan);
+
+    List<User> findByMobileNumberAndTypeOrderById(String mobileNumber, UserType type);
+    
+    List<User> findByTypeAndActiveTrueOrderByUsername(UserType type);
 }

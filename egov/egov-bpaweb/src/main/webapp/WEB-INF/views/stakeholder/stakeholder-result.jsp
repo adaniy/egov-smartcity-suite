@@ -52,7 +52,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn" %>
 
-<div class="alert alert-success" role="alert">
-	<strong>${message}</strong>
+<div class="panel-heading custom_form_panel_heading">
+	<div class="panel-title text-center no-float">
+		<c:if test="${not empty message}">
+			<strong>${message}</strong>
+		</c:if>
+	</div>
 </div>
 <jsp:include page="stakeholder-view.jsp"></jsp:include>

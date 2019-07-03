@@ -49,66 +49,181 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn" %>
+<%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <div class="panel-heading custom_form_panel_heading">
 	<div class="panel-title">
-		<spring:message code="lbl.appln.details" />
+		<spring:message code="lbl.basic.info" />
 	</div>
 </div>
 <div class="panel-body">
-	<div class="row add-border">
-		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.build.plan.apprvl.date" />
+	<c:if
+		test="${bpaApplication.planPermissionNumber ne null && bpaApplication.planPermissionNumber ne ''}">
+		<div class="row add-border">
+			<div class="col-sm-3 add-margin">
+				<spring:message code="lbl.build.plan.permission.date" />
+			</div>
+			<div class="col-sm-3 add-margin view-content">
+				<fmt:formatDate value="${bpaApplication.planPermissionDate}"
+					pattern="dd/MM/yyyy" var="planPermissionDate" />
+				<c:out value="${planPermissionDate}" default="N/A"></c:out>
+			</div>
+			<div class="col-sm-3 add-margin">
+				<spring:message code="lbl.plan.permission.no" />
+			</div>
+			<div class="col-sm-3 add-margin view-content">
+				<c:out value="${bpaApplication.planPermissionNumber}" default="N/A"></c:out>
+			</div>
 		</div>
-		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.buildingPlanApprovalDate}" default="N/A"></c:out>
+	</c:if>
+	<c:if test="${bpaApplication.occupancy.description ne null}">
+		<div class="row add-border">
+			<div class="col-sm-3 add-margin">
+				<spring:message code="lbl.occupancy" />
+			</div>
+			<div class="col-sm-3 add-margin view-content">
+				<c:out value="${bpaApplication.occupancy.description}" default="N/A"></c:out>
+			</div>
+			<c:if
+				test="${bpaApplication.eDcrNumber ne null && bpaApplication.eDcrNumber ne ''}">
+				<div class="col-sm-3 add-margin">
+					<spring:message code="lbl.edcr.number" />
+				</div>
+				<div class="col-sm-3 add-margin view-content">
+					<input type="hidden" id="eDcrNumber"
+						value="${bpaApplication.eDcrNumber}">
+					<c:out value="${bpaApplication.eDcrNumber}" default="N/A"></c:out>
+				</div>
+			</c:if>
 		</div>
-		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.plan.approval.no" />
-		</div>
-		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.buildingplanapprovalnumber}"
-				default="N/A"></c:out>
-		</div>
-	</div>
+	</c:if>
 
-	<div class="row add-border">
-		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.build.plan.permission.date" />
+	<c:if test="${bpaApplication.isOneDayPermitApplication}">
+		<div class="row add-border">
+			<div class="col-sm-3 add-margin">Is One Day Permit</div>
+			<div class="col-sm-3 add-margin view-content">
+				<input type="hidden" id="isOneDayPermitApplication"
+					value="${bpaApplication.isOneDayPermitApplication}">
+				<c:out
+					value="${bpaApplication.isOneDayPermitApplication ? 'YES' : 'NO'}"
+					default="N/A"></c:out>
+			</div>
+
+			<div class="col-sm-3 add-margin">Type of Land</div>
+			<div class="col-sm-3 add-margin view-content">
+				<c:out value="${bpaApplication.typeOfLand}" default="N/A"></c:out>
+			</div>
 		</div>
-		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.planPermissionDate}" default="N/A"></c:out>
+	</c:if>
+
+	<c:if test="${bpaApplication.siteDetail[0].isappForRegularization}">
+		<div class="row add-border">
+			<div class="col-sm-3 add-margin">
+				<spring:message code="lbl.if.regularized" />
+			</div>
+			<div class="col-sm-3 add-margin view-content">
+				<c:out
+					value="${bpaApplication.siteDetail[0].isappForRegularization ? 'YES' : 'NO'}"></c:out>
+			</div>
 		</div>
-		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.plan.permission.no" />
+		<div class="row add-border">
+			<div class="col-sm-3 add-margin">
+				<spring:message code="lbl.cons.stages" />
+			</div>
+			<div class="col-sm-3 add-margin view-content">
+				<c:out
+					value="${bpaApplication.siteDetail[0].constStages.description}"
+					default="N/A"></c:out>
+			</div>
+			<c:if
+				test="${bpaApplication.siteDetail[0].constStages.description eq 'In Progress'}">
+				<div class="col-sm-3 add-margin">
+					<spring:message code="lbl.if.cons.not.cmplted" />
+				</div>
+				<div class="col-sm-3 add-margin view-content">
+					<c:out value="${bpaApplication.siteDetail[0].stateOfConstruction}"
+						default="N/A"></c:out>
+				</div>
+			</c:if>
 		</div>
-		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.planPermissionNumber}" default="N/A"></c:out>
+		<div class="row add-border">
+			<c:choose>
+				<c:when
+					test="${bpaApplication.siteDetail[0].constStages.description eq 'In Progress'}">
+					<div class="col-sm-3 add-margin">
+						<spring:message code="lbl.work.commence.date" />
+					</div>
+					<div class="col-sm-3 add-margin view-content">
+						<fmt:formatDate
+							value="${bpaApplication.siteDetail[0].workCommencementDate}"
+							pattern="dd/MM/yyyy" var="workCommencementDate" />
+						<c:out value="${workCommencementDate}" default="N/A"></c:out>
+					</div>
+				</c:when>
+				<c:otherwise>
+					<div class="col-sm-3 add-margin">
+						<spring:message code="lbl.work.commence.date" />
+					</div>
+					<div class="col-sm-3 add-margin view-content">
+						<fmt:formatDate
+							value="${bpaApplication.siteDetail[0].workCommencementDate}"
+							pattern="dd/MM/yyyy" var="workCommencementDate1" />
+						<c:out value="${workCommencementDate1}" default="N/A"></c:out>
+					</div>
+					<div class="col-sm-3 add-margin">
+						<spring:message code="lbl.work.completion.date" />
+					</div>
+					<div class="col-sm-3 add-margin view-content">
+						<fmt:formatDate
+							value="${bpaApplication.siteDetail[0].workCompletionDate}"
+							pattern="dd/MM/yyyy" var="workCompletionDate" />
+						<c:out value="${workCompletionDate}" default="N/A"></c:out>
+					</div>
+				</c:otherwise>
+			</c:choose>
 		</div>
-	</div>
+	</c:if>
 
 	<div class="row add-border">
 		<div class="col-sm-3 add-margin">
 			<spring:message code="lbl.service.type" />
 		</div>
 		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.serviceType.description}" default="N/A"></c:out>
+			<input type="hidden" id="serviceType"
+				value="${bpaApplication.serviceType.description}">
+			<c:out value="${bpaApplication.serviceType.description}"
+				default="N/A"></c:out>
 		</div>
-		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.admission.fees" />
-		</div>
-		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.admissionfeeAmount}" default="N/A"></c:out>
-		</div>
+		<c:if test="${bpaApplication.amenityName ne ''}">
+			<div class="amenityHideShow">
+				<div class="col-sm-3 add-margin">Amenity Type</div>
+				<div class="col-sm-3 add-margin view-content">
+					<c:out
+						value="${bpaApplication.amenityName ne '' ?  bpaApplication.amenityName : 'N/A'}"></c:out>
+				</div>
+			</div>
+		</c:if>
 	</div>
-	
+	<c:if
+		test="${ empty  bpaApplication.receipts && (bpaApplication.status.code eq 'Created' || bpaApplication.status.code eq 'Registered')}">
+		<div class="row add-border">
+			<div class="col-sm-3 add-margin">
+				<spring:message code="lbl.admission.fees" />
+			</div>
+			<div class="col-sm-3 add-margin view-content">
+				<c:out value="${bpaApplication.admissionfeeAmount}" default="N/A"></c:out>
+			</div>
+		</div>
+	</c:if>
 	<div class="row add-border">
 		<div class="col-sm-3 add-margin">
 			<spring:message code="lbl.stakeholder.type" />
 		</div>
 		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.stakeHolder[0].stakeHolder.stakeHolderType}" default="N/A"></c:out>
+			<c:out
+				value="${bpaApplication.stakeHolder[0].stakeHolder.stakeHolderType}"
+				default="N/A"></c:out>
 		</div>
 		<div class="col-sm-3 add-margin">
 			<spring:message code="lbl.stakeholder.name" />
@@ -130,91 +245,25 @@
 			<spring:message code="lbl.application.date" />
 		</div>
 		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.applicationDate}" default="N/A"></c:out>
+			<fmt:formatDate value="${bpaApplication.applicationDate}"
+				pattern="dd/MM/yyyy" var="applicationDate" />
+			<c:out value="${applicationDate}" default="N/A"></c:out>
 		</div>
 	</div>
 
 	<div class="row add-border">
-		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.old.appln.no" />
-		</div>
-		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.oldApplicationNumber}" default="N/A"></c:out>
-		</div>
-		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.approval.date" />
-		</div>
-		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.approvalDate}" default="N/A"></c:out>
-		</div>
-	</div>
-
-	<div class="row add-border">
-		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.assessmt.no" />
-		</div>
-		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.assessmentNumber}" default="N/A"></c:out>
-		</div>
-		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.occupancy" />
-		</div>
-		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.occupancy}" default="N/A"></c:out>
-		</div>
-	</div>
-
-	<div class="row add-border">
-		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.applicant.type" />
-		</div>
-		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.applicantType}" default="N/A"></c:out>
-		</div>
-		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.source" />
-		</div>
-		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.source}" default="N/A"></c:out>
-		</div>
-	</div>
-
-	<div class="row add-border">
-		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.tapal.no" />
-		</div>
-		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.tapalNumber}" default="N/A"></c:out>
-		</div>
-		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.government.type" />
-		</div>
-		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.governmentType}" default="N/A"></c:out>
-		</div>
-	</div>
-
-	<div class="row add-border">
-		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.project.name" />
+		<%--<div class="col-sm-3 add-margin">
+			<spring:message code="lbl.project.type" />
 		</div>
 		<div class="col-sm-3 add-margin view-content">
 			<c:out value="${bpaApplication.projectName}" default="N/A"></c:out>
-		</div>
-		<div class="col-sm-3 add-margin">
-			<spring:message code="lbl.group.development" />
-		</div>
-		<div class="col-sm-3 add-margin view-content">
-			<c:out value="${bpaApplication.groupDevelopment}" default="N/A"></c:out>
-		</div>
-	</div>
-
-	<div class="row add-border">
+		</div>--%>
 		<div class="col-sm-3 add-margin">
 			<spring:message code="lbl.remarks" />
 		</div>
-		<div class="col-sm-3 add-margin view-content">
+		<div class="col-sm-3 add-margin view-content text-justify">
 			<c:out value="${bpaApplication.remarks}" default="N/A"></c:out>
 		</div>
 	</div>
+
 </div>

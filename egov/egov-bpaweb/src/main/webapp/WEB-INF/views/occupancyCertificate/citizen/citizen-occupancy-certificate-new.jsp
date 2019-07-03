@@ -1,0 +1,158 @@
+<%--
+  ~ eGov suite of products aim to improve the internal efficiency,transparency,
+  ~      accountability and the service delivery of the government  organizations.
+  ~
+  ~       Copyright (C) <2017>  eGovernments Foundation
+  ~
+  ~       The updated version of eGov suite of products as by eGovernments Foundation
+  ~       is available at http://www.egovernments.org
+  ~
+  ~       This program is free software: you can redistribute it and/or modify
+  ~       it under the terms of the GNU General Public License as published by
+  ~       the Free Software Foundation, either version 3 of the License, or
+  ~       any later version.
+  ~
+  ~       This program is distributed in the hope that it will be useful,
+  ~       but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~       GNU General Public License for more details.
+  ~
+  ~       You should have received a copy of the GNU General Public License
+  ~       along with this program. If not, see http://www.gnu.org/licenses/ or
+  ~       http://www.gnu.org/licenses/gpl.html .
+  ~
+  ~       In addition to the terms of the GPL license to be adhered to in using this
+  ~       program, the following additional terms are to be complied with:
+  ~
+  ~           1) All versions of this program, verbatim or modified must carry this
+  ~              Legal Notice.
+  ~
+  ~           2) Any misrepresentation of the origin of the material is prohibited. It
+  ~              is required that all modified versions of this material be marked in
+  ~              reasonable ways as different from the original version.
+  ~
+  ~           3) This license does not grant any rights to any user of the program
+  ~              with regards to rights under trademark law for use of the trade names
+  ~              or trademarks of eGovernments Foundation.
+  ~
+  ~     In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
+  --%>
+
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn"%>
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel-heading">
+			<div class="panel-title text-center no-float">
+				<c:if test="${not empty OcComparisonValidation}">
+					<strong class="error-msg" style="font-size: 97%;">${OcComparisonValidation}</strong>
+				</c:if>
+			</div>
+		</div>
+
+		<form:form role="form" action="submit" method="post"
+			modelAttribute="occupancyCertificate" id="occupancyCertificateForm"
+			cssClass="form-horizontal form-groups-bordered"
+			enctype="multipart/form-data">
+			<input type="hidden" id="citizenOrBusinessUser"
+				name="citizenOrBusinessUser" value="${citizenOrBusinessUser}" />
+			<input type="hidden" id="validateCitizenAcceptance"
+				name="validateCitizenAcceptance"
+				value="${validateCitizenAcceptance}" />
+			<input type="hidden" id="citizenDisclaimerAccepted"
+				name="citizenDisclaimerAccepted"
+				value="${citizenDisclaimerAccepted}" />
+			<input type="hidden" id="isCitizen" name="isCitizen"
+				value="${isCitizen}" />
+			<input type="hidden" id="cityName" name="cityName"
+				value="${cityName}" />
+			<input type="hidden" name="parent" id="bpaApplicationId" />
+			<input type="hidden" name="serviceType" id="serviceType"
+				class="serviceType" />
+			<input type="hidden" name="serviceTypeCode" id="serviceTypeCode" />
+			<input type="hidden" name="occupancyCertificate"
+				id="occupancyCertificate" value="${occupancyCertificate.id}" />
+			<form:hidden path="" id="workFlowAction" name="workFlowAction" />
+			<input type="hidden" id="mode" name="mode" value="${mode}" />
+			<input type="hidden" id="isEDCRIntegrationRequire"
+				value="${isEDCRIntegrationRequire}" />
+			<input type="hidden" id="loadingFloorDetailsFromEdcrRequire"
+				value="${loadingFloorDetailsFromEdcrRequire}" />
+			<ul class="nav nav-tabs" id="settingstab">
+				<li class="active"><a data-toggle="tab"
+					href="#application-info" data-tabidx=0><spring:message
+							code='lbl.appln.details' /></a></li>
+				<li><a data-toggle="tab" href="#document-info" data-tabidx=1><spring:message
+							code='title.documentdetail' /></a></li>
+				<li><a data-toggle="tab" href="#noc-document-info"
+					data-tabidx=2><spring:message code='lbl.noc.doc.details' /></a></li>
+			</ul>
+			<div class="tab-content">
+				<div id="application-info" class="tab-pane fade in active">
+					<div class="panel panel-primary" data-collapsed="0">
+						<jsp:include page="../oc-application-details.jsp"></jsp:include>
+					</div>
+					<div class="panel panel-primary" data-collapsed="0">
+						<jsp:include
+							page="../../application/edcr-application-details-form.jsp"></jsp:include>
+					</div>
+					<div class="panel panel-primary existingbuildingdetails" data-collapsed="0">
+						<jsp:include page="../oc-edcr-existing-bldg-details.jsp" />
+					</div>
+					<div class="panel panel-primary" data-collapsed="0">
+						<jsp:include page="../oc-edcr-building-details.jsp"></jsp:include>
+					</div>
+				</div>
+				<div id="document-info" class="tab-pane fade">
+					<div class="panel panel-primary" data-collapsed="0">
+					<div class="dcrDocuments">
+						<jsp:include page="../oc-dcr-documents.jsp"></jsp:include>
+					</div>
+						<jsp:include page="../oc-general-documents.jsp"></jsp:include>
+					</div>
+				</div>
+				<div id="noc-document-info" class="tab-pane fade">
+					<div class="panel panel-primary" data-collapsed="0">
+						<jsp:include page="../oc-noc-documents.jsp"></jsp:include>
+					</div>
+				</div>
+			</div>
+
+			<div align="center">
+				<form:button type="submit" id="ocSave" class="btn btn-primary"
+					value="Save">
+					<spring:message code="lbl.save" />
+				</form:button>
+				<form:button type="submit" id="ocSubmit" class="btn btn-primary"
+					value="Submit">
+					<spring:message code="lbl.submit" />
+				</form:button>
+				<input type="button" name="button2" id="button2" value="Close"
+					class="btn btn-default" onclick="window.close();" />
+			</div>
+		</form:form>
+	</div>
+</div>
+
+<link rel="stylesheet"
+	href="<c:url value='/resources/global/css/bootstrap/bootstrap-tagsinput.css?rnd=${app_release_no}' context='/egi'/>">
+<script
+	src="<c:url value='/resources/global/js/bootstrap/bootstrap-tagsinput.min.js?rnd=${app_release_no}' context='/egi'/>"></script>
+<script
+	src="<c:url value='/resources/global/js/handlebars/handlebars.js?rnd=${app_release_no}' context='/egi'/>"></script>
+<script
+	src="<cdn:url value='/resources/global/js/egov/inbox.js?rnd=${app_release_no}' context='/egi'/>"></script>
+<script
+	src="<cdn:url value='/resources/js/app/bpa-ajax-helper.js?rnd=${app_release_no}'/>"></script>
+<script
+	src="<cdn:url value='/resources/js/app/documentsuploadvalidation.js?rnd=${app_release_no}'/>"></script>
+<script
+	src="<cdn:url value='/resources/js/app/occupancy-certificate/occupancy-certificate-new.js?rnd=${app_release_no}'/>"></script>
+<script
+	src="<cdn:url value='/resources/js/app/occupancy-certificate/oc-edcr-helper.js?rnd=${app_release_no}'/>"></script>
+<script
+	src="<cdn:url value='/resources/js/app/occupancy-certificate/bpa-oc-validations.js?rnd=${app_release_no}'/>"></script>

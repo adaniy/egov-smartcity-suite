@@ -96,20 +96,35 @@ $(document)
 														"sClass" : "text-left"
 													},
 													{
+														"data" : "createdDate",
+														"sClass" : "text-left"
+													},
+													{
+														"data" : "stakeHolderType",
+														"sClass" : "text-left"
+													},
+													{
 														"data" : "code",
 														"sClass" : "text-left"
 													},
 													{
-														"data" : "businessLicenceNumber",
+														"data" : "licenceNumber",
 														"sClass" : "text-left"
 													},
 													{
-														"data" : "coaEnrolmentNumber",
+														"data" : "status",
 														"sClass" : "text-left"
 													},
 													{
-														"data" : "tinNumber",
-														"sClass" : "text-left"
+														"data" : null,
+														"sClass" : "text-left",
+														"render" : function(data, type, row, meta) {
+															if(row.isActive) {
+																return "Yes";
+															} else {
+																return "No";
+															}
+														}
 													},
 													{
 														"data" : null,
@@ -167,26 +182,41 @@ $(document)
 														"sClass" : "text-left"
 													},
 													{
+														"data" : "createdDate",
+														"sClass" : "text-left"
+													},
+													{
+														"data" : "stakeHolderType",
+														"sClass" : "text-left"
+													},
+													{
 														"data" : "code",
 														"sClass" : "text-left"
 													},
 													{
-														"data" : "businessLicenceNumber",
+														"data" : "licenceNumber",
 														"sClass" : "text-left"
 													},
 													{
-														"data" : "coaEnrolmentNumber",
+														"data" : "status",
 														"sClass" : "text-left"
 													},
 													{
-														"data" : "tinNumber",
-														"sClass" : "text-left"
+														"data" : null,
+														"sClass" : "text-left",
+														"render" : function(data, type, row, meta) {
+															if(row.isActive) {
+																return "Yes";
+															} else {
+																return "No";
+															}
+														}
 													},
 													{
 														"data" : null,
 													    "sClass" : "text-center",
 													    "render": function ( data, type, row, meta ) {
-														        return '<button type="button" class="btn btn-xs btn-secondary edit" value='+viewurl+row.id +'><span class="glyphicon glyphicon-edit"></span>&nbsp;View</button>';
+														        return '<button type="button" class="btn btn-xs btn-secondary edit" value='+viewurl+row.id +'><i class="fa fa-eye" aria-hidden="true"></i>&nbsp;View</button>';
 													    }
 													}]
 

@@ -46,7 +46,6 @@
   ~
   --%>
 
-<%@page import="org.python.modules.jarray"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -56,28 +55,28 @@
 		<spring:message code="lbl.applicant.details" />
 	</div>
 </div>
-<div id="applicantdet">
+<div class="panel-body">
 	<div class="form-group">
-
 		<label class="col-sm-3 control-label text-right"><spring:message
 				code="lbl.applicant.name" /> <span class="mandatory"></span> </label>
 		<div class="col-sm-3 add-margin">
+			<form:hidden path="owner.user" id="userId" />
 			<form:input class="form-control patternvalidation"
-				data-pattern="alphabetwithspace" maxlength="128"
-				id="owner.applicantName" path="owner.applicantName"
-				required="required" />
-			<form:errors path="owner.applicantName"
-				cssClass="add-margin error-msg" />
+						data-pattern="alphabetspecialcharacters" data-role="tagsinput"
+						maxlength="100" id="name" path="owner.name" cols="5" rows="3"
+						required="required" />
+			<small class="view-content text-info">Enter multiple names comma separated</small>
+			<form:errors path="owner.name" cssClass="add-margin error-msg" />
 		</div>
-
 		<label class="col-sm-2 control-label text-right"><spring:message
-				code="lbl.owner.address" /><span class="mandatory"></span> </label>
+				code="lbl.owner.address" /><span class="mandatory"></span></label>
 		<div class="col-sm-3 add-margin">
-			<form:textarea path="owner.address" id="address"
-				class="form-control patternvalidation"
-				data-pattern="alphanumericwithspace" required="required"
-				maxlength="256" cols="5" rows="4" />
-			<form:errors path="owner.address" cssClass="add-margin error-msg" />
+			<form:textarea path="owner.address"
+						   id="address" class="form-control patternvalidation"
+						   data-pattern="alphanumericspecialcharacters" required="required"
+						   maxlength="249" cols="5" rows="4" />
+			<form:errors path="owner.address"
+						 cssClass="add-margin error-msg" />
 		</div>
 	</div>
 	<div class="form-group">
@@ -85,21 +84,46 @@
 				code="lbl.mobileNo" /> <span class="mandatory"></span> </label>
 		<div class="col-sm-3 add-margin">
 			<form:input class="form-control patternvalidation"
-				data-pattern="number" maxlength="10"
-				onblur="return validateMobileNumber(this);" id="mobileNumber"
-				path="owner.mobileNumber" required="required" />
-			**SMS is sent to this
-			<form:errors path="owner.mobileNumber"
-				cssClass="add-margin error-msg" />
+						data-pattern="number" maxlength="10" id="mobileNumber"
+						path="owner.user.mobileNumber" required="required" />
+			**SMS will send to this  <span class=""></span>
+			<form:errors path="owner.user.mobileNumber"
+						 cssClass="add-margin error-msg" />
 		</div>
 
 		<label class="col-sm-2 control-label text-right"><spring:message
-				code="lbl.emailid" /> <span class="mandatory"></span></label>
+				code="lbl.emailid" /></label>
 		<div class="col-sm-3 add-margin">
 			<form:input class="form-control " maxlength="128" onblur=""
-				id="emailId" path="owner.emailid" required="required" />
-			**Mail is sent to this
-			<form:errors path="owner.emailid" cssClass="add-margin error-msg" />
+						id="emailId" name="emailId" path="owner.emailId" />
+			**Mail will send to this  <span class=""></span>
+			<form:errors path="owner.emailId"
+						 cssClass="add-margin error-msg" />
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-3 control-label text-right"><spring:message
+				code="lbl.gender" /> <span class="mandatory"></span></label>
+		<div class="col-sm-3 add-margin">
+			<form:select path="owner.gender" id="gender"
+						 required="required" cssClass="form-control"
+						 cssErrorClass="form-control error">
+				<form:option value="">
+					<spring:message code="lbl.select" />
+				</form:option>
+				<form:options items="${genderList}" />
+			</form:select>
+			<form:errors path="owner.gender" cssClass="error-msg" />
+		</div>
+
+		<label class="col-sm-2 control-label text-right"><spring:message
+				code="lbl.aadhar" /> </label>
+		<div class="col-sm-3 add-margin">
+			<form:input class="form-control patternvalidation"
+						data-pattern="number" minlength="12" maxlength="12" id="aadhaarNumber"
+						path="owner.aadhaarNumber" />
+			<form:errors path="owner.aadhaarNumber" data-server-error="owner.aadhaarNumber"
+						 cssClass="add-margin error-msg" />
 		</div>
 	</div>
 </div>

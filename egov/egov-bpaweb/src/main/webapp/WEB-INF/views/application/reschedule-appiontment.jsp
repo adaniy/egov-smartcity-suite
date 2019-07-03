@@ -59,12 +59,47 @@
 	<input type="hidden" id="bpaAppointmentScheduleId"
 		name="bpaAppointmentScheduleId"
 		value="${appointmentScheduledList[0].id}" />
+	<input type="hidden" id="previoueappointmentDate"
+		name="bpaAppointmentappointmentDate"
+		value="${appointmentScheduledList[0].appointmentDate}" />
+	<input type="hidden" id="prevAppointmentTime"
+		name="prevAppointmentTime"
+		value="${appointmentScheduledList[0].appointmentTime}" />
 	<div class="row">
 		<div class="col-md-12">
 			<div class="panel panel-primary" data-collapsed="0">
+			<c:if test="${bpaAppointmentSchedule.purpose eq 'DOCUMENTSCRUTINY'}">
+			<div class="panel-heading custom_form_panel_heading">
+				<div class="panel-title">
+					<spring:message code="lbl.existing.schedule.scrutiny" />
+				</div>
+			</div>
+			</c:if>
+			<c:if test="${bpaAppointmentSchedule.purpose eq 'INSPECTION'}">
+				<div class="panel-heading custom_form_panel_heading">
+					<div class="panel-title">
+					<spring:message code="lbl.existing.schedule.inspection" />
+					</div>
+				</div>
+			</c:if>
 				<jsp:include page="view-schedule-appiontment.jsp"></jsp:include>
 			</div>
 			<div class="panel panel-primary" data-collapsed="0">
+				
+				<c:if test="${bpaAppointmentSchedule.purpose eq 'DOCUMENTSCRUTINY'}">
+				<div class="panel-heading custom_form_panel_heading">
+					<div class="panel-title">
+						<spring:message code="lbl.schedule.doc.scrutiny" />
+					</div>
+				</div>
+			</c:if>
+			<c:if test="${bpaAppointmentSchedule.purpose eq 'INSPECTION'}">
+			<div class="panel-heading custom_form_panel_heading">
+				<div class="panel-title">
+					<spring:message code="lbl.schedule.field.ins" />
+				</div>
+			</div>
+			</c:if>
 				<jsp:include page="schedule-appiontment-form.jsp"></jsp:include>
 			</div>
 			<div class="text-center">

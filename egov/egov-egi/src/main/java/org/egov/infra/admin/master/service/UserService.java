@@ -48,6 +48,14 @@
 
 package org.egov.infra.admin.master.service;
 
+import static org.egov.infra.config.core.ApplicationThreadLocals.getMunicipalityName;
+import static org.egov.infra.persistence.entity.enums.UserType.EMPLOYEE;
+
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.Set;
+
 import org.egov.infra.admin.master.contracts.UserRole;
 import org.egov.infra.admin.master.entity.Role;
 import org.egov.infra.admin.master.entity.User;
@@ -63,15 +71,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-
-import static org.egov.infra.config.core.ApplicationThreadLocals.getMunicipalityName;
-import static org.egov.infra.persistence.entity.enums.UserType.EMPLOYEE;
 
 @Service
 @Transactional(readOnly = true)
@@ -124,7 +123,7 @@ public class UserService {
         User currentUser = getCurrentUser();
         if (!currentUser.equals(user)) {
             String passwordResetMessage = messageSource.getMessage("msg.password.reset",
-                    new String[]{user.getName(), currentUser.getName(), getMunicipalityName()}, Locale.getDefault());
+                    new String[] { user.getName(), currentUser.getName(), getMunicipalityName() }, Locale.getDefault());
             notificationService.sendEmail(user.getEmailId(), "Password Reset", passwordResetMessage);
             notificationService.sendSMS(user.getMobileNumber(), passwordResetMessage);
         }
@@ -187,7 +186,7 @@ public class UserService {
         return userRepository.findUsersByRoleName(roleName);
     }
 
-    public Set<User> getUsersByRoleNames(String [] roleName) {
+    public Set<User> getUsersByRoleNames(String[] roleName) {
         return userRepository.findUsersByRoleNames(roleName);
     }
 
@@ -205,5 +204,21 @@ public class UserService {
 
     public List<User> findByMobileNumberAndType(String mobileNumber, UserType type) {
         return userRepository.findByMobileNumberAndType(mobileNumber, type);
+    }
+
+    public List<User> getUsersByTypeAndEmailId(final String emailId, final UserType type) {
+        return userRepository.findByEmailIdAndTypeOrderById(emailId, type);
+    }
+
+    public User getUserByPan(String panNumber) {
+        return userRepository.findByPan(panNumber);
+    }
+
+    public List<User> getUserByMobileNumberAndType(final String mobileNumber, final UserType type) {
+        return userRepository.findByMobileNumberAndTypeOrderById(mobileNumber, type);
+    }
+
+    public List<User> getUserByTypeInOrder(final UserType type) {
+        return userRepository.findByTypeAndActiveTrueOrderByUsername(type);
     }
 }

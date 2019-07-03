@@ -46,16 +46,13 @@
   ~
   --%>
 
-<%@page import="org.python.modules.jarray"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn"%>
-<div class="panel-heading custom_form_panel_heading">
-	<div class="panel-title">
-		<spring:message code="lbl.existing.schedule.scrutiny" />
-	</div>
-</div>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
+
 <div class="panel-body" data-collapsed="0">
 	<c:forEach items="${appointmentScheduledList}" var="appoimnt"
 		varStatus="counter">
@@ -67,56 +64,51 @@
 		</div>
 		<div class="row add-border">
 			<div class="col-sm-3 add-margin">
-				<spring:message code="lbl.purpose" />
-			</div>
-			<div class="col-sm-3 add-margin view-content">
-				<c:out value="${appoimnt.purpose}" default="N/A"></c:out>
-			</div>
-			<div class="col-sm-3 add-margin">
 				<spring:message code="lbl.appmnt.date" />
 			</div>
 			<div class="col-sm-3 add-margin view-content">
-				<c:out value="${appoimnt.appointmentDate}" default="N/A"></c:out>
+				<fmt:formatDate value="${appoimnt.appointmentDate}" pattern="dd/MM/yyyy" var="appointmentDate" />
+				<c:out value="${appointmentDate}" default="N/A"></c:out>
 			</div>
-		</div>
-
-		<div class="row add-border">
 			<div class="col-sm-3 add-margin">
 				<spring:message code="lbl.appmnt.time" />
 			</div>
 			<div class="col-sm-3 add-margin view-content">
 				<c:out value="${appoimnt.appointmentTime}" default="N/A"></c:out>
 			</div>
-			<div class="col-sm-3 add-margin">
-				<spring:message code="lbl.appmnt.location" />
-			</div>
-			<div class="col-sm-3 add-margin view-content">
-				<c:out value="${appoimnt.appointmentLocation}" default="N/A"></c:out>
-			</div>
 		</div>
 
 		<div class="row add-border">
+			<c:if test="${appoimnt.purpose eq 'DOCUMENTSCRUTINY'}">
+				<div class="col-sm-3 add-margin">
+					<spring:message code="lbl.appmnt.location" />
+				</div>
+				<div class="col-sm-3 add-margin view-content">
+					<c:out value="${appoimnt.appointmentLocation.description}" default="N/A"></c:out>
+				</div>
+			</c:if>
 			<div class="col-sm-3 add-margin">
 				<spring:message code="lbl.remarks" />
 			</div>
-			<div class="col-sm-3 add-margin view-content">
+			<div class="col-sm-3 add-margin view-content text-justify">
 				<c:out value="${appoimnt.remarks}" default="N/A"></c:out>
 			</div>
-			<div class="col-sm-3 add-margin">
-				<spring:message code="lbl.ispostponed" />
-			</div>
-			<div class="col-sm-3 add-margin view-content">
-				<c:out value="${appoimnt.postponed ? 'YES' : 'NO'}" default="N/A"></c:out>
-			</div>
 		</div>
-
-		<div class="row add-border">
-			<div class="col-sm-3 add-margin">
-				<spring:message code="lbl.postpone.reason" />
+		<c:if test="${appoimnt.postponed}">
+			<div class="row add-border">
+				<div class="col-sm-3 add-margin">
+					<spring:message code="lbl.ispostponed" />
+				</div>
+				<div class="col-sm-3 add-margin view-content">
+					<c:out value="${appoimnt.postponed ? 'YES' : 'NO'}" default="N/A"></c:out>
+				</div>
+				<div class="col-sm-3 add-margin">
+					<spring:message code="lbl.postpone.reason" />
+				</div>
+				<div class="col-sm-3 add-margin view-content text-justify">
+					<c:out value="${appoimnt.postponementReason}" default="N/A"></c:out>
+				</div>
 			</div>
-			<div class="col-sm-3 add-margin view-content">
-				<c:out value="${appoimnt.postponementReason}" default="N/A"></c:out>
-			</div>
-		</div>
+		</c:if>
 	</c:forEach>
 </div>

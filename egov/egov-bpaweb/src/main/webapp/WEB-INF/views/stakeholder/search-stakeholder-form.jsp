@@ -52,43 +52,32 @@
 	<div class="col-md-12">
 		<div class="panel panel-primary" data-collapsed="0">
 			<div class="panel-heading">
-				<div class="panel-title">Search StakeHolder</div>
+				<div class="panel-title">Search Building Licensee</div>
 			</div>
 			<div class="panel-body">
 				<div class="form-group">
-					<label class="col-sm-3 control-label text-right"><spring:message
-							code="lbl.applicant.name" /></label>
+					<label class="col-sm-3 control-label text-right"><spring:message code="lbl.stakeholder.type" /></label>
 					<div class="col-sm-3 add-margin">
-						<form:input path="name"
-							class="form-control text-left patternvalidation"
-							data-pattern="alphanumeric" maxlength="100" />
-						<form:errors path="name" cssClass="error-msg" />
+						<select name="stakeHolderType" id="stakeHolderType"
+								class="form-control">
+							<option value=""><spring:message code="lbl.select" /></option>
+							<c:forEach items="${stakeHolderTypes}" var="stkhldrtype">
+								<option value="${stkhldrtype}">${stkhldrtype.stakeHolderTypeVal}</option>
+							</c:forEach>
+						</select>
+						<form:errors path="stakeHolderType" cssClass="error-msg" />
 					</div>
-					<label class="col-sm-2 control-label text-right"><spring:message
-							code="lbl.tin.no" /></label>
+					<label class="col-sm-2 control-label"><spring:message
+							code="lbl.status" /></label>
 					<div class="col-sm-3 add-margin">
-						<form:input type="text" cssClass="form-control" path="tinNumber"
-							id="tinNumber" />
-						<form:errors path="tinNumber" cssClass="error-msg" />
+						<select name="status" id="status"
+								class="form-control">
+							<option value=""><spring:message code="lbl.select" /></option>
+							<c:forEach items="${stakeHolderStatusList}" var="stkhldrStatus">
+								<option value="${stkhldrStatus}">${stkhldrStatus.stakeHolderStatusVal}</option>
+							</c:forEach>
+						</select>
 					</div>
-				</div>
-
-				<div class="form-group">
-					<label class="col-sm-3 control-label text-right"><spring:message
-							code="lbl.business.lic.no" /></label>
-					<div class="col-sm-3 add-margin">
-						<form:input type="text" cssClass="form-control"
-							path="businessLicenceNumber" id="businessLicenceNumber" />
-						<form:errors path="businessLicenceNumber" cssClass="error-msg" />
-					</div>
-					<label class="col-sm-2 control-label text-right"><spring:message
-							code="lbl.coa.enrol.no" /></label>
-					<div class="col-sm-3 add-margin">
-						<form:input type="text" cssClass="form-control"
-							path="coaEnrolmentNumber" id="coaEnrolmentNo" />
-						<form:errors path="coaEnrolmentNumber" cssClass="error-msg" />
-					</div>
-
 				</div>
 
 				<div class="form-group">
@@ -106,6 +95,24 @@
 						<form:input type="text" cssClass="form-control" path="pan"
 							id="panNumber" maxlength="10" />
 						<form:errors path="pan" cssClass="error-msg" />
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label class="col-sm-3 control-label text-right"><spring:message
+							code="lbl.applicant.name" /></label>
+					<div class="col-sm-3 add-margin">
+						<form:input path="name"
+									class="form-control text-left patternvalidation"
+									data-pattern="alphanumeric" maxlength="100" />
+						<form:errors path="name" cssClass="error-msg" />
+					</div>
+					<label class="col-sm-2 control-label text-right"><spring:message
+							code="lbl.lic.no" /></label>
+					<div class="col-sm-3 add-margin">
+						<form:input type="text" cssClass="form-control"
+							path="licenceNumber" id="licenceNumber" />
+						<form:errors path="licenceNumber" cssClass="error-msg" />
 					</div>
 				</div>
 			</div>

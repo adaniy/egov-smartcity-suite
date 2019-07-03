@@ -51,12 +51,12 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="/WEB-INF/taglib/cdn.tld" prefix="cdn" %>
 <form:form role="form" action="/bpa/stakeholder/create" modelAttribute="stakeHolder"
-	id="stakeHolderform" cssClass="form-horizontal form-groups-bordered"
+	id="stakeHolderform" autocomplete="off" cssClass="form-horizontal form-groups-bordered"
 	enctype="multipart/form-data">
 	<ul class="nav nav-tabs" id="settingstab">
 		<li class="active"><a data-toggle="tab" href="#applicant-info"
 			data-tabidx=0><spring:message code='lbl.applicant.info'/></a></li>
-		<li><a data-toggle="tab" href="#checklist-info" data-tabidx=1><spring:message code='lbl.checklist'/></a></li>
+		<li><a data-toggle="tab" href="#checklist-info" data-tabidx=1><spring:message code='title.documentdetail'/></a></li>
 	</ul>
 	<div class="tab-content">
 		<div id="applicant-info" class="tab-pane fade in active">
@@ -83,5 +83,8 @@
 	src="<cdn:url value='/resources/global/js/bootstrap/bootstrap-datepicker.js' context='/egi'/>"></script>
 <link rel="stylesheet"
 	href="<cdn:url value='/resources/global/css/bootstrap/bootstrap-datepicker.css' context='/egi'/>">
+<script
+		src="<cdn:url value='/resources/global/js/jquery/plugins/datatables/moment.min.js' context='/egi'/>"></script>
 <script src="<cdn:url value='/resources/js/app/stakeholder.js?rnd=${app_release_no}'/> "></script>
+<script src="<cdn:url value='/resources/js/app/stakeholder-common.js?rnd=${app_release_no}'/> "></script>
 <script src="<cdn:url value='/resources/js/app/documentsuploadvalidation.js?rnd=${app_release_no}'/> "></script>

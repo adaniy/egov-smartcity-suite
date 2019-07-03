@@ -1,0 +1,1 @@
+update egbpa_mstr_bpafee set servicetype = (select id from egbpa_mstr_servicetype where code='04') where code='404';

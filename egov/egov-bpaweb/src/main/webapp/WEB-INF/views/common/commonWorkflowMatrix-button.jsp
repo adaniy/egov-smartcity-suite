@@ -50,47 +50,39 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <script>
-
-
-
 	function validateWorkFlowApprover(name) {
-		document.getElementById("workFlowAction").value=name;
-	    var approverPosId = document.getElementById("approvalPosition");
-	    /* if(approverPosId && approverPosId.value != -1) {
+		document.getElementById("workFlowAction").value = name;
+		var approverPosId = document.getElementById("approvalPosition");
+		/* if(approverPosId && approverPosId.value != -1) {
 			var approver = approverPosId.options[approverPosId.selectedIndex].text; 
 			document.getElementById("approverName").value= approver.split('~')[0];
 			validateWorkFlowApprover('Forward');
 		}   */
-		var rejectbutton=document.getElementById("workFlowAction").value;
-		if(rejectbutton!=null && rejectbutton=='Reject')
-			{
-			$('#approvalDepartment').removeAttr('required');
-			$('#approvalDesignation').removeAttr('required');
-			$('#approvalPosition').removeAttr('required');
-			$('#approvalComent').attr('required', 'required');	
-			} 
-		 if(rejectbutton!=null && rejectbutton=='Forward'){
-			if($('#currentUser'))
-			{
-				if($('#currentUser').val()=="true")
-				{
-					$('#approvalDepartment').removeAttr('required');
-					$('#approvalDesignation').removeAttr('required');
-					$('#approvalPosition').removeAttr('required');
-					$('#approvalComent').removeAttr('required');
-					return true;
-				}
-			}
+		var rejectbutton = document.getElementById("workFlowAction").value;
+
+		if (rejectbutton != null && rejectbutton == 'Reject') {
+			removeMandatory();
+			$('#approvalComent').attr('required', 'required');
+		} else if (rejectbutton != null && rejectbutton == 'CANCEL APPLICATION') {
+			removeMandatory();
+			$('#approvalComent').removeAttr('required');
+		} else if (rejectbutton != null && rejectbutton == 'Forward') {
 			$('#approvalDepartment').attr('required', 'required');
 			$('#approvalDesignation').attr('required', 'required');
 			$('#approvalPosition').attr('required', 'required');
 			$('#approvalComent').removeAttr('required');
-		} 
-		 if(rejectbutton!=null && rejectbutton=='Approve'){
-				$('#approvalComent').removeAttr('required');
-			} 
-	   document.forms[0].submit;
-	   return true;
+		} else if (rejectbutton != null && rejectbutton == 'Approve') {
+			$('#approvalComent').removeAttr('required');
+		} else if (rejectbutton == 'Forward'
+				&& $('#currentState').val() == 'LP Initiated') {
+			removeMandatory();
+		}
+	}
+
+	function removeMandatory() {
+		$('#approvalDepartment').removeAttr('required');
+		$('#approvalDesignation').removeAttr('required');
+		$('#approvalPosition').removeAttr('required');
 	}
 </script>
 
@@ -99,7 +91,7 @@
 		<tr>
 			<td>
 		<c:forEach items="${validActionList}" var="validButtons">
-				<form:button type="submit" id="${validButtons}" class="btn btn-primary workAction"  value="${validButtons}" onclick="validateWorkFlowApprover('${validButtons}');">
+				<form:button type="submit" id="${validButtons}" class="btn workAction btn-primary"  value="${validButtons}" onclick="validateWorkFlowApprover('${validButtons}');">
 						<c:out value="${validButtons}" /> </form:button>
 			</c:forEach>
 				<input type="button" name="button2" id="button2" value="Close"

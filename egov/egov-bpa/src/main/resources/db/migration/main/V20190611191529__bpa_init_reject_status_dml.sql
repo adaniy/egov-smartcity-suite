@@ -1,0 +1,2 @@
+Insert into EGBPA_STATUS (ID,MODULETYPE,description,LASTMODIFIEDDATE,CODE,isactive,version,createdby,createddate)
+ values (nextval('SEQ_EGBPA_STATUS'),'REGISTRATION','Initiated For Rejection',now(),'Initiated For Rejection',true,0,1,now());

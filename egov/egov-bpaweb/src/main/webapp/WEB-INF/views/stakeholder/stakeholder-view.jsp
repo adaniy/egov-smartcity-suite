@@ -59,12 +59,18 @@
 		<ul class="nav nav-tabs" id="settingstab">
 			<li class="active"><a data-toggle="tab" href="#applicant-info"
 				data-tabidx=0><spring:message code='lbl.appln.details'/></a></li>
-			<li><a data-toggle="tab" href="#checklist-info" data-tabidx=1><spring:message code='lbl.checklist' /></a></li>
+			<li><a data-toggle="tab" href="#checklist-info" data-tabidx=1><spring:message code='title.documentdetail' /></a></li>
 		</ul>
 		<div class="tab-content">
 			<div id="applicant-info" class="tab-pane fade in active">
 				<div class="panel panel-primary" data-collapsed="0">
 					<jsp:include page="viewapplicantinfo.jsp"></jsp:include>
+				</div>
+				<div class="panel panel-primary" data-collapsed="0">
+					<jsp:include page="stakeholder-addnlinfo.jsp"></jsp:include>
+				</div>
+				<div class="panel panel-primary" data-collapsed="0">
+					<jsp:include page="../application/applicationhistory-view.jsp"></jsp:include>
 				</div>
 			</div>
 			<div id="checklist-info" class="tab-pane fade">
@@ -81,6 +87,10 @@
 
 	</div>
 </div>
-
+<script>
+    $(document).ready(function () {
+        $('.currentOwner').hide();
+    });
+</script>
 <script src="<cdn:url value='/resources/global/js/egov/inbox.js' context='/egi'/>"></script>
 <script src="<cdn:url value='/resources/js/app/viewdocumentsupload.js?rnd=${app_release_no}'/> "></script>
