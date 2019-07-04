@@ -126,7 +126,7 @@ public class State<T extends OwnerGroup> extends AbstractAuditable {
     @SafeHtml
     private String nextAction;
 
-    @Length(max = 1024)
+    @Length(max = 3072)
     @SafeHtml
     private String comments;
 

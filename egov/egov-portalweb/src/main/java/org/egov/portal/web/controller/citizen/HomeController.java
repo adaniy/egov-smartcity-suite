@@ -114,6 +114,7 @@ public class HomeController {
         final User user = securityUtils.getCurrentUser();
         modelData.addAttribute("unreadMessageCount", getUnreadMessageCount());
         modelData.addAttribute("inboxMessages", getAllInboxMessages());
+        modelData.addAttribute("currentUser", user);
         modelData.addAttribute("myAccountMessages", getMyAccountMessages());
         modelData.addAttribute("cityLogo", cityService.getCityLogoURL());
         modelData.addAttribute("cityName", cityService.getMunicipalityName());

@@ -542,7 +542,7 @@ function worklist() {
 }
 
 function loadGroupMenusModuleWise(moduleArray) {
-    if (Object.keys(moduleArray).length > 1 ||
+    if (Object.keys(moduleArray).length > 0 ||
         (Object.keys(moduleArray).length == 1 && Object.keys(moduleArray[Object.keys(moduleArray)[0]]).length > 1)) {
 
         Object.keys(moduleArray)
