@@ -24,8 +24,7 @@ import org.kabeja.dxf.DXFDocument;
 /*All the details extracted from the plan are referred in this object*/
 public class PlanDetail implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
+    private static final long serialVersionUID = -3366713640017914855L;
     public ReportOutput reportOutput = new ReportOutput();
     private Utility utility = new Utility();
     private PlanInformation planInformation;

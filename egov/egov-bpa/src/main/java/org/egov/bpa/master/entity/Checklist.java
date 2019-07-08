@@ -53,7 +53,8 @@ import org.hibernate.validator.constraints.Length;
 @SequenceGenerator(name = Checklist.SEQ_CHECKLIST, sequenceName = Checklist.SEQ_CHECKLIST, allocationSize = 1)
 public class Checklist extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = 8591172467091536239L;
+
     public static final String SEQ_CHECKLIST = "SEQ_EGBPA_MSTR_CHECKLIST";
 
     @Id

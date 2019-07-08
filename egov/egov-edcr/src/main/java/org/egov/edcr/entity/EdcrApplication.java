@@ -27,17 +27,20 @@ import javax.validation.constraints.NotNull;
 import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
 @Table(name = "EDCR_APPLICATION")
 @SequenceGenerator(name = EdcrApplication.SEQ_EDCR_APPLICATION, sequenceName = EdcrApplication.SEQ_EDCR_APPLICATION, allocationSize = 1)
 public class EdcrApplication extends AbstractAuditable {
+
+    private static final long serialVersionUID = 4346685835021689754L;
+
     /*
      * Application number and date.Owner name, contact info,email id, address, Architect name, emailid,contract info.
      */
     public static final String SEQ_EDCR_APPLICATION = "SEQ_EDCR_APPLICATION";
-    private static final long serialVersionUID = 61L;
 
     @Id
     @GeneratedValue(generator = SEQ_EDCR_APPLICATION, strategy = GenerationType.SEQUENCE)
@@ -48,11 +51,12 @@ public class EdcrApplication extends AbstractAuditable {
 
     @NotNull
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String applicationNumber;
 
     @Temporal(value = TemporalType.DATE)
     private Date applicationDate;
-
+    @SafeHtml
     private String status;
 
     @OneToMany(mappedBy = "application", fetch = LAZY, cascade = ALL)
@@ -64,6 +68,7 @@ public class EdcrApplication extends AbstractAuditable {
     private PlanInformation planInformation;
 
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String planPermitNumber;
 
     @Temporal(value = TemporalType.DATE)
@@ -79,16 +84,22 @@ public class EdcrApplication extends AbstractAuditable {
 
     private transient EdcrApplicationDetail savedEdcrApplicationDetail;
 
+    @SafeHtml
     private String applicantName;
 
+    @SafeHtml
     private String occupancy;
 
+    @SafeHtml
     private String serviceType;
 
+    @SafeHtml
     private String amenities;
 
+    @SafeHtml
     private String architectInformation;
 
+    @SafeHtml
     private String projectType;
 
     private transient String permitDateTemp;

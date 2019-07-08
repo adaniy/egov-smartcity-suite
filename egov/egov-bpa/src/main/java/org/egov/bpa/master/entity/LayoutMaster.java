@@ -40,13 +40,14 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_MSTR_LAYOUT")
 @SequenceGenerator(name = LayoutMaster.SEQ_LAYOUT, sequenceName = LayoutMaster.SEQ_LAYOUT, allocationSize = 1)
 public class LayoutMaster extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = 8791640009848439488L;
     public static final String SEQ_LAYOUT = "SEQ_EGBPA_MSTR_LAYOUT";
     @Id
     @GeneratedValue(generator = SEQ_LAYOUT, strategy = GenerationType.SEQUENCE)
@@ -55,9 +56,11 @@ public class LayoutMaster extends AbstractAuditable {
     @NotNull
     @Length(min = 1, max = 128)
     @Column(name = "code", unique = true)
+    @SafeHtml
     private String code;
     @NotNull
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String description;
 
     private Boolean isActive;

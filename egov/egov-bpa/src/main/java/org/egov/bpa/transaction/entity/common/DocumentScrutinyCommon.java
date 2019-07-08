@@ -70,6 +70,7 @@ import org.egov.bpa.transaction.entity.enums.ChecklistValues;
 import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_DOCUMENT_SCRUTINY_COMMON")
@@ -84,20 +85,25 @@ public class DocumentScrutinyCommon extends AbstractAuditable {
     private Long id;
 
     @Length(min = 1, max = 24)
+    @SafeHtml
     private String plotSurveyNumber;
 
     @Length(min = 1, max = 24)
+    @SafeHtml
     private String reSurveyNumber;
 
     @Length(min = 1, max = 12)
+    @SafeHtml
     private String subdivisionNumber;
 
     private BigDecimal extentInSqmts;
 
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String natureOfOwnership;
 
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String registrarOffice;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -105,15 +111,18 @@ public class DocumentScrutinyCommon extends AbstractAuditable {
     private VillageName village;
 
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String taluk;
 
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String district;
 
     @Enumerated(EnumType.STRING)
     private ChecklistValues neighbourOwnerDtlSubmitted;
 
     @Length(min = 1, max = 64)
+    @SafeHtml
     private String deedNumber;
 
     @Temporal(value = TemporalType.DATE)

@@ -45,6 +45,7 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
@@ -52,7 +53,7 @@ import org.springframework.web.multipart.MultipartFile;
 @SequenceGenerator(name = CheckListDetail.SEQ_CHECKLISTDETAIL, sequenceName = CheckListDetail.SEQ_CHECKLISTDETAIL, allocationSize = 1)
 public class CheckListDetail extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = -3457287710170954739L;
     public static final String SEQ_CHECKLISTDETAIL = "SEQ_EGBPA_MSTR_CHKLISTDETAIL";
     @Id
     @GeneratedValue(generator = SEQ_CHECKLISTDETAIL, strategy = GenerationType.SEQUENCE)
@@ -61,9 +62,11 @@ public class CheckListDetail extends AbstractAuditable {
     @NotNull
     @Length(min = 1, max = 128)
     @Column(name = "code", unique = true)
+    @SafeHtml
     private String code;
     @NotNull
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String description;
 
     @NotNull

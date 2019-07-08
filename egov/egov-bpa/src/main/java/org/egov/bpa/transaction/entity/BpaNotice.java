@@ -62,13 +62,15 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.egov.infra.filestore.entity.FileStoreMapper;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "egbpa_notice")
 @SequenceGenerator(name = BpaNotice.SEQ_BPA_NOTICE, sequenceName = BpaNotice.SEQ_BPA_NOTICE, allocationSize = 1)
 public class BpaNotice implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -8033383697951052566L;
+
     public static final String SEQ_BPA_NOTICE = "SEQ_EGBPA_NOTICE";
 
     @Id
@@ -81,6 +83,7 @@ public class BpaNotice implements Serializable {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "noticeFileStore")
     private FileStoreMapper noticeFileStore;
+    @SafeHtml
     private String noticeType;
 
     public Long getId() {

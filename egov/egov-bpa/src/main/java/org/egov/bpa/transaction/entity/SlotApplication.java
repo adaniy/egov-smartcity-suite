@@ -60,7 +60,7 @@ import org.egov.infra.persistence.entity.AbstractAuditable;
 @SequenceGenerator(name = SlotApplication.SEQ, sequenceName = SlotApplication.SEQ, allocationSize = 1)
 public class SlotApplication extends AbstractAuditable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -6590703894753051946L;
     public static final String SEQ = "seq_egbpa_slotapplication";
     @Id
     @GeneratedValue(generator = SEQ, strategy = GenerationType.SEQUENCE)

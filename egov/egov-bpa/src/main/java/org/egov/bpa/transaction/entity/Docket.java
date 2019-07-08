@@ -47,13 +47,15 @@ import javax.persistence.Table;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_DOCKET")
 @SequenceGenerator(name = Docket.SEQ_DOCKET, sequenceName = Docket.SEQ_DOCKET, allocationSize = 1)
 public class Docket extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = -8305581554690394753L;
+
     public static final String SEQ_DOCKET = "SEQ_EGBPA_DOCKET";
 
     @Id
@@ -66,30 +68,42 @@ public class Docket extends AbstractAuditable {
     @JoinColumn(name = "status")
     private BpaStatus status;
     @Length(min = 1, max = 64)
+    @SafeHtml
     private String existingUsage;
     @Length(min = 1, max = 64)
+    @SafeHtml
     private String proposedActivityIsPermissible;
     @Length(min = 1, max = 32)
+    @SafeHtml
     private String oldProptaxPaidRecptEnclosed;
     @Length(min = 1, max = 32)
+    @SafeHtml
     private String existingSanctionPlanOrPtTaxPaidRecptEnclosed;
     private BigDecimal abuttingRoadWidth;
     @Length(max = 128)
+    @SafeHtml
     private String locationOfPlot;
     @Length(min = 1, max = 32)
+    @SafeHtml
     private String abuttingRoadIsPrivateOrPublic;
     @Length(min = 1, max = 32)
+    @SafeHtml
     private String abuttingRoadTakenUpForImprovement;
     @Length(min = 1, max = 32)
+    @SafeHtml
     private String abuttingRoadgainsAceessThroughPassage;
     private BigDecimal abuttingRoadgainWidth;
     @Length(min = 1, max = 32)
+    @SafeHtml
     private String abuttingRoadgainPrivateOrPublic;
     @Length(min = 1, max = 32)
+    @SafeHtml
     private String planCompliesWithSideCondition;
     @Length(min = 1, max = 512)
+    @SafeHtml
     private String remarks;
     @Length(min = 1, max = 512)
+    @SafeHtml
     private String aeeInspectionReport;
     private Integer totalFloorCount;
     private BigDecimal lengthOfCompoundWall;

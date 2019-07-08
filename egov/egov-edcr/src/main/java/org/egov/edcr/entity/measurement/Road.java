@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Road extends Measurement {
 
-    private static final long serialVersionUID = 66L;
+    private static final long serialVersionUID = 8494854203111115375L;
     protected List<BigDecimal> shortestDistanceToRoad = new ArrayList<>();
     protected List<BigDecimal> distancesFromCenterToPlot = new ArrayList<>();
     protected List<BigDecimal> distanceFromAccessoryBlock = new ArrayList<>();

@@ -48,13 +48,15 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_UNCONSIDER")
 @SequenceGenerator(name = Unconsider.SEQ_UNCONSIDER, sequenceName = Unconsider.SEQ_UNCONSIDER, allocationSize = 1)
 public class Unconsider extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = -7954315979248528245L;
+
     public static final String SEQ_UNCONSIDER = "SEQ_EGBPA_UNCONSIDER";
 
     @Id
@@ -64,8 +66,10 @@ public class Unconsider extends AbstractAuditable {
     @NotNull
     private Date rejectionDate;
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String remarks;
     @Length(min = 1, max = 32)
+    @SafeHtml
     private String rejectionNumber;
 
     @OneToMany(mappedBy = "unconsider", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

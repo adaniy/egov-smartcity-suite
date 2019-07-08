@@ -16,15 +16,16 @@ import javax.persistence.Transient;
 
 import org.egov.infra.filestore.entity.FileStoreMapper;
 import org.egov.infra.persistence.entity.AbstractAuditable;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EDCR_PDF_DETAIL")
 @SequenceGenerator(name = EdcrPdfDetail.SEQ_EDCR_PDF_DETAIL, sequenceName = EdcrPdfDetail.SEQ_EDCR_PDF_DETAIL, allocationSize = 1)
 public class EdcrPdfDetail extends AbstractAuditable {
 
-    public static final String SEQ_EDCR_PDF_DETAIL = "SEQ_EDCR_PDF_DETAIL";
+    private static final long serialVersionUID = 3991287412393203716L;
 
-    private static final long serialVersionUID = 63L;
+    public static final String SEQ_EDCR_PDF_DETAIL = "SEQ_EDCR_PDF_DETAIL";
 
     @Id
     @GeneratedValue(generator = SEQ_EDCR_PDF_DETAIL, strategy = GenerationType.SEQUENCE)
@@ -33,15 +34,15 @@ public class EdcrPdfDetail extends AbstractAuditable {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "applicationdetail")
     private EdcrApplicationDetail edcrApplicationDetail;
-
+    @SafeHtml
     private String layer;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "convertedpdf")
     private FileStoreMapper convertedPdf;
-
+    @SafeHtml
     private String failureReasons;
-
+    @SafeHtml
     private String standardViolations;
 
     @Transient

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TypicalFloor implements Serializable {
-    private static final long serialVersionUID = 5L;
+    private static final long serialVersionUID = -145037866415222702L;
     private Integer modelFloorNo;
     private List<Integer> repetitiveFloorNos = new ArrayList<>();
 

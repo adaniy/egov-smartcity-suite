@@ -44,13 +44,15 @@ import javax.validation.constraints.NotNull;
 import org.egov.bpa.master.entity.ChangeOfUsage;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_PERMITTED_FLOORDETAIL")
 @SequenceGenerator(name = PermittedFloorDetail.SEQ_PERMITTEDFLOORDETAIL, sequenceName = PermittedFloorDetail.SEQ_PERMITTEDFLOORDETAIL, allocationSize = 1)
 public class PermittedFloorDetail extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = -6051562052233814106L;
+
     public static final String SEQ_PERMITTEDFLOORDETAIL = "SEQ_EGBPA_PERMITTED_FLOORDETAIL";
 
     @Id
@@ -61,6 +63,7 @@ public class PermittedFloorDetail extends AbstractAuditable {
     private BpaApplication application;
     private Integer floorNumber;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String floorType;
     private Integer block;
     private BigDecimal area;

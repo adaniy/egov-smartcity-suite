@@ -11,6 +11,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
+import org.hibernate.validator.constraints.SafeHtml;
 
 /*Used to determine the rules to be validated for a building plan*/
 @Entity
@@ -24,13 +25,13 @@ public class PlanRule extends AbstractAuditable {
     @Id
     @GeneratedValue(generator = SEQ_EDCR_PLANRULE, strategy = GenerationType.SEQUENCE)
     private Long id;
-
+    @SafeHtml
     private String service;
 
     private BigDecimal minPlotArea;
 
     private BigDecimal maxPlotArea;
-
+    @SafeHtml
     private String occupancy;
 
     private Double minFloors;
@@ -40,11 +41,11 @@ public class PlanRule extends AbstractAuditable {
     private BigDecimal minBuildingHgt;
 
     private BigDecimal maxBuildingHgt;
-
+    @SafeHtml
     private String rules;
-
+    @SafeHtml
     private String familySize;
-
+    @SafeHtml
     private String abutingRoad;
 
     private BigDecimal minRoad;

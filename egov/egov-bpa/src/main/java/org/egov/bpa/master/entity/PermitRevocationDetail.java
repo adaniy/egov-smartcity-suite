@@ -69,6 +69,7 @@ import javax.persistence.TemporalType;
 import org.egov.infra.filestore.entity.FileStoreMapper;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
@@ -76,10 +77,8 @@ import org.springframework.web.multipart.MultipartFile;
 @SequenceGenerator(name = PermitRevocationDetail.SEQ_REVOCATION_DETAIL, sequenceName = PermitRevocationDetail.SEQ_REVOCATION_DETAIL, allocationSize = 1)
 public class PermitRevocationDetail extends AbstractAuditable {
 
-    /**
-    *
-    */
-    private static final long serialVersionUID = -3497037801478484778L;
+    private static final long serialVersionUID = -4006173160839654567L;
+
     public static final String SEQ_REVOCATION_DETAIL = "SEQ_EGBPA_PERMIT_REVOCATION_DETAIL";
 
     @Id
@@ -89,14 +88,17 @@ public class PermitRevocationDetail extends AbstractAuditable {
     @JoinColumn(name = "revocation", nullable = false)
     private PermitRevocation revocation;
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String natureOfRequest;
     @Temporal(value = TemporalType.DATE)
     private Date requestDate;
     @Temporal(value = TemporalType.DATE)
     private Date replyDate;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String issuedBy;
     @Length(min = 1, max = 512)
+    @SafeHtml
     private String remarks;
     private Integer orderNumber;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

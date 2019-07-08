@@ -71,13 +71,14 @@ import org.egov.infra.persistence.validator.annotation.Unique;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_MSTR_STAKEHOLDER")
 @Unique(fields = { "code", "coaEnrolmentNumber", "tinNumber" }, enableDfltMsg = true)
 public class StakeHolder extends User {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = 792639024686773228L;
     @OneToMany(mappedBy = "stakeHolder", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StakeHolderDocument> stakeHolderDocument = new ArrayList<>(0);
     @Enumerated(EnumType.ORDINAL)
@@ -87,10 +88,12 @@ public class StakeHolder extends User {
     @Length(min = 1, max = 128)
     @Column(name = "code", unique = true)
     @Audited
+    @SafeHtml
     private String code;
     @NotNull
     @Length(min = 1, max = 64)
     @Audited
+    @SafeHtml
     private String licenceNumber;
     @NotNull
     @Temporal(value = TemporalType.DATE)
@@ -100,33 +103,42 @@ public class StakeHolder extends User {
     @Temporal(value = TemporalType.DATE)
     private Date buildingLicenceExpiryDate;
     @Length(min = 1, max = 64)
+    @SafeHtml
     private String coaEnrolmentNumber;
     @Temporal(value = TemporalType.DATE)
     private Date coaEnrolmentDueDate;
     private Boolean isEnrolWithLocalBody;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String organizationName;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String organizationAddress;
     @Length(min = 1, max = 64)
+    @SafeHtml
     private String organizationUrl;
     @Length(min = 1, max = 15)
+    @SafeHtml
     private String organizationMobNo;
     private Boolean isOnbehalfOfOrganization;
     @NotNull
     @Audited
     private Boolean isActive;
     @Length(max = 11)
+    @SafeHtml
     private String tinNumber;
     @Length(max = 50)
+    @SafeHtml
     private String contactPerson;
     @Length(max = 50)
+    @SafeHtml
     private String designation;
     private transient CorrespondenceAddress correspondenceAddress = new CorrespondenceAddress();
     private transient PermanentAddress permanentAddress = new PermanentAddress();
     private transient List<CheckListDetail> checkListDocuments = new ArrayList<>(0);
     private transient String activationCode;
     @Audited
+    @SafeHtml
     private String comments;
     @Enumerated(EnumType.STRING)
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)

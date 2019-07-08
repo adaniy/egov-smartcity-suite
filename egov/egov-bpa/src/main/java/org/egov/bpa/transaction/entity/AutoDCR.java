@@ -57,82 +57,113 @@ import javax.validation.Valid;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_AUTODCR")
 @SequenceGenerator(name = AutoDCR.SEQ_EGBPA_AUTODCR, sequenceName = AutoDCR.SEQ_EGBPA_AUTODCR, allocationSize = 1)
 public class AutoDCR extends AbstractAuditable {
-    private static final long serialVersionUID = 3078684328383202788L;
+
+    private static final long serialVersionUID = 3039780005344584621L;
+
     public static final String SEQ_EGBPA_AUTODCR = "seq_EGBPA_AUTODCR";
 
     @Id
     @GeneratedValue(generator = SEQ_EGBPA_AUTODCR, strategy = GenerationType.SEQUENCE)
     private Long id;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String autoDcrNum;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String applicantName;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String address;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String emailId;
     @Length(min = 1, max = 12)
+    @SafeHtml
     private String mobilNo;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String zone;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String ward;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String dooNo;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String plotNumber;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String surveyNo;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String village;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String blockNumber;
     private BigDecimal plotArea;
     private Integer floorCount;
     private BigDecimal fileNumber;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String fileCaseType;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String fileBldgcategory;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String fileLandUseZone;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String fileProposalType;
 
     private Date fileInWardDate;
 
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String fileZone;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String fileDevision;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String filePlotNumber;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String fileRoadName;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String fileDoorNumber;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String fileSurveyNumber;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String fileRevenuevillage;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String fileBlockNumber;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String fileMobileNumber;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String fileEmail;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String fileUniqueId;
     @Length(min = 1, max = 128)
     private BigDecimal filePattaPltArea;
     private BigDecimal fileDocPlotArea;
     private BigDecimal fileSitePlotArea;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String fileStatus;
     private Integer plotUse;
     private BigDecimal plotgrossArea;
@@ -146,6 +177,7 @@ public class AutoDCR extends AbstractAuditable {
     private BigDecimal plotCompoundWellArea;
     private BigDecimal plotwellOHTSumpTankArea;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String buildingName;
     private BigDecimal buildingHeight;
     private BigDecimal bldgMarginFrontSide;
@@ -154,6 +186,7 @@ public class AutoDCR extends AbstractAuditable {
     private BigDecimal bldgMarginSide2;
     private BigDecimal fileApplicantName;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String logicalPath;
 
     @Valid

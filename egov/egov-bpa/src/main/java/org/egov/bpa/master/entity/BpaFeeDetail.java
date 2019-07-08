@@ -51,6 +51,7 @@ import org.hibernate.envers.AuditOverrides;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_MSTR_BPAFEEDETAIL")
@@ -59,7 +60,7 @@ import org.hibernate.validator.constraints.Length;
 @SequenceGenerator(name = BpaFeeDetail.SEQ_BPAFEEDETAIL, sequenceName = BpaFeeDetail.SEQ_BPAFEEDETAIL, allocationSize = 1)
 public class BpaFeeDetail extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = 5845010530598549218L;
     public static final String SEQ_BPAFEEDETAIL = "SEQ_EGBPA_MSTR_BPAFEEDETAIL";
     @Id
     @GeneratedValue(generator = SEQ_BPAFEEDETAIL, strategy = GenerationType.SEQUENCE)
@@ -82,9 +83,11 @@ public class BpaFeeDetail extends AbstractAuditable {
     private Long srlNo;
     @Length(min = 1, max = 128)
     @Audited
+    @SafeHtml
     private String subType;
     @Length(min = 1, max = 128)
     @Audited
+    @SafeHtml
     private String landUseZone;
     @Audited
     private Long floorNumber;
@@ -101,6 +104,7 @@ public class BpaFeeDetail extends AbstractAuditable {
     private Date endDate;
     @Length(min = 1, max = 128)
     @Audited
+    @SafeHtml
     private String additionalType;
 
     @Override

@@ -10,8 +10,7 @@ import org.egov.edcr.entity.utility.SetBack;
 
 public class Plot extends Measurement {
 
-    private static final long serialVersionUID = 17L;
-
+    private static final long serialVersionUID = 6973750324296562422L;
     public static final String PLOT_BOUNDARY = "PLOT_BOUNDARY";
     private Yard frontYard;
     private Yard rearYard;

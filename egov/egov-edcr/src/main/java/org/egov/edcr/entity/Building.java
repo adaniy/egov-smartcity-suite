@@ -9,7 +9,7 @@ import org.egov.edcr.entity.measurement.Measurement;
 
 public class Building extends Measurement {
 
-    private static final long serialVersionUID = 13L;
+    private static final long serialVersionUID = 4630429128528801327L;
 
     private BigDecimal buildingHeight;
 

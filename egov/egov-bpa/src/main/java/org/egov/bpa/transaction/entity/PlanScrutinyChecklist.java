@@ -63,14 +63,15 @@ import org.egov.bpa.master.entity.CheckListDetail;
 import org.egov.bpa.transaction.entity.enums.ChecklistValues;
 import org.egov.bpa.transaction.entity.enums.ScrutinyChecklistType;
 import org.egov.infra.persistence.entity.AbstractAuditable;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "egbpa_plan_scrutiny_checklist")
 @SequenceGenerator(name = PlanScrutinyChecklist.SEQ_PLAN_SCRUTINY, sequenceName = PlanScrutinyChecklist.SEQ_PLAN_SCRUTINY, allocationSize = 1)
 public class PlanScrutinyChecklist extends AbstractAuditable {
 
+    private static final long serialVersionUID = 3426044735177154505L;
     public static final String SEQ_PLAN_SCRUTINY = "seq_egbpa_plan_scrutiny_checklist";
-    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(generator = SEQ_PLAN_SCRUTINY, strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -86,6 +87,7 @@ public class PlanScrutinyChecklist extends AbstractAuditable {
     private ChecklistValues scrutinyValue;
     @Enumerated(EnumType.STRING)
     private ScrutinyChecklistType scrutinyChecklistType;
+    @SafeHtml
     private String remarks;
     private Integer orderNumber;
 

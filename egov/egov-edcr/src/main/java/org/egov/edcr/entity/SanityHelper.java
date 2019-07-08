@@ -6,7 +6,7 @@ import java.util.Set;
 
 public class SanityHelper implements Serializable {
 
-    private static final long serialVersionUID = 55L;
+    private static final long serialVersionUID = 5100577228589375371L;
     public Double maleWc = 0d;
     public Double femaleWc = 0d;
     public Double urinal = 0d;

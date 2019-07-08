@@ -59,8 +59,8 @@ import org.egov.infra.persistence.entity.AbstractAuditable;
 @SequenceGenerator(name = PermitNocVerification.SEQ_PERMIT_NOC_VERIFY, sequenceName = PermitNocVerification.SEQ_PERMIT_NOC_VERIFY, allocationSize = 1)
 public class PermitNocVerification extends AbstractAuditable {
 
+    private static final long serialVersionUID = 1307898997974698526L;
     public static final String SEQ_PERMIT_NOC_VERIFY = "SEQ_EGBPA_PERMIT_NOC_VERIFICATION";
-    private static final long serialVersionUID = 3078684328383202788L;
     @Id
     @GeneratedValue(generator = SEQ_PERMIT_NOC_VERIFY, strategy = GenerationType.SEQUENCE)
     private Long id;

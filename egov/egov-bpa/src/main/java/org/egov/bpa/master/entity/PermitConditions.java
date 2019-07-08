@@ -55,21 +55,27 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "egbpa_mstr_permit_conditions")
 @SequenceGenerator(name = PermitConditions.SEQ_PERMIT_CONDITIONS, sequenceName = PermitConditions.SEQ_PERMIT_CONDITIONS, allocationSize = 1)
 public class PermitConditions extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = 5516864834221356979L;
+
     public static final String SEQ_PERMIT_CONDITIONS = "seq_egbpa_mstr_permit_conditions";
 
     @Id
     @GeneratedValue(generator = SEQ_PERMIT_CONDITIONS, strategy = GenerationType.SEQUENCE)
     private Long id;
+    @SafeHtml
     private String code;
+    @SafeHtml
     private String description;
+    @SafeHtml
     private String orderNumber;
+    @SafeHtml
     private String conditionType;
 
     @Override

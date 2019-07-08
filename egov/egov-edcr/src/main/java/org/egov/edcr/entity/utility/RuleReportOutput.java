@@ -3,9 +3,10 @@ package org.egov.edcr.entity.utility;
 import java.io.Serializable;
 
 public class RuleReportOutput implements Serializable {
-    private static final long serialVersionUID = 49L;
 
     // public String ruleKey;
+
+    private static final long serialVersionUID = -26191259183372877L;
 
     public String fieldVerified;
 

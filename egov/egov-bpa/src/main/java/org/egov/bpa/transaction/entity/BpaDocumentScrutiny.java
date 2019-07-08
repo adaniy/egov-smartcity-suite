@@ -24,12 +24,13 @@ import org.egov.bpa.transaction.entity.enums.ChecklistValues;
 import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_DOCUMENTSCRUTINY")
 @SequenceGenerator(name = BpaDocumentScrutiny.SEQ_EGBPA_DOCUMENTSCRUTINY, sequenceName = BpaDocumentScrutiny.SEQ_EGBPA_DOCUMENTSCRUTINY, allocationSize = 1)
 public class BpaDocumentScrutiny extends AbstractAuditable {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -7523650944239626992L;
     public static final String SEQ_EGBPA_DOCUMENTSCRUTINY = "SEQ_EGBPA_DOCUMENTSCRUTINY";
     @Id
     @GeneratedValue(generator = SEQ_EGBPA_DOCUMENTSCRUTINY, strategy = GenerationType.SEQUENCE)
@@ -39,26 +40,34 @@ public class BpaDocumentScrutiny extends AbstractAuditable {
     @JoinColumn(name = "application", nullable = false)
     private BpaApplication application;
     @Length(min = 1, max = 24)
+    @SafeHtml
     private String plotsurveynumber;
     @Length(min = 1, max = 24)
+    @SafeHtml
     private String reSurveynumber;
     @Length(min = 1, max = 12)
+    @SafeHtml
     private String subdivisionNumber;
     private BigDecimal extentinsqmts;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String natureofOwnership;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String registrarOffice;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "village")
     private VillageName village;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String taluk;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String district;
     @Enumerated(EnumType.STRING)
     private ChecklistValues neighoutOwnerDtlSubmitted;
     @Length(min = 1, max = 64)
+    @SafeHtml
     private String deedNumber;
     @Temporal(value = TemporalType.DATE)
     private Date deedDate;

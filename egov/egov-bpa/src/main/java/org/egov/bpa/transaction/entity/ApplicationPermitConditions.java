@@ -63,13 +63,15 @@ import javax.persistence.Table;
 
 import org.egov.bpa.master.entity.PermitConditions;
 import org.egov.bpa.transaction.entity.enums.PermitConditionType;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "egbpa_application_permit_conditions")
 @SequenceGenerator(name = ApplicationPermitConditions.SEQ_APPLICATION_PERMIT_CONDITIONS, sequenceName = ApplicationPermitConditions.SEQ_APPLICATION_PERMIT_CONDITIONS, allocationSize = 1)
 public class ApplicationPermitConditions implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -657190527496896598L;
+
     public static final String SEQ_APPLICATION_PERMIT_CONDITIONS = "seq_egbpa_application_permit_conditions";
 
     @Id
@@ -82,11 +84,13 @@ public class ApplicationPermitConditions implements Serializable {
     @JoinColumn(name = "permitcondition", nullable = false)
     private PermitConditions permitCondition;
     private Date permitConditiondDate;
+    @SafeHtml
     private String permitConditionNumber;
     private Integer orderNumber;
     @Enumerated(EnumType.STRING)
     private PermitConditionType permitConditionType;
     private boolean isRequired;
+    @SafeHtml
     private String additionalPermitCondition;
 
     public BpaApplication getApplication() {

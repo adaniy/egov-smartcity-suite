@@ -48,13 +48,14 @@ import javax.validation.constraints.NotNull;
 import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_DOCUMENTHISTORY")
 @SequenceGenerator(name = DocumentHistory.SEQ_DOCUMENTHISTORY, sequenceName = DocumentHistory.SEQ_DOCUMENTHISTORY, allocationSize = 1)
 public class DocumentHistory extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = -1700023603574043400L;
     public static final String SEQ_DOCUMENTHISTORY = "SEQ_EGBPA_DOCUMENTHISTORY";
     @Id
     @GeneratedValue(generator = SEQ_DOCUMENTHISTORY, strategy = GenerationType.SEQUENCE)
@@ -64,6 +65,7 @@ public class DocumentHistory extends AbstractAuditable {
     private BpaApplication application;
     @NotNull
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String documentNum;
     @ManyToOne(cascade = CascadeType.ALL)
     private User createdUser;
@@ -75,6 +77,7 @@ public class DocumentHistory extends AbstractAuditable {
     private Boolean wheatherplotDevelopedBy;
     private Boolean wheatherpartOfLayout;
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String plotDevelopedBy;
     private Boolean wheatherFmsOrSketchCopyOfReg;
 

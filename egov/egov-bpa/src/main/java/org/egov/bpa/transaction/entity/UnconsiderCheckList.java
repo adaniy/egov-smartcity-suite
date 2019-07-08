@@ -43,13 +43,15 @@ import javax.validation.constraints.NotNull;
 import org.egov.bpa.master.entity.CheckListDetail;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_UNCONSIDER_CHECKLIST")
 @SequenceGenerator(name = UnconsiderCheckList.SEQ_UNCONSIDERCHECKLIST, sequenceName = UnconsiderCheckList.SEQ_UNCONSIDERCHECKLIST, allocationSize = 1)
 public class UnconsiderCheckList extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = -776033817819524836L;
+
     public static final String SEQ_UNCONSIDERCHECKLIST = "SEQ_EGBPA_UNCONSIDER_CHECKLIST";
 
     @Id
@@ -63,6 +65,7 @@ public class UnconsiderCheckList extends AbstractAuditable {
     private CheckListDetail checkListDetail;
     private Boolean isChecked;
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String remarks;
 
     @Override

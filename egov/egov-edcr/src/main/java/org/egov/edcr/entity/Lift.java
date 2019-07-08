@@ -8,7 +8,7 @@ import org.kabeja.dxf.DXFLWPolyline;
 
 public class Lift extends Measurement {
 
-    private static final long serialVersionUID = 31L;
+    private static final long serialVersionUID = 5643661327987813409L;
 
     private Integer number;
 

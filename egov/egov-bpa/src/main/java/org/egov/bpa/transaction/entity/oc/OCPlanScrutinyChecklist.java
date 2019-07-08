@@ -63,6 +63,7 @@ import org.egov.bpa.master.entity.CheckListDetail;
 import org.egov.bpa.transaction.entity.enums.ChecklistValues;
 import org.egov.bpa.transaction.entity.enums.ScrutinyChecklistType;
 import org.egov.infra.persistence.entity.AbstractAuditable;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "egbpa_oc_plan_scrutiny_checklist")
@@ -86,6 +87,7 @@ public class OCPlanScrutinyChecklist extends AbstractAuditable {
     private ChecklistValues scrutinyValue;
     @Enumerated(EnumType.STRING)
     private ScrutinyChecklistType scrutinyChecklistType;
+    @SafeHtml
     private String remarks;
     private Integer orderNumber;
 

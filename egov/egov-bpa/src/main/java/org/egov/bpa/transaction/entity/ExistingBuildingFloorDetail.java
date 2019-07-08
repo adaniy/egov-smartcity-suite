@@ -54,13 +54,14 @@ import javax.persistence.Table;
 
 import org.egov.common.entity.Occupancy;
 import org.egov.infra.persistence.entity.AbstractAuditable;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_EXISTING_BUILDING_FLOORDETAIL")
 @SequenceGenerator(name = ExistingBuildingFloorDetail.SEQ_EGBPA_EXST_BUILD_FLOORDETAIL, sequenceName = ExistingBuildingFloorDetail.SEQ_EGBPA_EXST_BUILD_FLOORDETAIL, allocationSize = 1)
 public class ExistingBuildingFloorDetail extends AbstractAuditable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 5154989593647441137L;
     public static final String SEQ_EGBPA_EXST_BUILD_FLOORDETAIL = "SEQ_EGBPA_EXISTING_BUILDING_FLOORDETAIL";
     @Id
     @GeneratedValue(generator = SEQ_EGBPA_EXST_BUILD_FLOORDETAIL, strategy = GenerationType.SEQUENCE)
@@ -69,6 +70,7 @@ public class ExistingBuildingFloorDetail extends AbstractAuditable {
     @JoinColumn(name = "existingBuildingDetail", nullable = false)
     private ExistingBuildingDetail existingBuildingDetail;
     private Integer orderOfFloor;
+    @SafeHtml
     private String floorDescription;
     private Integer floorNumber;
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

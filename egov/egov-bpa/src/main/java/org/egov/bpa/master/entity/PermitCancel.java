@@ -70,6 +70,7 @@ import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.infra.filestore.entity.FileStoreMapper;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
@@ -77,9 +78,6 @@ import org.springframework.web.multipart.MultipartFile;
 @SequenceGenerator(name = PermitCancel.SEQ_CANCEL, sequenceName = PermitCancel.SEQ_CANCEL, allocationSize = 1)
 public class PermitCancel extends AbstractAuditable {
 
-    /**
-    *
-    */
     private static final long serialVersionUID = -4954480849979881787L;
 
     public static final String SEQ_CANCEL = "SEQ_EGBPA_PERMIT_CANCEL";
@@ -99,9 +97,11 @@ public class PermitCancel extends AbstractAuditable {
     private Date cancellationDate;
 
     @Length(min = 1, max = 1024)
+    @SafeHtml
     private String initiatorRemarks;
 
     @Length(min = 1, max = 1024)
+    @SafeHtml
     private String approverRemarks;
 
     private Boolean acceptance;

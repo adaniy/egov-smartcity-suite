@@ -6,8 +6,7 @@ import org.kabeja.dxf.DXFCircle;
 
 public class SpiralStair extends Stair {
 
-    private static final long serialVersionUID = 37L;
-
+    private static final long serialVersionUID = 8389200557821306243L;
     private transient List<DXFCircle> spiralPolyLines;
 
     public List<DXFCircle> getSpiralPolyLines() {

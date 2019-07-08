@@ -6,7 +6,7 @@ import java.util.List;
 
 public class RuleOutput implements Serializable {
 
-    private static final long serialVersionUID = 54L;
+    private static final long serialVersionUID = 306905677684288013L;
     public String key;
     public List<SubRuleOutput> subRuleOutputs = new ArrayList<>();
     public String message;

@@ -59,16 +59,14 @@ import org.egov.bpa.master.entity.enums.SlotMappingApplType;
 import org.egov.bpa.master.entity.enums.WorkingDays;
 import org.egov.infra.admin.master.entity.Boundary;
 import org.egov.infra.persistence.entity.AbstractAuditable;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "egbpa_mstr_slotmapping")
 @SequenceGenerator(name = SlotMapping.SEQ, sequenceName = SlotMapping.SEQ, allocationSize = 1)
 public class SlotMapping extends AbstractAuditable {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -7933337983029484717L;
 
     public static final String SEQ = "seq_egbpa_mstr_slotmapping";
 
@@ -97,6 +95,7 @@ public class SlotMapping extends AbstractAuditable {
     @Transient
     private WorkingDays days;
 
+    @SafeHtml
     private String day;
 
     @NotNull

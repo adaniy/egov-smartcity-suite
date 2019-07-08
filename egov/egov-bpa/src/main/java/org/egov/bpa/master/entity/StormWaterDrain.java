@@ -40,13 +40,14 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_MSTR_STORMWATERDRAIN")
 @SequenceGenerator(name = StormWaterDrain.SEQ_STORMWATERDRAIN, sequenceName = StormWaterDrain.SEQ_STORMWATERDRAIN, allocationSize = 1)
 public class StormWaterDrain extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = 6492699096779709831L;
     public static final String SEQ_STORMWATERDRAIN = "SEQ_EGBPA_STORMWATERDRAIN";
     @Id
     @GeneratedValue(generator = SEQ_STORMWATERDRAIN, strategy = GenerationType.SEQUENCE)
@@ -55,14 +56,17 @@ public class StormWaterDrain extends AbstractAuditable {
     @NotNull
     @Length(min = 1, max = 128)
     @Column(name = "code", unique = true)
+    @SafeHtml
     private String code;
 
     @NotNull
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String description;
 
     @NotNull
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String dimension;
 
     private Boolean isActive;

@@ -22,6 +22,7 @@ import org.egov.bpa.master.entity.AppointmentLocations;
 import org.egov.bpa.transaction.entity.enums.AppointmentSchedulePurpose;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_APPOINTMENT_SCHEDULE")
@@ -43,14 +44,17 @@ public class BpaAppointmentSchedule extends AbstractAuditable {
     private Date appointmentDate;
 
     @Length(min = 1, max = 50)
+    @SafeHtml
     private String appointmentTime;
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "appointmentLocation")
     private AppointmentLocations appointmentLocation;
 
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String remarks;
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String postponementReason;
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "parent")

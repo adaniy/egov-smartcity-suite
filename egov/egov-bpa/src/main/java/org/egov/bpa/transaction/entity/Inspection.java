@@ -85,6 +85,7 @@ import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.filestore.entity.FileStoreMapper;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
@@ -93,11 +94,11 @@ import org.springframework.web.multipart.MultipartFile;
 public class Inspection extends AbstractAuditable {
 
     public static final String SEQ_INSPECTION = "SEQ_EGBPA_INSPECTION";
-    private static final long serialVersionUID = 3078684328383202788L;
     @Id
     @GeneratedValue(generator = SEQ_INSPECTION, strategy = GenerationType.SEQUENCE)
     private Long id;
     @Length(min = 1, max = 64)
+    @SafeHtml
     private String inspectionNumber;
 
     @Temporal(value = TemporalType.DATE)
@@ -113,9 +114,11 @@ public class Inspection extends AbstractAuditable {
     private Boolean isExistingBuildingAsPerPlan;
     private Boolean isInspected;
     @Length(min = 1, max = 1000)
+    @SafeHtml
     private String inspectionRemarks;
     private Boolean isPostponed;
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String postponementReason;
     @Temporal(value = TemporalType.DATE)
     private Date postponedDate;
@@ -198,6 +201,7 @@ public class Inspection extends AbstractAuditable {
     private boolean boundaryDrawingSubmitted;
     private boolean rightToMakeConstruction;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String typeofLand;
     @OneToMany(mappedBy = "inspection", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PlanScrutinyChecklist> planScrutinyChecklist = new ArrayList<>(0);

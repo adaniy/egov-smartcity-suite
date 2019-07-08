@@ -7,7 +7,7 @@ import java.util.List;
 import org.egov.edcr.entity.measurement.Measurement;
 
 public class SanityDetails implements Serializable {
-    private static final long serialVersionUID = 9L;
+    private static final long serialVersionUID = -5257588633529560466L;
     private List<Measurement> maleWaterClosets = new ArrayList<>();
     private List<Measurement> femaleWaterClosets = new ArrayList<>();
     private List<Measurement> commonWaterClosets = new ArrayList<>();

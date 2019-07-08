@@ -53,13 +53,15 @@ import org.egov.commons.CFunction;
 import org.egov.commons.Fund;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_MSTR_BPAFEE")
 @SequenceGenerator(name = BpaFee.SEQ_BPAFEE, sequenceName = BpaFee.SEQ_BPAFEE, allocationSize = 1)
 public class BpaFee extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = -8561842896362381366L;
+
     public static final String SEQ_BPAFEE = "SEQ_EGBPA_MSTR_BPAFEE";
 
     @Id
@@ -80,13 +82,16 @@ public class BpaFee extends AbstractAuditable {
     private Fund fund;
     @NotNull
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String feeType;
     @NotNull
     @Length(min = 1, max = 128)
     @Column(name = "code", unique = true)
+    @SafeHtml
     private String code;
     @NotNull
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String description;
     @NotNull
     private Boolean isFixedAmount;
@@ -100,11 +105,13 @@ public class BpaFee extends AbstractAuditable {
     private Long demandDetailId;
     @NotNull
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String feeDescriptionLocal;
     private Long orderNumber;
     @NotNull
     private Boolean isPlanningPermitFee;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String feeGroup;
 
     @OneToMany(mappedBy = "bpafee", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

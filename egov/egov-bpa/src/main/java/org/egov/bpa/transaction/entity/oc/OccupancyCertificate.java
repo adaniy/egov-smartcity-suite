@@ -81,6 +81,7 @@ import org.egov.infra.utils.DateUtils;
 import org.egov.infra.workflow.entity.StateAware;
 import org.egov.pims.commons.Position;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
@@ -101,12 +102,15 @@ public class OccupancyCertificate extends StateAware<Position> {
     private BpaApplication parent;
 
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String applicationNumber;
 
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String occupancyCertificateNumber;
 
     @Length(min = 1, max = 20)
+    @SafeHtml
     private String eDcrNumber;
 
     @Temporal(value = TemporalType.DATE)
@@ -119,6 +123,7 @@ public class OccupancyCertificate extends StateAware<Position> {
     private Source source;
 
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String applicationType;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -151,10 +156,11 @@ public class OccupancyCertificate extends StateAware<Position> {
     private Boolean authorizedToSubmitPlan = false;
 
     private Boolean failureInScheduler = false;
-
+    @SafeHtml
     private String schedulerFailedRemarks;
 
     @Length(min = 1, max = 5000)
+    @SafeHtml
     private String townSurveyorRemarks;
 
     private Boolean isTownSurveyorInspectionRequire = false;

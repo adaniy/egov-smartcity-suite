@@ -55,19 +55,22 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_AUTODCR_FLOORDETAILS")
 @SequenceGenerator(name = AutoDCRFloorDetails.SEQ_EGBPA_AUTODCR_FLD, sequenceName = AutoDCRFloorDetails.SEQ_EGBPA_AUTODCR_FLD, allocationSize = 1)
 public class AutoDCRFloorDetails extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = 1028458307846389528L;
+
     public static final String SEQ_EGBPA_AUTODCR_FLD = "SEQ_EGBPA_AUTODCR_FloorDetails";
 
     @Id
     @GeneratedValue(generator = SEQ_EGBPA_AUTODCR_FLD, strategy = GenerationType.SEQUENCE)
     private Long id;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String floorName;
     @ManyToOne(cascade = CascadeType.ALL)
     @Valid

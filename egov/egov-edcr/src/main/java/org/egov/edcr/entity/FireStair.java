@@ -2,8 +2,7 @@ package org.egov.edcr.entity;
 
 public class FireStair extends Stair {
 
-    private static final long serialVersionUID = 35L;
-
+    private static final long serialVersionUID = -7731925286127198978L;
     private boolean generalStair = false;
 
     public boolean isGeneralStair() {

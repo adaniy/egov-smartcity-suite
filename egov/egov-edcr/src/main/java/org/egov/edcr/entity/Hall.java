@@ -6,7 +6,7 @@ import org.egov.edcr.entity.measurement.Measurement;
 
 public class Hall extends Measurement {
 
-    private static final long serialVersionUID = 33L;
+    private static final long serialVersionUID = -5356539941227563768L;
 
     private String number;
 

@@ -64,6 +64,7 @@ import javax.validation.constraints.NotNull;
 import org.egov.bpa.master.entity.CheckListDetail;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
@@ -84,6 +85,7 @@ public class DCRDocumentCommon extends AbstractAuditable {
     private Date submissionDate;
     private Boolean isSubmitted;
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String remarks;
     @OrderBy("id ASC")
     @OneToMany(mappedBy = "dcrDocument", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

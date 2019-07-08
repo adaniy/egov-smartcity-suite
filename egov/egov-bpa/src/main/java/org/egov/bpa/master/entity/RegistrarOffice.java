@@ -49,19 +49,21 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_MSTR_REGISTRAR_OFFICE")
 @SequenceGenerator(name = RegistrarOffice.SEQ_EGBPA_MSTR_REGISTRAR_OFFICE, sequenceName = RegistrarOffice.SEQ_EGBPA_MSTR_REGISTRAR_OFFICE, allocationSize = 1)
 public class RegistrarOffice extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = 9152385986787501210L;
     public static final String SEQ_EGBPA_MSTR_REGISTRAR_OFFICE = "SEQ_EGBPA_MSTR_REGISTRAR_OFFICE";
     @Id
     @GeneratedValue(generator = SEQ_EGBPA_MSTR_REGISTRAR_OFFICE, strategy = GenerationType.SEQUENCE)
     private Long id;
     @NotNull
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String name;
     private Boolean isActive;
     private Integer orderNumber;

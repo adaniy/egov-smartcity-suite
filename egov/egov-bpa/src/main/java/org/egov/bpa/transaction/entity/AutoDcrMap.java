@@ -53,19 +53,22 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_AUTODCRMAP")
 @SequenceGenerator(name = AutoDcrMap.SEQ_EGBPA_AUTODCRMAP, sequenceName = AutoDcrMap.SEQ_EGBPA_AUTODCRMAP, allocationSize = 1)
 public class AutoDcrMap extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = 3110485511883315372L;
+
     public static final String SEQ_EGBPA_AUTODCRMAP = "SEQ_EGBPA_AUTODCRMAP";
 
     @Id
     @GeneratedValue(generator = SEQ_EGBPA_AUTODCRMAP, strategy = GenerationType.SEQUENCE)
     private Long id;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String autodcrNumber;
     @ManyToOne(cascade = CascadeType.ALL)
     @Valid

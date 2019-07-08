@@ -13,7 +13,7 @@ import org.egov.edcr.entity.measurement.Measurement;
  *
  */
 public class ParkingDetails implements Serializable {
-    private static final long serialVersionUID = 8L;
+    private static final long serialVersionUID = -6799777425904904290L;
     private List<Measurement> cars = new ArrayList<>();
     private Integer validCarParkingSlots = 0;
     private Integer diningSeats = 0;

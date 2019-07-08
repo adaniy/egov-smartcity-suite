@@ -61,6 +61,7 @@ import javax.validation.constraints.NotNull;
 import org.egov.bpa.master.entity.CheckListDetail;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_DOCKET_CONSTRNSTAGE_COMMON")
@@ -75,9 +76,11 @@ public class DocketConstructionStageCommon extends AbstractAuditable {
     private Long id;
 
     @Length(min = 1, max = 32)
+    @SafeHtml
     private String value;
 
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String remarks;
 
     @ManyToOne(fetch = FetchType.LAZY)

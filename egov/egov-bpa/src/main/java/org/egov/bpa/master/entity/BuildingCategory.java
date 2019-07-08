@@ -40,13 +40,14 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_MSTR_BLDGCATEGORY")
 @SequenceGenerator(name = BuildingCategory.SEQ_BUILDINGCATEGORY, sequenceName = BuildingCategory.SEQ_BUILDINGCATEGORY, allocationSize = 1)
 public class BuildingCategory extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = -4660694398547840494L;
     public static final String SEQ_BUILDINGCATEGORY = "SEQ_EGBPA_MSTR_BLDGCATEGORY";
     @Id
     @GeneratedValue(generator = SEQ_BUILDINGCATEGORY, strategy = GenerationType.SEQUENCE)
@@ -55,10 +56,12 @@ public class BuildingCategory extends AbstractAuditable {
     @NotNull
     @Length(min = 1, max = 128)
     @Column(name = "code", unique = true)
+    @SafeHtml
     private String code;
 
     @NotNull
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String description;
 
     @NotNull

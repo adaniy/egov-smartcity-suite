@@ -47,13 +47,14 @@ import javax.validation.constraints.NotNull;
 import org.egov.bpa.transaction.entity.BpaNoc;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_MSTR_SERVICETYPE")
 @SequenceGenerator(name = ServiceType.SEQ_SERVICETYPE, sequenceName = ServiceType.SEQ_SERVICETYPE, allocationSize = 1)
 public class ServiceType extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = -8016058733882685489L;
     public static final String SEQ_SERVICETYPE = "SEQ_EGBPA_MSTR_SERVICETYPE";
     @Id
     @GeneratedValue(generator = SEQ_SERVICETYPE, strategy = GenerationType.SEQUENCE)
@@ -62,9 +63,11 @@ public class ServiceType extends AbstractAuditable {
     @NotNull
     @Length(min = 1, max = 128)
     @Column(name = "code", unique = true)
+    @SafeHtml
     private String code;
     @NotNull
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String description;
     private Boolean isActive;
     private Boolean buildingPlanApproval;
@@ -78,8 +81,10 @@ public class ServiceType extends AbstractAuditable {
     private Boolean isAutoDcrNumberRequired;
     @NotNull
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String serviceNumberPrefix;
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String descriptionLocal;
     private Boolean isDocUploadForCitizen;
     private Long sla;

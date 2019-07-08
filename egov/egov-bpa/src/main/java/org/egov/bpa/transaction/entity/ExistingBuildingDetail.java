@@ -60,16 +60,18 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_EXISTING_BUILDINGDETAIL")
 @SequenceGenerator(name = ExistingBuildingDetail.SEQ_EXISTING_BUILDINGDETAIL, sequenceName = ExistingBuildingDetail.SEQ_EXISTING_BUILDINGDETAIL, allocationSize = 1)
 public class ExistingBuildingDetail extends AbstractAuditable {
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = -8679120036585824627L;
     public static final String SEQ_EXISTING_BUILDINGDETAIL = "SEQ_EGBPA_EXISTING_BUILDINGDETAIL";
     @Id
     @GeneratedValue(generator = SEQ_EXISTING_BUILDINGDETAIL, strategy = GenerationType.SEQUENCE)
     private Long id;
+    @SafeHtml
     private String name;
     private Integer number;
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

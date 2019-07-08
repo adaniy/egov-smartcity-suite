@@ -69,13 +69,14 @@ import org.egov.bpa.transaction.entity.enums.BpaUom;
 import org.egov.infra.admin.master.entity.Boundary;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_SITEDETAIL")
 @SequenceGenerator(name = SiteDetail.SEQ_EGBPA_SITEDETAIL, sequenceName = SiteDetail.SEQ_EGBPA_SITEDETAIL, allocationSize = 1)
 public class SiteDetail extends AbstractAuditable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 5481799733300554670L;
     public static final String SEQ_EGBPA_SITEDETAIL = "SEQ_EGBPA_SITEDETAIL";
     @Id
     @GeneratedValue(generator = SEQ_EGBPA_SITEDETAIL, strategy = GenerationType.SEQUENCE)
@@ -85,26 +86,37 @@ public class SiteDetail extends AbstractAuditable {
     @JoinColumn(name = "application", nullable = false)
     private BpaApplication application;
     @Length(min = 1, max = 12)
+    @SafeHtml
     private String plotdoornumber;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String plotlandmark;
     @Length(min = 1, max = 24)
+    @SafeHtml
     private String plotnumber;
     @Length(min = 1, max = 24)
+    @SafeHtml
     private String plotsurveynumber;
     @Length(min = 1, max = 24)
+    @SafeHtml
     private String surveynumberType;
     @Length(min = 1, max = 24)
+    @SafeHtml
     private String oldSurveyNumber;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String reSurveyNumber;
     @Length(min = 1, max = 24)
+    @SafeHtml
     private String townSurveyNumber;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String streetaddress1;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String streetaddress2;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String area;
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "adminboundary")
@@ -116,6 +128,7 @@ public class SiteDetail extends AbstractAuditable {
     @JoinColumn(name = "electionBoundary")
     private Boundary electionBoundary;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String citytown;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "street")
@@ -128,6 +141,7 @@ public class SiteDetail extends AbstractAuditable {
     @JoinColumn(name = "postalAddress")
     private PostalAddress postalAddress;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String natureofOwnership;
     private BigDecimal extentOfLand;
     private BigDecimal extentinsqmts;
@@ -138,16 +152,20 @@ public class SiteDetail extends AbstractAuditable {
     @JoinColumn(name = "registrarOffice")
     private RegistrarOfficeVillage registrarOffice;
     @Length(min = 1, max = 12)
+    @SafeHtml
     private String nearestbuildingnumber;
     @Length(min = 1, max = 12)
+    @SafeHtml
     private String subdivisionNumber;
     @Length(min = 1, max = 128)
     private Boolean encroachmentIssuesPresent;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String encroachmentRemarks;
     /// this need to be check as we can refer master --statusofsite -- construction in progress,vacant ,completed
     private Boolean siteinApprovedLayout;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String approvedLayoutDetail;
     private BigDecimal setBackFront;
     private BigDecimal setBackRear;
@@ -155,6 +173,7 @@ public class SiteDetail extends AbstractAuditable {
     private BigDecimal setBackSide2;
     private BigDecimal lengthOfCompoundWall;
     private BigDecimal dwellingunitnt;
+    @SafeHtml
     private String locationOfPlot;
     private BigDecimal roofConversion;
     private BigDecimal shutter;
@@ -168,6 +187,7 @@ public class SiteDetail extends AbstractAuditable {
     @JoinColumn(name = "conststages")
     private ConstructionStages constStages;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String stateOfConstruction;
     private Boolean isappForRegularization = false;
     @Temporal(value = TemporalType.DATE)

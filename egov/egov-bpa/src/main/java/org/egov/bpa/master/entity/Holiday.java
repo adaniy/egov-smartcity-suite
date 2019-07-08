@@ -49,6 +49,7 @@ import org.egov.bpa.transaction.entity.enums.HolidayType;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.egov.infra.persistence.validator.annotation.Unique;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_MSTR_HOLIDAY")
@@ -56,7 +57,8 @@ import org.hibernate.validator.constraints.Length;
 @SequenceGenerator(name = Holiday.SEQ_HOLIDAY, sequenceName = Holiday.SEQ_HOLIDAY, allocationSize = 1)
 public class Holiday extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = 4774222028817135987L;
+
     public static final String SEQ_HOLIDAY = "SEQ_EGBPA_MSTR_HOLIDAY";
 
     @Id
@@ -72,9 +74,11 @@ public class Holiday extends AbstractAuditable {
     private Date holidayDate;
 
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String description;
 
     @Length(min = 1, max = 30)
+    @SafeHtml
     private String year;
 
     private transient List<Holiday> holidaysTemp = new ArrayList<>();

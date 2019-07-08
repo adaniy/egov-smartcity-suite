@@ -47,7 +47,7 @@ import org.egov.infra.persistence.entity.AbstractAuditable;
 @SequenceGenerator(name = ApplicationStakeHolder.SEQ_APPLICATION_STAKEHOLDER, sequenceName = ApplicationStakeHolder.SEQ_APPLICATION_STAKEHOLDER, allocationSize = 1)
 public class ApplicationStakeHolder extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = -697799795833917212L;
     public static final String SEQ_APPLICATION_STAKEHOLDER = "SEQ_EGBPA_ApplicationStakeHolder";
     @Id
     @GeneratedValue(generator = SEQ_APPLICATION_STAKEHOLDER, strategy = GenerationType.SEQUENCE)

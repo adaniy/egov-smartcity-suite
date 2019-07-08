@@ -7,7 +7,7 @@ import java.util.List;
 import org.egov.edcr.entity.utility.RuleReportOutput;
 
 public class SubRuleOutput implements Serializable {
-    private static final long serialVersionUID = 56L;
+    private static final long serialVersionUID = 1210655669893150338L;
     public String key;
     public List<RuleReportOutput> ruleReportOutputs = new ArrayList();
     public String message;

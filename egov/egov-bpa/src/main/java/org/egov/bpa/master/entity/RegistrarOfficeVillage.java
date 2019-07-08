@@ -59,7 +59,7 @@ import org.egov.infra.persistence.entity.AbstractAuditable;
 @SequenceGenerator(name = RegistrarOfficeVillage.SEQ_EGBPA_MSTR_REGISTRAR_VILLAGE, sequenceName = RegistrarOfficeVillage.SEQ_EGBPA_MSTR_REGISTRAR_VILLAGE, allocationSize = 1)
 public class RegistrarOfficeVillage extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = 6326984945097587062L;
     public static final String SEQ_EGBPA_MSTR_REGISTRAR_VILLAGE = "seq_egbpa_mstr_registrar_village";
     @Id
     @GeneratedValue(generator = SEQ_EGBPA_MSTR_REGISTRAR_VILLAGE, strategy = GenerationType.SEQUENCE)

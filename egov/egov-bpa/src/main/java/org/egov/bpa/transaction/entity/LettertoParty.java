@@ -54,13 +54,15 @@ import org.egov.bpa.master.entity.LpReason;
 import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_LETTERTOPARTY")
 @SequenceGenerator(name = LettertoParty.SEQ_LETTERTOPARTY, sequenceName = LettertoParty.SEQ_LETTERTOPARTY, allocationSize = 1)
 public class LettertoParty extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = 4184790380138349134L;
+
     public static final String SEQ_LETTERTOPARTY = "SEQ_EGBPA_LETTERTOPARTY";
 
     @Id
@@ -74,11 +76,13 @@ public class LettertoParty extends AbstractAuditable {
     @JoinColumn(name = "inspection")
     private Inspection inspection;
     @Length(min = 1, max = 32)
+    @SafeHtml
     private String acknowledgementNumber;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "egbpa_lp_and_reason", joinColumns = @JoinColumn(name = "lettertoparty"), inverseJoinColumns = @JoinColumn(name = "lpreason"))
     private List<LpReason> lpReason;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String lpNumber;
 
     @Temporal(TemporalType.DATE)
@@ -87,6 +91,7 @@ public class LettertoParty extends AbstractAuditable {
     @JoinColumn(name = "scheduledby")
     private User scheduledby;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String scheduledPlace;
     @Temporal(TemporalType.DATE)
     private Date scheduledtime;
@@ -95,15 +100,20 @@ public class LettertoParty extends AbstractAuditable {
     @Temporal(TemporalType.DATE)
     private Date replyDate;
     @Length(min = 1, max = 1024)
+    @SafeHtml
     private String lpRemarks;
     @Length(min = 1, max = 1024)
+    @SafeHtml
     private String lpReplyRemarks;
     @Length(min = 1, max = 1024)
+    @SafeHtml
     private String lpDesc;
     @Length(min = 1, max = 1024)
+    @SafeHtml
     private String lpReplyDesc;
     private Boolean isHistory;
     @Length(min = 1, max = 512)
+    @SafeHtml
     private String documentid;
     @Temporal(TemporalType.DATE)
     private Date lastReplyDate;
@@ -113,11 +123,14 @@ public class LettertoParty extends AbstractAuditable {
     @OrderBy("id ASC")
     @OneToMany(mappedBy = "lettertoParty", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<LettertoPartyDocument> lettertoPartyDocument = new ArrayList<>(0);
+    @SafeHtml
     private String currentStateValueOfLP;
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "currentapplnstatus")
     private BpaStatus currentApplnStatus;
+    @SafeHtml
     private String stateForOwnerPosition;
+    @SafeHtml
     private String pendingAction;
 
     @Override

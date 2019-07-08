@@ -68,15 +68,13 @@ import javax.persistence.TemporalType;
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_PERMIT_REVOCATION")
 @SequenceGenerator(name = PermitRevocation.SEQ_REVOCATION, sequenceName = PermitRevocation.SEQ_REVOCATION, allocationSize = 1)
 public class PermitRevocation extends AbstractAuditable {
 
-    /**
-    *
-    */
     private static final long serialVersionUID = -4954480849979881787L;
 
     public static final String SEQ_REVOCATION = "SEQ_EGBPA_PERMIT_REVOCATION";
@@ -90,21 +88,25 @@ public class PermitRevocation extends AbstractAuditable {
     private BpaApplication application;
 
     @Length(min = 1, max = 64)
+    @SafeHtml
     private String applicationNumber;
 
     @Temporal(value = TemporalType.DATE)
     private Date applicationDate;
 
     @Length(min = 1, max = 64)
+    @SafeHtml
     private String revocationNumber;
 
     @Temporal(value = TemporalType.DATE)
     private Date revocationDate;
 
     @Length(min = 1, max = 1024)
+    @SafeHtml
     private String initiateRemarks;
 
     @Length(min = 1, max = 1024)
+    @SafeHtml
     private String approveCancelRemarks;
 
     @OneToMany(mappedBy = "revocation", cascade = CascadeType.ALL)

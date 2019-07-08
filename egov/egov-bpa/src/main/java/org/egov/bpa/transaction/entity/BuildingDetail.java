@@ -52,16 +52,19 @@ import javax.validation.constraints.NotNull;
 import org.egov.bpa.master.entity.BuildingCategory;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_BUILDINGDETAIL")
 @SequenceGenerator(name = BuildingDetail.SEQEGBPABUILDINGDETAIL, sequenceName = BuildingDetail.SEQEGBPABUILDINGDETAIL, allocationSize = 1)
 public class BuildingDetail extends AbstractAuditable {
-    private static final long serialVersionUID = 3078684328383202788L;
+
+    private static final long serialVersionUID = -8052301413392051593L;
     public static final String SEQEGBPABUILDINGDETAIL = "SEQ_EGBPA_BUILDINGDETAIL";
     @Id
     @GeneratedValue(generator = SEQEGBPABUILDINGDETAIL, strategy = GenerationType.SEQUENCE)
     private Long id;
+    @SafeHtml
     private String name;
     private Integer number;
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -71,6 +74,7 @@ public class BuildingDetail extends AbstractAuditable {
     private BpaApplication application;
     private Integer unitCount;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String unitClassification;
     private Integer floorCount;
     private Integer noofbasementUnit;
@@ -96,7 +100,9 @@ public class BuildingDetail extends AbstractAuditable {
     private BigDecimal heightFromGroundWithOutStairRoom;
     private BigDecimal fromStreetLevelWithStairRoom;
     private BigDecimal fromStreetLevelWithOutStairRoom;
+    @SafeHtml
     private String townPlanningZone;
+    @SafeHtml
     private String crzZone;
     @OneToMany(mappedBy = "buildingDetail", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @OrderBy("orderOfFloor")

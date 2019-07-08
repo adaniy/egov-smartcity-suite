@@ -48,13 +48,14 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_DOCHIST_DETAIL")
 @SequenceGenerator(name = DocumentHistoryDetail.SEQ_DOCUMENTHISTORY_DETAIL, sequenceName = DocumentHistoryDetail.SEQ_DOCUMENTHISTORY_DETAIL, allocationSize = 1)
 public class DocumentHistoryDetail extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = -1482299518936585600L;
     public static final String SEQ_DOCUMENTHISTORY_DETAIL = "SEQ_EGBPA_DOCHIST_DETAIL";
     @Id
     @GeneratedValue(generator = SEQ_DOCUMENTHISTORY_DETAIL, strategy = GenerationType.SEQUENCE)
@@ -64,38 +65,52 @@ public class DocumentHistoryDetail extends AbstractAuditable {
     @JoinColumn(name = "docHistory")
     private DocumentHistory docHistory;
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String surveyNumber;
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String vendor;
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String purchaser;
     private BigDecimal extentInsqmt;
     private BigDecimal plotorStreetNumber;
     @Transient
     private Long srlNo;
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String natureOfDeed;
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String remarks;
     @Temporal(value = TemporalType.DATE)
     private Date documentDate;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String documentType;
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String referenceNumber;
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String northBoundary;
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String southBoundary;
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String westBoundary;
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String eastBoundary;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String villeagename;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String previousowner;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String presentowner;
 
     @Override

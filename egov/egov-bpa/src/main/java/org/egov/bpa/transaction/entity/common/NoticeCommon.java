@@ -62,15 +62,13 @@ import javax.persistence.Table;
 
 import org.egov.infra.filestore.entity.FileStoreMapper;
 import org.egov.infra.persistence.entity.AbstractAuditable;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "egbpa_notice_common")
 @SequenceGenerator(name = NoticeCommon.SEQ_BPA_NOTICE_COMMON, sequenceName = NoticeCommon.SEQ_BPA_NOTICE_COMMON, allocationSize = 1)
 public class NoticeCommon extends AbstractAuditable {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -2679151193081470064L;
 
     public static final String SEQ_BPA_NOTICE_COMMON = "SEQ_EGBPA_NOTICE_COMMON";
@@ -85,6 +83,7 @@ public class NoticeCommon extends AbstractAuditable {
     @JoinColumn(name = "noticeFileStore")
     private FileStoreMapper noticeFileStore;
 
+    @SafeHtml
     private String noticeType;
 
     @Override

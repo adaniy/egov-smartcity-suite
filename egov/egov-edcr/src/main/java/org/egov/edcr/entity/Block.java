@@ -12,8 +12,7 @@ import org.egov.edcr.entity.utility.SetBack;
 
 public class Block extends Measurement {
 
-    private static final long serialVersionUID = 12L;
-
+    private static final long serialVersionUID = 3126433375694514278L;
     private Building building = new Building();
     private String name;
     private String number;

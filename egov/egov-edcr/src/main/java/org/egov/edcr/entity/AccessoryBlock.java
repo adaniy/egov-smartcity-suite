@@ -8,8 +8,8 @@ import org.kabeja.dxf.DXFLWPolyline;
 
 public class AccessoryBlock extends Measurement {
 
-    private static final long serialVersionUID = 18L;
 
+    private static final long serialVersionUID = 1521692555939625281L;
     private String number;
     private transient List<DXFLWPolyline> polylineList = new ArrayList<>();
 

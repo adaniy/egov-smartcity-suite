@@ -7,7 +7,8 @@ import org.egov.edcr.utility.Util;
 import org.kabeja.dxf.DXFLWPolyline;
 
 public class Measurement implements Cloneable, Serializable {
-    private static final long serialVersionUID = 3L;
+
+    private static final long serialVersionUID = -6113826238198843596L;
 
     protected Boolean presentInDxf = false;
 

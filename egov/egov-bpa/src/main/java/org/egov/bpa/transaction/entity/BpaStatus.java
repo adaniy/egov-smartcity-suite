@@ -40,13 +40,15 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_STATUS")
 @SequenceGenerator(name = BpaStatus.SEQ_BPASTATUS, sequenceName = BpaStatus.SEQ_BPASTATUS, allocationSize = 1)
 public class BpaStatus extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = 4551936946960816364L;
+
     public static final String SEQ_BPASTATUS = "SEQ_EGBPA_STATUS";
 
     @Id
@@ -56,16 +58,20 @@ public class BpaStatus extends AbstractAuditable {
     @NotNull
     @Length(min = 1, max = 128)
     @Column(name = "code", unique = true)
+    @SafeHtml
     private String code;
 
     @NotNull
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String description;
 
     @NotNull
     private Boolean isActive;
+  
     @Length(min = 1, max = 64)
     @NotNull
+    @SafeHtml
     private String moduleType;
 
     @Override

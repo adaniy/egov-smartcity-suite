@@ -40,13 +40,15 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_MSTR_INSPSOURCE")
 @SequenceGenerator(name = InspectionSource.SEQ_INSPECTIONSOURCE, sequenceName = InspectionSource.SEQ_INSPECTIONSOURCE, allocationSize = 1)
 public class InspectionSource extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = 8503539532148098191L;
+
     public static final String SEQ_INSPECTIONSOURCE = "SEQ_EGBPA_MSTR_INSPSOURCE";
 
     @Id
@@ -56,10 +58,12 @@ public class InspectionSource extends AbstractAuditable {
     @NotNull
     @Length(min = 1, max = 128)
     @Column(name = "code", unique = true)
+    @SafeHtml
     private String code;
 
     @NotNull
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String description;
 
     private Boolean isActive;

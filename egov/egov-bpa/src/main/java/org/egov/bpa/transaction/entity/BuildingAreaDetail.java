@@ -41,6 +41,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.validator.constraints.SafeHtml;
+
 @Entity
 @Table(name = "egbpa_buildingareadetail")
 @SequenceGenerator(name = BuildingAreaDetail.SEQEGBPABUILDINGAREADETAIL, sequenceName = BuildingAreaDetail.SEQEGBPABUILDINGAREADETAIL, allocationSize = 1)
@@ -52,6 +54,7 @@ public class BuildingAreaDetail {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "buildingDetails")
     private BuildingDetail buildingDetails;
+    @SafeHtml
     private String floorDescription;
     private BigDecimal plinthArea;
     private BigDecimal carpetArea;

@@ -10,7 +10,7 @@ import org.egov.edcr.entity.measurement.Measurement;
 import org.egov.edcr.entity.measurement.WasteDisposal;
 
 public class Utility extends Measurement {
-    private static final long serialVersionUID = 16L;
+    private static final long serialVersionUID = -5119633549293595758L;
     private List<WasteDisposal> wasteDisposalUnits = new ArrayList<>();
     private List<WasteWaterRecyclePlant> wasteWaterRecyclePlant = new ArrayList<>();
     private List<LiquidWasteTreatementPlant> liquidWasteTreatementPlant = new ArrayList<>();

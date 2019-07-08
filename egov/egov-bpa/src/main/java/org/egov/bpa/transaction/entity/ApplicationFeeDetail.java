@@ -56,7 +56,8 @@ import org.hibernate.envers.RelationTargetAuditMode;
         @AuditOverride(forClass = AbstractAuditable.class, name = "lastModifiedDate") })
 public class ApplicationFeeDetail extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = -3864005281742747177L;
+
     public static final String SEQ_APPLICATIONFEE_DETAIL = "SEQ_EGBPA_APPLICATION_FEEDETAILS";
 
     @Id

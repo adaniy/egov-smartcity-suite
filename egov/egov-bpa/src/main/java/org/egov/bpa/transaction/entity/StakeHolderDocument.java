@@ -56,7 +56,7 @@ import org.springframework.web.multipart.MultipartFile;
 @SequenceGenerator(name = StakeHolderDocument.SEQ_STAKEHOLDER_DOCUMENT, sequenceName = StakeHolderDocument.SEQ_STAKEHOLDER_DOCUMENT, allocationSize = 1)
 public class StakeHolderDocument extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = 6844828410798807258L;
     public static final String SEQ_STAKEHOLDER_DOCUMENT = "SEQ_EGBPA_STAKEHOLDER_Document";
     @Id
     @GeneratedValue(generator = SEQ_STAKEHOLDER_DOCUMENT, strategy = GenerationType.SEQUENCE)

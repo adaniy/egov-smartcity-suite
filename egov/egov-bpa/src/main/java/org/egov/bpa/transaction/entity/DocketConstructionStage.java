@@ -43,21 +43,25 @@ import javax.validation.constraints.NotNull;
 import org.egov.bpa.master.entity.CheckListDetail;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_DOCKET_CONSTRNSTAGE")
 @SequenceGenerator(name = DocketConstructionStage.SEQ_DOCKETCONSTRSTAGE, sequenceName = DocketConstructionStage.SEQ_DOCKETCONSTRSTAGE, allocationSize = 1)
 public class DocketConstructionStage extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = 7478004254185870L;
+
     public static final String SEQ_DOCKETCONSTRSTAGE = "SEQ_EGBPA_DOCKET_CONSTRNSTAGE";
 
     @Id
     @GeneratedValue(generator = SEQ_DOCKETCONSTRSTAGE, strategy = GenerationType.SEQUENCE)
     private Long id;
     @Length(min = 1, max = 32)
+    @SafeHtml
     private String value;
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String remarks;
 
     @ManyToOne(fetch = FetchType.LAZY)

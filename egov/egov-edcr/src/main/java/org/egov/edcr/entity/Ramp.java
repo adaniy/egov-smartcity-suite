@@ -8,7 +8,7 @@ import org.kabeja.dxf.DXFLWPolyline;
 
 public class Ramp extends Measurement {
 
-    private static final long serialVersionUID = 30L;
+    private static final long serialVersionUID = -5516452227204331621L;
 
     private Integer number;
 

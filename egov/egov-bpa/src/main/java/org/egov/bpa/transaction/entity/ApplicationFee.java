@@ -60,20 +60,22 @@ import javax.validation.constraints.NotNull;
 import org.egov.infra.workflow.entity.StateAware;
 import org.egov.pims.commons.Position;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_APPLICATION_FEE")
 @SequenceGenerator(name = ApplicationFee.SEQ_APPLICATIONFEE, sequenceName = ApplicationFee.SEQ_APPLICATIONFEE, allocationSize = 1)
 public class ApplicationFee extends StateAware<Position> {
 
+    private static final long serialVersionUID = 4609048163280486331L;
     public static final String SEQ_APPLICATIONFEE = "SEQ_EGBPA_APPLICATION_FEE";
-    private static final long serialVersionUID = 3078684328383202788L;
     @Id
     @GeneratedValue(generator = SEQ_APPLICATIONFEE, strategy = GenerationType.SEQUENCE)
     private Long id;
     @NotNull
     private Date feeDate;
     @Length(min = 1, max = 1024)
+    @SafeHtml
     private String feeRemarks;
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
@@ -84,12 +86,14 @@ public class ApplicationFee extends StateAware<Position> {
     @JoinColumn(name = "application")
     private BpaApplication application;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String challanNumber;
     @OrderBy("id ASC")
     @OneToMany(mappedBy = "applicationFee", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ApplicationFeeDetail> applicationFeeDetail = new ArrayList<>();
     private Boolean isRevised = false;
     @Length(min = 1, max = 512)
+    @SafeHtml
     private String modifyFeeReason;
 
     @Override

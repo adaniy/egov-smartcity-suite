@@ -45,13 +45,15 @@ import javax.validation.constraints.NotNull;
 import org.egov.commons.Bank;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_DD_DETAIL")
 @SequenceGenerator(name = DDDetail.SEQ_DDDETAIL, sequenceName = DDDetail.SEQ_DDDETAIL, allocationSize = 1)
 public class DDDetail extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = -8014831206344964056L;
+
     public static final String SEQ_DDDETAIL = "SEQ_EGBPA_DD_DETAIL";
 
     @Id
@@ -59,10 +61,12 @@ public class DDDetail extends AbstractAuditable {
     private Long id;
     private BigDecimal ddAmount;
     @Length(min = 1, max = 64)
+    @SafeHtml
     private String ddNumber;
     @NotNull
     private Date ddDate;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String ddType;
     @ManyToOne(fetch = FetchType.LAZY)
     private Bank ddBank;

@@ -8,8 +8,8 @@ import org.egov.edcr.entity.measurement.Measurement;
 
 public class AccessoryBuilding extends Measurement {
 
-    private static final long serialVersionUID = 41L;
 
+    private static final long serialVersionUID = -6405767094179810621L;
     private List<BigDecimal> distanceFromPlotBoundary = new ArrayList<>();
 
     public List<BigDecimal> getDistanceFromPlotBoundary() {

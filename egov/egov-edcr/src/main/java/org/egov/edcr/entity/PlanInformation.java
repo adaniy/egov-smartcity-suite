@@ -13,71 +13,73 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EDCR_PLANINFO")
 @SequenceGenerator(name = PlanInformation.SEQ_EDCR_PLANINFO, sequenceName = PlanInformation.SEQ_EDCR_PLANINFO, allocationSize = 1)
 public class PlanInformation extends AbstractAuditable implements Serializable {
 
+    private static final long serialVersionUID = 2851586270698193495L;
     public static final String SEQ_EDCR_PLANINFO = "SEQ_EDCR_PLANINFO";
-    private static final long serialVersionUID = 4L;
-
     @Id
     @GeneratedValue(generator = SEQ_EDCR_PLANINFO, strategy = GenerationType.SEQUENCE)
     private Long id;
 
     private BigDecimal plotArea = BigDecimal.ZERO;
-
+    @SafeHtml
     private String ownerName;
-
+    @SafeHtml
     private String occupancy;
-
+    @SafeHtml
     private String serviceType;
-
+    @SafeHtml
     private String amenities;
-
+    @SafeHtml
     private String architectInformation;
 
     private Long acchitectId;
-
+    @SafeHtml
     private String applicantName;
 
     private Boolean crzZoneArea = true;
-
+    @SafeHtml
     private transient String crzZoneDesc = NA;
 
     private BigDecimal demolitionArea = BigDecimal.ZERO;
 
     private transient Boolean depthCutting;
-
+    @SafeHtml
     private transient String depthCuttingDesc = NA;
 
     private transient Boolean governmentOrAidedSchool;
 
     private transient Boolean securityZone = true;
-
+    @SafeHtml
     private transient String securityZoneDesc = NA;
 
     private transient BigDecimal accessWidth;
 
     private transient BigDecimal noOfBeds;
-
+    @SafeHtml
     private transient String nocToAbutSideDesc = NA;
-
+    @SafeHtml
     private transient String nocToAbutRearDesc = NA;
 
     private transient Boolean openingOnSide = false;
-
+    @SafeHtml
     private transient String openingOnSideBelow2mtsDesc = NA;
-
+    @SafeHtml
     private transient String openingOnSideAbove2mtsDesc = NA;
-
+    @SafeHtml
     private transient String openingOnRearBelow2mtsDesc = NA;
-
+    @SafeHtml
     private transient String openingOnRearAbove2mtsDesc = NA;
-
+    @SafeHtml
     private transient String plotInCommercialZone = NA;
+    @SafeHtml
     private transient String commercialZoneBldgOpenOnSide1 = NA;
+    @SafeHtml
     private transient String commercialZoneBldgOpenOnSide2 = NA;
 
     /*
@@ -94,13 +96,13 @@ public class PlanInformation extends AbstractAuditable implements Serializable {
     private transient Integer numberOfWorkers = 0;
 
     private transient Boolean singleFamilyBuilding;
-
+    @SafeHtml
     private String reSurveyNo;
-
+    @SafeHtml
     private String revenueWard;
-
+    @SafeHtml
     private String desam;
-
+    @SafeHtml
     private String village;
 
     public Boolean getParkingToMainBuilding() {

@@ -52,6 +52,7 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_MSTR_SCHEMELANDUSAGE")
@@ -73,6 +74,7 @@ public class BpaSchemeLandUsage extends AbstractAuditable {
 
     @NotNull
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String description;
 
     @NotNull

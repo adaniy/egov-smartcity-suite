@@ -8,8 +8,7 @@ import org.egov.edcr.entity.measurement.Measurement;
 
 public class Occupancy extends Measurement {
 
-    private static final long serialVersionUID = 22L;
-
+    private static final long serialVersionUID = 273268209293922286L;
     private OccupancyType type;
     private BigDecimal deduction = BigDecimal.ZERO;
     private BigDecimal builtUpArea = BigDecimal.ZERO;

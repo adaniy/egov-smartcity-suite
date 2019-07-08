@@ -6,7 +6,7 @@ import org.egov.edcr.entity.measurement.Measurement;
 
 public class ElectricLine extends Measurement {
 
-    private static final long serialVersionUID = 19L;
+    private static final long serialVersionUID = -213172080179005526L;
     private String number;
     private BigDecimal verticalDistance;
     private BigDecimal horizontalDistance;

@@ -59,22 +59,21 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.infra.admin.master.entity.Boundary;
 import org.egov.infra.persistence.entity.AbstractAuditable;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "egbpa_slot")
 @SequenceGenerator(name = Slot.SEQ, sequenceName = Slot.SEQ, allocationSize = 1)
 public class Slot extends AbstractAuditable {
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
+
+    private static final long serialVersionUID = 4152515501710448672L;
 
     public static final String SEQ = "seq_egbpa_slot";
 
     @Id
     @GeneratedValue(generator = SEQ, strategy = GenerationType.SEQUENCE)
     private Long id;
-
+    @SafeHtml
     private String type;
 
     @NotNull

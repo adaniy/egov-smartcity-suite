@@ -63,6 +63,7 @@ import javax.persistence.Table;
 import org.egov.bpa.master.entity.PermitConditions;
 import org.egov.bpa.transaction.entity.enums.PermitConditionType;
 import org.egov.infra.persistence.entity.AbstractAuditable;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "egbpa_oc_notice_conditions")
@@ -83,11 +84,13 @@ public class OCNoticeConditions extends AbstractAuditable {
     @JoinColumn(name = "noticecondition", nullable = false)
     private PermitConditions noticeCondition;
     private Date conditiondDate;
+    @SafeHtml
     private String conditionNumber;
     private Integer orderNumber;
     @Enumerated(EnumType.STRING)
     private PermitConditionType type;
     private boolean isRequired;
+    @SafeHtml
     private String additionalCondition;
 
     @Override

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReportOutput implements Serializable {
-    private static final long serialVersionUID = 2L;
+    private static final long serialVersionUID = -6478928965806435331L;
     public List<RuleOutput> ruleOutPuts = new ArrayList<>();
     public List<ScrutinyDetail> scrutinyDetails = new ArrayList<>();
 

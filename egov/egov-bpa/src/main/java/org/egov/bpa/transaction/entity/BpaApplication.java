@@ -92,6 +92,7 @@ import org.egov.infra.utils.DateUtils;
 import org.egov.infra.workflow.entity.StateAware;
 import org.egov.pims.commons.Position;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
@@ -107,10 +108,12 @@ public class BpaApplication extends StateAware<Position> {
     @GeneratedValue(generator = SEQ_APPLICATION, strategy = GenerationType.SEQUENCE)
     private Long id;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String buildingplanapprovalnumber;
     @Temporal(value = TemporalType.DATE)
     private Date buildingPlanApprovalDate;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String applicationNumber;
     @NotNull
     @Temporal(value = TemporalType.DATE)
@@ -118,11 +121,13 @@ public class BpaApplication extends StateAware<Position> {
     @Temporal(value = TemporalType.DATE)
     private Date approvalDate;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String assessmentNumber;
     @NotNull
     @Enumerated(EnumType.ORDINAL)
     private Source source;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String applicantType;
     // same as source
     @NotNull
@@ -139,12 +144,15 @@ public class BpaApplication extends StateAware<Position> {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Applicant owner;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String planPermissionNumber;
     @Temporal(value = TemporalType.DATE)
     private Date planPermissionDate;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String oldApplicationNumber;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String tapalNumber;
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "occupancy")
@@ -156,27 +164,35 @@ public class BpaApplication extends StateAware<Position> {
     @JoinColumn(name = "demand")
     private EgDemand demand;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String remarks;
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String projectName;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String groupDevelopment;
     private BigDecimal admissionfeeAmount;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String feeAmountRecieptNo;
     private BigDecimal approvedFeeAmount;
     private Date approvedReceiptDate;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String revisedApplicationNumber;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String revisedPermitNumber;
     private Boolean isExistingApprovedPlan = false;
     private boolean citizenAccepted;
     private boolean architectAccepted;
     private Boolean isEconomicallyWeakerSection;
+    @SafeHtml
     private String additionalRejectionReasons;
     private Boolean isSentToPreviousOwner = false;
     @Length(min = 1, max = 5000)
+    @SafeHtml
     private String townSurveyorRemarks;
     private Boolean isTownSurveyorInspectionRequire = false;
     private Boolean isRescheduledByCitizen = false;
@@ -184,6 +200,7 @@ public class BpaApplication extends StateAware<Position> {
     private Boolean isOneDayPermitApplication = false;
     private Boolean isLPRequestInitiated;
     private Boolean failureInScheduler = false;
+    @SafeHtml
     private String schedulerFailedRemarks;
     private Boolean authorizedToSubmitPlan = false;
 
@@ -191,6 +208,7 @@ public class BpaApplication extends StateAware<Position> {
     @Column(name = "typeOfLand")
     private OneDayPermitLandType typeOfLand;// Garden Land or Wet Land
     @Length(min = 1, max = 20)
+    @SafeHtml
     private String eDcrNumber;
     private BigDecimal totalBuiltUpArea;
 

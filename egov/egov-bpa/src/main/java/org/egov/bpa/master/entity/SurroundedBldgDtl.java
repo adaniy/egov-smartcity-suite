@@ -40,13 +40,14 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_MSTR_SURNBLDGDTL")
 @SequenceGenerator(name = SurroundedBldgDtl.SEQ_SURROUNDEDBLDGDTL, sequenceName = SurroundedBldgDtl.SEQ_SURROUNDEDBLDGDTL, allocationSize = 1)
 public class SurroundedBldgDtl extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = 5309264897892541708L;
     public static final String SEQ_SURROUNDEDBLDGDTL = "SEQ_EGBPA_MSTR_SURNBLDGDTL";
     @Id
     @GeneratedValue(generator = SEQ_SURROUNDEDBLDGDTL, strategy = GenerationType.SEQUENCE)
@@ -55,9 +56,11 @@ public class SurroundedBldgDtl extends AbstractAuditable {
     @NotNull
     @Length(min = 1, max = 128)
     @Column(name = "code", unique = true)
+    @SafeHtml
     private String code;
 
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String description;
 
     @NotNull

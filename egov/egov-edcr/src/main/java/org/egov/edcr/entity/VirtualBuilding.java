@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.util.EnumSet;
 
 public class VirtualBuilding implements Serializable {
-    private static final long serialVersionUID = 7L;
+    private static final long serialVersionUID = 2180064069842754178L;
     private BigDecimal buildingHeight;
     private EnumSet<OccupancyType> occupancies = EnumSet.noneOf(OccupancyType.class);
     private BigDecimal totalBuitUpArea;

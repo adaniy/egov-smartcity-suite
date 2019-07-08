@@ -72,6 +72,7 @@ import org.egov.bpa.transaction.entity.BpaStatus;
 import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_LETTERTOPARTY_COMMON")
@@ -90,6 +91,7 @@ public class LetterToPartyCommon extends AbstractAuditable {
     private InspectionCommon inspection;
 
     @Length(min = 1, max = 32)
+    @SafeHtml
     private String acknowledgementNumber;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -97,6 +99,7 @@ public class LetterToPartyCommon extends AbstractAuditable {
     private List<LpReason> lpReason;
 
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String lpNumber;
 
     @Temporal(TemporalType.DATE)
@@ -107,6 +110,7 @@ public class LetterToPartyCommon extends AbstractAuditable {
     private User scheduledBy;
 
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String scheduledPlace;
 
     @Temporal(TemporalType.DATE)
@@ -119,29 +123,37 @@ public class LetterToPartyCommon extends AbstractAuditable {
     private Date replyDate;
 
     @Length(min = 1, max = 1024)
+    @SafeHtml
     private String lpRemarks;
 
     @Length(min = 1, max = 1024)
+    @SafeHtml
     private String lpReplyRemarks;
 
     @Length(min = 1, max = 1024)
+    @SafeHtml
     private String lpDesc;
 
     @Length(min = 1, max = 1024)
+    @SafeHtml
     private String lpReplyDesc;
 
     private Boolean isHistory;
 
     @Length(min = 1, max = 512)
+    @SafeHtml
     private String documentId;
 
     @Temporal(TemporalType.DATE)
     private Date lastReplyDate;
 
+    @SafeHtml
     private String currentStateValueOfLP;
 
+    @SafeHtml
     private String stateForOwnerPosition;
 
+    @SafeHtml
     private String pendingAction;
 
     @OrderBy("id ASC")

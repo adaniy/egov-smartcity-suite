@@ -49,5 +49,6 @@ package org.egov.edcr.entity;
 import org.egov.edcr.entity.measurement.Measurement;
 
 public class OpenStair extends Measurement {
-    private static final long serialVersionUID = 64L;
+
+    private static final long serialVersionUID = 4105938209654466714L;
 }

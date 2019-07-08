@@ -9,8 +9,7 @@ import org.kabeja.dxf.DXFLWPolyline;
 
 public class Floor extends Measurement {
 
-    private static final long serialVersionUID = 26L;
-
+    private static final long serialVersionUID = 803356852446490787L;
     private List<Occupancy> occupancies = new ArrayList<>();
     private List<Occupancy> convertedOccupancies = new ArrayList<>();
     private List<FloorUnit> units = new ArrayList<>();

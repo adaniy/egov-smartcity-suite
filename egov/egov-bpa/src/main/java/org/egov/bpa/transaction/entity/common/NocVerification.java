@@ -53,14 +53,15 @@ import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.egov.pims.commons.Position;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_NOC_VERIFICATION")
 @SequenceGenerator(name = NocVerification.SEQ_NOC_VERIFY, sequenceName = NocVerification.SEQ_NOC_VERIFY, allocationSize = 1)
 public class NocVerification extends AbstractAuditable {
 
+    private static final long serialVersionUID = 4901683936840896688L;
     public static final String SEQ_NOC_VERIFY = "SEQ_EGBPA_NOC_VERIFICATION";
-    private static final long serialVersionUID = 3078684328383202788L;
     @Id
     @GeneratedValue(generator = SEQ_NOC_VERIFY, strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -71,6 +72,7 @@ public class NocVerification extends AbstractAuditable {
     @JoinColumn(name = "verifiedUser")
     private User verifiedUser;
     @Length(min = 1, max = 4900)
+    @SafeHtml
     private String remarks;
 
     @Override

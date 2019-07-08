@@ -47,13 +47,15 @@ import org.egov.bpa.master.entity.CheckListDetail;
 import org.egov.bpa.transaction.entity.enums.ChecklistValues;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_DOCKET_DETAIL")
 @SequenceGenerator(name = DocketDetail.SEQ_DOCKETDETAIL, sequenceName = DocketDetail.SEQ_DOCKETDETAIL, allocationSize = 1)
 public class DocketDetail extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = 4404858360713334825L;
+
     public static final String SEQ_DOCKETDETAIL = "SEQ_EGBPA_DOCKET_DETAIL";
 
     @Id
@@ -63,14 +65,19 @@ public class DocketDetail extends AbstractAuditable {
     @Enumerated(EnumType.STRING)
     private ChecklistValues value;
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String remarks;
     @Length(min = 1, max = 32)
+    @SafeHtml
     private String required;
     @Length(min = 1, max = 32)
+    @SafeHtml
     private String provided;
     @Length(min = 1, max = 32)
+    @SafeHtml
     private String extentOfViolation;
     @Length(min = 1, max = 32)
+    @SafeHtml
     private String percentageOfViolation;
     @ManyToOne(cascade = CascadeType.ALL)
     @Valid

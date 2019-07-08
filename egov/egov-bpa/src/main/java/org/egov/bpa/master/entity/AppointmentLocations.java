@@ -40,23 +40,32 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "egbpa_mstr_appointment_location")
 @SequenceGenerator(name = AppointmentLocations.SEQ_EGBPA_MSTR_APPOINTMENT_LOCATION, sequenceName = AppointmentLocations.SEQ_EGBPA_MSTR_APPOINTMENT_LOCATION, allocationSize = 1)
 public class AppointmentLocations extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+
+    private static final long serialVersionUID = 1091953801553964881L;
+
     public static final String SEQ_EGBPA_MSTR_APPOINTMENT_LOCATION = "seq_egbpa_mstr_appointment_location";
+
     @Id
     @GeneratedValue(generator = SEQ_EGBPA_MSTR_APPOINTMENT_LOCATION, strategy = GenerationType.SEQUENCE)
     private Long id;
+
+    @SafeHtml
     @Length(min = 1, max = 32)
     @Column(name = "code", unique = true)
     private String code;
+
+    @SafeHtml
     @NotNull
     @Length(min = 1, max = 160)
     private String description;
+
     private Integer orderNumber;
 
     @Override

@@ -9,7 +9,7 @@ import org.kabeja.dxf.DXFLine;
 
 public class Stair extends Measurement {
 
-    private static final long serialVersionUID = 34L;
+    private static final long serialVersionUID = -7875563413843495963L;
 
     private String number;
 

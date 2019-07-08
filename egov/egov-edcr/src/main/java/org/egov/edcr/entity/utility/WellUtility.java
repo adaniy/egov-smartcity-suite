@@ -5,7 +5,8 @@ import org.kabeja.dxf.DXFCircle;
 import org.kabeja.dxf.DXFLWPolyline;
 
 public class WellUtility extends Measurement {
-    private static final long serialVersionUID = 46L;
+    private static final long serialVersionUID = 4569013359575964238L;
+
     protected transient DXFCircle circle;
 
     protected transient DXFLWPolyline polygon;

@@ -6,8 +6,8 @@ import java.util.List;
 
 public class Yard extends Measurement {
 
-    private static final long serialVersionUID = 15L;
 
+    private static final long serialVersionUID = -2364095521158325172L;
     /**
      * Each yard can at different level Level 0 is considered ground Level -1 is basement
      */

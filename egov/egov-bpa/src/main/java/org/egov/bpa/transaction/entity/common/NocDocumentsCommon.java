@@ -75,6 +75,7 @@ import org.egov.infra.admin.master.entity.User;
 import org.egov.infra.filestore.entity.FileStoreMapper;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.web.multipart.MultipartFile;
 
 @Entity
@@ -108,9 +109,11 @@ public class NocDocumentsCommon extends AbstractAuditable {
     private User createdUser;
 
     @Length(min = 1, max = 1000)
+    @SafeHtml
     private String remarks;
 
     @Length(min = 1, max = 1000)
+    @SafeHtml
     private String natureOfRequest;
 
     @Temporal(value = TemporalType.DATE)

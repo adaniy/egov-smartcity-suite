@@ -8,8 +8,8 @@ import org.egov.edcr.entity.measurement.Yard;
 
 public class SetBack implements Serializable {
 
-    private static final long serialVersionUID = 14L;
 
+    private static final long serialVersionUID = -9048025940211257324L;
     private Yard frontYard;
     private Yard rearYard;
     private Yard sideYard1;

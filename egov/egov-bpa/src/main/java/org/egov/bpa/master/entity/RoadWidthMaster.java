@@ -41,13 +41,14 @@ import javax.validation.constraints.NotNull;
 
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_MSTR_ROADWIDTH", uniqueConstraints = @UniqueConstraint(columnNames = { "range" }))
 @SequenceGenerator(name = RoadWidthMaster.SEQ_ROADWIDTHMASTER, sequenceName = RoadWidthMaster.SEQ_ROADWIDTHMASTER, allocationSize = 1)
 public class RoadWidthMaster extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = -6180745749178005695L;
     public static final String SEQ_ROADWIDTHMASTER = "SEQ_EGBPA_MSTR_ROADWIDTH";
     @Id
     @GeneratedValue(generator = SEQ_ROADWIDTHMASTER, strategy = GenerationType.SEQUENCE)
@@ -56,15 +57,18 @@ public class RoadWidthMaster extends AbstractAuditable {
     @NotNull
     @Length(min = 1, max = 128)
     @Column(name = "code", unique = true)
+    @SafeHtml
     private String code;
     @NotNull
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String description;
 
     private Boolean isActive;
 
     @NotNull
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String range;
     @NotNull
     private Double rate;

@@ -44,13 +44,14 @@ import javax.validation.constraints.NotNull;
 import org.egov.bpa.master.entity.ServiceType;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EGBPA_MSTR_NOC")
 @SequenceGenerator(name = BpaNoc.SEQ_NOC, sequenceName = BpaNoc.SEQ_NOC, allocationSize = 1)
 public class BpaNoc extends AbstractAuditable {
 
-    private static final long serialVersionUID = 3078684328383202788L;
+    private static final long serialVersionUID = -3551909149549382521L;
     public static final String SEQ_NOC = "SEQ_EGBPA_MSTR_NOC";
     @Id
     @GeneratedValue(generator = SEQ_NOC, strategy = GenerationType.SEQUENCE)
@@ -59,9 +60,11 @@ public class BpaNoc extends AbstractAuditable {
     @NotNull
     @Length(min = 1, max = 128)
     @Column(name = "code", unique = true)
+    @SafeHtml
     private String code;
     @NotNull
     @Length(min = 1, max = 256)
+    @SafeHtml
     private String description;
 
     private Boolean isActive;

@@ -14,22 +14,24 @@ import javax.validation.constraints.NotNull;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EDCR_SUBRULE")
 @SequenceGenerator(name = SubRule.SEQ_EDCR_SUBRULE, sequenceName = SubRule.SEQ_EDCR_SUBRULE, allocationSize = 1)
 public class SubRule extends AbstractAuditable {
 
+    private static final long serialVersionUID = -1893529596612908357L;
+
     public static final String SEQ_EDCR_SUBRULE = "SEQ_EDCR_SUBRULE";
-    private static final long serialVersionUID = 60L;
 
     @Id
     @GeneratedValue(generator = SEQ_EDCR_SUBRULE, strategy = GenerationType.SEQUENCE)
     private Long id;
-
+    @SafeHtml
     @NotNull
     private String name;
-
+    @SafeHtml
     @NotNull
     private String clause;
 

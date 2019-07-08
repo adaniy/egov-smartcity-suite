@@ -6,7 +6,7 @@ import org.egov.edcr.entity.measurement.Measurement;
 
 public class MezzanineFloor extends Measurement {
 
-    private static final long serialVersionUID = 32L;
+    private static final long serialVersionUID = -4547413726397575189L;
 
     private String number;
 

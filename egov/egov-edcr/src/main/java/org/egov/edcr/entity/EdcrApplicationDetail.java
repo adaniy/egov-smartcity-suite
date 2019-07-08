@@ -62,14 +62,16 @@ import javax.persistence.Transient;
 import org.egov.infra.filestore.entity.FileStoreMapper;
 import org.egov.infra.persistence.entity.AbstractAuditable;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.SafeHtml;
 
 @Entity
 @Table(name = "EDCR_APPLICATION_DETAIL")
 @SequenceGenerator(name = EdcrApplicationDetail.SEQ_EDCR_APPLICATION_DETAIL, sequenceName = EdcrApplicationDetail.SEQ_EDCR_APPLICATION_DETAIL, allocationSize = 1)
 public class EdcrApplicationDetail extends AbstractAuditable {
 
+    private static final long serialVersionUID = 5845092436455282649L;
+
     public static final String SEQ_EDCR_APPLICATION_DETAIL = "SEQ_EDCR_APPLICATION_DETAIL";
-    private static final long serialVersionUID = 62L;
 
     @Id
     @GeneratedValue(generator = SEQ_EDCR_APPLICATION_DETAIL, strategy = GenerationType.SEQUENCE)
@@ -92,8 +94,10 @@ public class EdcrApplicationDetail extends AbstractAuditable {
     private FileStoreMapper planDetailFileStore;
 
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String dcrNumber;
 
+    @SafeHtml
     private String status;
 
     @Transient

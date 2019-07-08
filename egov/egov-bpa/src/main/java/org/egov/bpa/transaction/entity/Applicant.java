@@ -70,26 +70,33 @@ import org.hibernate.validator.constraints.SafeHtml;
 @SequenceGenerator(name = Applicant.SEQ_APPLICANT, sequenceName = Applicant.SEQ_APPLICANT, allocationSize = 1)
 public class Applicant extends AbstractAuditable {
 
+    private static final long serialVersionUID = 713788738650789873L;
     public static final String SEQ_APPLICANT = "SEQ_EGBPA_Applicant";
-    private static final long serialVersionUID = 3078684328383202788L;
     @Id
     @GeneratedValue(generator = SEQ_APPLICANT, strategy = GenerationType.SEQUENCE)
     private Long id;
     private GenderTitle title;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String fatherorHusbandName;
     private Date dateofBirth;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String district;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String taluk;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String area;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String city;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String state;
     @Length(min = 1, max = 128)
+    @SafeHtml
     private String pinCode;
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -99,6 +106,7 @@ public class Applicant extends AbstractAuditable {
     @SafeHtml
     @Length(min = 2, max = 100)
     private String name;
+    @SafeHtml
     private String address;
     @Enumerated(EnumType.ORDINAL)
     private Gender gender;

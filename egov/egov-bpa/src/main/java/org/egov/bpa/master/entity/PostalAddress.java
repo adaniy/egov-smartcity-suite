@@ -47,6 +47,8 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.validator.constraints.SafeHtml;
+
 @Entity
 @Table(name = "egbpa_mstr_postal")
 @SequenceGenerator(name = PostalAddress.SEQ_EGBPA_MSTR_POSTAL, sequenceName = PostalAddress.SEQ_EGBPA_MSTR_POSTAL, allocationSize = 1)
@@ -56,10 +58,15 @@ public class PostalAddress {
     @Id
     @GeneratedValue(generator = SEQ_EGBPA_MSTR_POSTAL, strategy = GenerationType.SEQUENCE)
     private Long id;
+    @SafeHtml
     private String postOffice;
+    @SafeHtml
     private String district;
+    @SafeHtml
     private String pincode;
+    @SafeHtml
     private String state;
+    @SafeHtml
     private String taluk;
     private boolean isActive;
 

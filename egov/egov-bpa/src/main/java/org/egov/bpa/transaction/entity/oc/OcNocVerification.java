@@ -59,8 +59,8 @@ import org.egov.infra.persistence.entity.AbstractAuditable;
 @SequenceGenerator(name = OcNocVerification.SEQ_OC_NOC_VERIFY, sequenceName = OcNocVerification.SEQ_OC_NOC_VERIFY, allocationSize = 1)
 public class OcNocVerification extends AbstractAuditable {
 
+    private static final long serialVersionUID = -3299564941203236296L;
     public static final String SEQ_OC_NOC_VERIFY = "SEQ_EGBPA_OC_NOC_VERIFICATION";
-    private static final long serialVersionUID = 3078684328383202788L;
     @Id
     @GeneratedValue(generator = SEQ_OC_NOC_VERIFY, strategy = GenerationType.SEQUENCE)
     private Long id;
