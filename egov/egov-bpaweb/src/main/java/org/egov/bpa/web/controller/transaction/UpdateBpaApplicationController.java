@@ -399,6 +399,15 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
                             && bpaApplication.getSiteDetail().get(0).getElectionBoundary() != null
                                     ? bpaApplication.getSiteDetail().get(0).getElectionBoundary().getId()
                                     : null);
+        } else if (BpaConstants.FWD_TO_SEC.equalsIgnoreCase(workFlowAction)) {
+            WorkFlowMatrix wfMatrix = bpaApplicationWorkflowService.getWfMatrix(bpaApplication.getStateType(), null, amountRule,
+                    CREATE_ADDITIONAL_RULE_CREATE, "Corporation Engineer Application Approval Pending",
+                    "Forwarding to secretary is pending");
+            approvalPosition = bpaUtils.getUserPositionIdByZone(wfMatrix.getNextDesignation(),
+                    bpaApplication.getSiteDetail().get(0) != null
+                            && bpaApplication.getSiteDetail().get(0).getElectionBoundary() != null
+                                    ? bpaApplication.getSiteDetail().get(0).getElectionBoundary().getId()
+                                    : null);
         } else if (BpaConstants.FWD_TO_INITIATOR.equalsIgnoreCase(workFlowAction)) {
             pos = positionMasterService.getPositionById(
                     bpaWorkFlowService.getNocInitiator(bpaApplication.getStateHistory(), bpaApplication.getCurrentState()));

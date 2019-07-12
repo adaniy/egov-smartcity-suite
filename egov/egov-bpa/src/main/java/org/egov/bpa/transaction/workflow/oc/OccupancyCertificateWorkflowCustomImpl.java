@@ -305,6 +305,18 @@ public abstract class OccupancyCertificateWorkflowCustomImpl implements Occupanc
                     .withDateInfo(currentDate.toDate()).withOwner(pos)
                     .withOwner(ownerUser).withExtraInfo(bpaStateInfo)
                     .withNextAction(wfMatrix.getNextAction()).withNatureOfTask(NATURE_OF_WORK_OC);
+        } else if (BpaConstants.FWD_TO_SEC.equalsIgnoreCase(wfBean.getWorkFlowAction())) {
+            wfMatrix = bpaApplicationWorkflowService.getWfMatrix(oc.getStateType(), null, wfBean.getAmountRule(),
+                    wfBean.getAdditionalRule(), "Corporation Engineer Application Approval Pending",
+                    "Forwarding to secretary is pending");
+            oc.setStatus(bpaStatusService
+                    .findByModuleTypeAndCode(BpaConstants.BPASTATUS_MODULETYPE, BpaConstants.APPLICATION_STATUS_NOCUPDATED));
+            oc.transition().progressWithStateCopy()
+                    .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
+                    .withComments(wfBean.getApproverComments()).withStateValue(wfMatrix.getNextState())
+                    .withDateInfo(currentDate.toDate()).withOwner(pos)
+                    .withOwner(ownerUser)
+                    .withNextAction(wfMatrix.getNextAction()).withNatureOfTask(NATURE_OF_WORK_OC);
         } else {
             Assignment approverAssignment = bpaWorkFlowService.getApproverAssignment(pos);
             if (approverAssignment == null)

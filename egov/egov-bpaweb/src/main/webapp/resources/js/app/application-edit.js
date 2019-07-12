@@ -437,7 +437,40 @@ jQuery(document)
                                 e.preventDefault();
                             }
                             return false;
+                        } else if (action == 'Forward to Secretary') {
+                            if (validateOnSecretaryForward()) {
+                                bootbox
+                                    .confirm({
+                                        message: 'Please confirm, Do you really want to forward this application to Secretary ?',
+                                        buttons: {
+                                            'cancel': {
+                                                label: 'No',
+                                                className: 'btn-danger'
+                                            },
+                                            'confirm': {
+                                                label: 'Yes',
+                                                className: 'btn-primary'
+                                            }
+                                        },
+                                        callback: function (result) {
+                                            if (result) {
+                                                $('#viewBpaApplicationForm').trigger('submit');
+                                            } else {
+                                                e.stopPropagation();
+                                                e.preventDefault();
+                                            }
+                                        }
+                                    });
+                            } else {
+                                e.preventDefault();
+                            }
+                            return false;
                         } else if (action == 'Forward') {
+                        	if($('#wfstateDesc').val() === 'Corporation Engineer forwarded to secretary reviewal' && $('#approvalComent').val() === '') {
+                        		bootbox.alert('Please enter comments');
+                        		return false;
+                        	}
+                        	
                             if (validateOnApproveAndForward(validator, action) && validateAdditionalConditionsOnFwd()) {
                                 bootbox
                                     .confirm({
@@ -633,6 +666,17 @@ function validateForm(validator) {
         validator.focusInvalid();
         return false;
     }
+}
+
+function validateOnSecretaryForward() {
+	makePermitConditionsNotMandatory();
+    var approvalComent = $('#approvalComent').val();
+    if (approvalComent == "") {
+        $('#approvalComent').focus();
+        bootbox.alert("Please enter comments/reason for sending to secretary");
+        return false;
+    }
+    return true;
 }
 
 

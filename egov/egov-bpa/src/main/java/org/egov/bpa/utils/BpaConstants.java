@@ -288,6 +288,7 @@ public class BpaConstants {
     public static final String FWD_TO_OVERSEER = "Forward to Overseer";
     public static final String FWD_TO_SUP = "Forward to Superintendent";
     public static final String FWD_TO_INITIATOR = "Forward to Initiator";
+    public static final String FWD_TO_SEC = "Forward to Secretary";
 
     // building details related constants
     public static final String TOTAL_PLINT_AREA = "totalPlintArea";

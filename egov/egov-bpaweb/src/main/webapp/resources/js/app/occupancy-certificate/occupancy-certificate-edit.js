@@ -373,6 +373,34 @@ jQuery(document)
                                 e.preventDefault();
                             }
                             return false;
+                        } else if (action == 'Forward to Secretary') {
+                            if (validateOnApproveAndForward(validator, action)) {
+                                bootbox
+                                    .confirm({
+                                        message: 'Please confirm, Do you really want to forward this application to Secretary ?',
+                                        buttons: {
+                                            'cancel': {
+                                                label: 'No',
+                                                className: 'btn-danger'
+                                            },
+                                            'confirm': {
+                                                label: 'Yes',
+                                                className: 'btn-primary'
+                                            }
+                                        },
+                                        callback: function (result) {
+                                            if (result) {
+                                                $('#occupancyCertificateUpdateForm').trigger('submit');
+                                            } else {
+                                                e.stopPropagation();
+                                                e.preventDefault();
+                                            }
+                                        }
+                                    });
+                            } else {
+                                e.preventDefault();
+                            }
+                            return false;
                         } else if (action === 'Generate Occupancy Certificate') {
                             $('#Generate Occupancy Certificate').attr('formnovalidate', 'true');
                             if (validateOnApproveAndForward(validator, action)) {

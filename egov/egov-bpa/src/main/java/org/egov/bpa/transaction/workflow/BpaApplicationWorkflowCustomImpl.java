@@ -330,6 +330,17 @@ public abstract class BpaApplicationWorkflowCustomImpl implements BpaApplication
                     .withDateInfo(currentDate.toDate()).withOwner(pos)
                     .withOwner(ownerUser).withExtraInfo(bpaStateInfo)
                     .withNextAction(wfmatrix.getNextAction()).withNatureOfTask(natureOfTask);
+        } else if (BpaConstants.FWD_TO_SEC.equalsIgnoreCase(workFlowAction)) {
+            wfmatrix = bpaApplicationWorkflowService.getWfMatrix(application.getStateType(), null, amountRule,
+                    additionalRule, "Corporation Engineer Application Approval Pending", "Forwarding to secretary is pending");
+            application.setStatus(bpaStatusService
+                    .findByModuleTypeAndCode(BpaConstants.BPASTATUS_MODULETYPE, BpaConstants.APPLICATION_STATUS_NOCUPDATED));
+            application.transition().progressWithStateCopy()
+                    .withSenderName(user.getUsername() + BpaConstants.COLON_CONCATE + user.getName())
+                    .withComments(approvalComent).withStateValue(wfmatrix.getNextState())
+                    .withDateInfo(currentDate.toDate()).withOwner(pos)
+                    .withOwner(ownerUser)
+                    .withNextAction(wfmatrix.getNextAction()).withNatureOfTask(natureOfTask);
         } else {
             Assignment approverAssignment = bpaWorkFlowService.getApproverAssignment(pos);
             if (approverAssignment == null)

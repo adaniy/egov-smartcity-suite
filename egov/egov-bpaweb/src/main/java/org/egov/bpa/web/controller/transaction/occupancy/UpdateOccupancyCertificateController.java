@@ -520,6 +520,16 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
                     bpaWorkFlowService.getNocInitiator(occupancyCertificate.getStateHistory(),
                             occupancyCertificate.getCurrentState()));
             approvalPosition = pos.getId();
+        } else if (BpaConstants.FWD_TO_SEC.equalsIgnoreCase(wfBean.getWorkFlowAction())) {
+            WorkFlowMatrix wfMatrix = ocApplicationWorkflowService.getWfMatrix(occupancyCertificate.getStateType(), null,
+                    amountRule,
+                    CREATE_ADDITIONAL_RULE_CREATE_OC, "Corporation Engineer Application Approval Pending",
+                    "Forwarding to secretary is pending");
+            approvalPosition = bpaUtils.getUserPositionIdByZone(wfMatrix.getNextDesignation(),
+                    occupancyCertificate.getParent().getSiteDetail().get(0) != null
+                            && occupancyCertificate.getParent().getSiteDetail().get(0).getElectionBoundary() != null
+                                    ? occupancyCertificate.getParent().getSiteDetail().get(0).getElectionBoundary().getId()
+                                    : null);
         } else if (StringUtils.isNotBlank(request.getParameter(APPRIVALPOSITION))
                 && !WF_REJECT_BUTTON.equalsIgnoreCase(wfBean.getWorkFlowAction())
                 && !GENERATEREJECTNOTICE.equalsIgnoreCase(wfBean.getWorkFlowAction()))
