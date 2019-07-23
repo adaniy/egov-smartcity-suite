@@ -322,10 +322,15 @@ $.fn.getCursorPosition = function () {
     return [pos, posEnd];
 };
 
-function typeaheadWithEventsHandling(typeaheadobj, hiddeneleid, dependentfield) {
+function typeaheadWithEventsHandling(typeaheadobj, hiddeneleid, dependentfield,callBackFunc) {
     typeaheadobj.on('typeahead:selected', function (event, data) {
-        //setting hidden value
-        $(hiddeneleid).val(data.value);
+    	//setting hidden value
+		$(hiddeneleid).val(data.value);    
+
+		if(callBackFunc){
+			callBackFunc(event, data);
+		}
+
     }).on('keydown', this, function (event) {
         var e = event;
 

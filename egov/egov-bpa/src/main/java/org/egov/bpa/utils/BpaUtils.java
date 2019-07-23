@@ -44,6 +44,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.text.RandomStringGenerator;
+import org.egov.bpa.config.properties.BpaApplicationSettings;
 import org.egov.bpa.transaction.entity.ApplicationFloorDetail;
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.BuildingDetail;
@@ -92,6 +93,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.multipart.MultipartFile;
+
+import eu.medsea.mimeutil.MimeException;
+import eu.medsea.mimeutil.MimeUtil;
 
 @Service
 @Transactional(readOnly = true)
@@ -142,6 +148,9 @@ public class BpaUtils {
     private CollectionIntegrationService collectionIntegrationService;
 
     private String fileStoreDir;
+
+    @Autowired
+    private BpaApplicationSettings bpaApplicationSettings;
 
     @Autowired
     public BpaUtils(@Value("${filestore.base.dir}") String fileStoreDir) {
@@ -678,5 +687,45 @@ public class BpaUtils {
         List<AppConfigValues> appConfigValueList = appConfigValueService
                 .getConfigValuesByModuleAndKey(BpaConstants.EGMODULE_NAME, "OC_ALLOW_DEVIATION");
         return appConfigValueList.get(0).getValue();
+    }
+
+    private String getMimeType(final MultipartFile file) {
+        MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.MagicMimeMimeDetector");
+
+        eu.medsea.mimeutil.MimeType mimeType = null;
+        try {
+            mimeType = MimeUtil.getMostSpecificMimeType(MimeUtil.getMimeTypes(file.getInputStream()));
+        } catch (MimeException | IOException e) {
+            e.printStackTrace();
+        }
+
+        MimeUtil.unregisterMimeDetector("eu.medsea.mimeutil.detector.MagicMimeMimeDetector");
+        return String.valueOf(mimeType);
+    }
+
+    public void validateFiles(final BindingResult errors, List<String> allowedExtenstions, List<String> mimeTypes,
+            Integer i, MultipartFile[] files, String filePathPref) {
+        String extension;
+        String mimeType;
+        if (files != null && files.length > 0)
+            for (MultipartFile file : files) {
+                extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf('.') + 1);
+                mimeType = getMimeType(file);
+                if (file.isEmpty()) {
+                    errors.rejectValue(filePathPref + "[" + i + "].files", "upload.file.required");
+                } else if (!allowedExtenstions.contains(extension.toLowerCase())) {
+                    errors.rejectValue(filePathPref + "[" + i + "].files", "upload.invalid.file.type",
+                            new Object[] { file.getOriginalFilename() }, null);
+                } else if (allowedExtenstions.contains(extension.toLowerCase())
+                        && (!mimeTypes.contains(mimeType)
+                                || StringUtils.countMatches(file.getName(), ".") > 1 || file.getName().contains("%00"))) {
+                    errors.rejectValue(filePathPref + "[" + i + "].files", "upload.malicious.file.type",
+                            new Object[] { file.getOriginalFilename() }, null);
+                } else if (file.getSize() > (Long.valueOf(bpaApplicationSettings.getValue("bpa.citizen.app.docs.max.size"))
+                        * 1024 * 1024)) {
+                    errors.rejectValue(filePathPref + "[" + i + "].files", "upload.exceeded.file.size",
+                            new Object[] { file.getOriginalFilename() }, null);
+                }
+            }
     }
 }

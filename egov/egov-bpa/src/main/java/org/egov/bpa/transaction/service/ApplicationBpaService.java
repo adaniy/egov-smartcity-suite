@@ -85,6 +85,7 @@ import javax.persistence.PersistenceContext;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.bpa.autonumber.PlanPermissionNumberGenerator;
+import org.egov.bpa.config.properties.BpaApplicationSettings;
 import org.egov.bpa.master.entity.BpaFeeDetail;
 import org.egov.bpa.master.entity.ServiceType;
 import org.egov.bpa.master.service.BpaSchemeLandUsageService;
@@ -142,10 +143,13 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.MessageSource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -224,6 +228,11 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
     private FileStoreUtils fileStoreUtils;
     @Autowired
     private CustomImplProvider specificNoticeService;
+    @Autowired
+    private BpaApplicationSettings bpaApplicationSettings;
+    @Autowired
+    @Qualifier("parentMessageSource")
+    private MessageSource bpaMessageSource;
 
     public Session getCurrentSession() {
         return entityManager.unwrap(Session.class);
@@ -416,6 +425,33 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
     public void buildExistingAndProposedBuildingDetails(final BpaApplication application) {
         existingBuildingFloorDetailsService.buildExistingBuildingFloorDetails(application);
         buildingFloorDetailsService.buildProposedBuildingFloorDetails(application);
+    }
+
+    public void validateDocs(final BpaApplication application, final BindingResult errors) {
+        List<String> appDocAllowedExtenstions = new ArrayList<String>(
+                Arrays.asList(bpaApplicationSettings.getValue("bpa.citizen.app.docs.allowed.extenstions").split(",")));
+
+        List<String> appDocMimeTypes = new ArrayList<String>(
+                Arrays.asList(bpaApplicationSettings.getValue("bpa.citizen.app.docs.allowed.mime.types").split(",")));
+
+        List<String> dcrDocAllowedExtenstions = new ArrayList<String>(
+                Arrays.asList(bpaApplicationSettings.getValue("bpa.citizen.dcr.docs.allowed.extenstions").split(",")));
+
+        List<String> dcrDocMimeTypes = new ArrayList<String>(
+                Arrays.asList(bpaApplicationSettings.getValue("bpa.citizen.dcr.docs.allowed.mime.types").split(",")));
+
+        Integer i = 0;
+        for (ApplicationDocument document : application.getApplicationDocument()) {
+            bpaUtils.validateFiles(errors, appDocAllowedExtenstions, appDocMimeTypes, i, document.getFiles(),
+                    "applicationDocument");
+            i++;
+        }
+        i = 0;
+        for (DCRDocument document : application.getDcrDocuments()) {
+            bpaUtils.validateFiles(errors, dcrDocAllowedExtenstions, dcrDocMimeTypes, i, document.getFiles(), "dcrDocuments");
+            i++;
+        }
+
     }
 
     @Transactional
@@ -804,6 +840,7 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
         citizen.setAadhaarNumber(bpaApplication.getOwner().getAadhaarNumber());
         citizen.setActive(true);
         citizen.addRole(roleService.getRoleByName(ROLE_CITIZEN));
+        citizen.generateUID();
         return citizen;
     }
 

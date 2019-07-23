@@ -68,6 +68,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.egov.bpa.config.properties.BpaApplicationSettings;
 import org.egov.bpa.master.entity.CheckListDetail;
 import org.egov.bpa.master.entity.StakeHolder;
 import org.egov.bpa.master.entity.enums.StakeHolderStatus;
@@ -125,6 +126,9 @@ public class CitizenApplicationController extends BpaGenericApplicationControlle
     private static final String BPAAPPLICATION_CITIZEN = "citizen_suceess";
 
     private static final String COMMON_ERROR = "common-error";
+
+    @Autowired
+    private BpaApplicationSettings bpaApplicationSettings;
 
     @Autowired
     private GenericBillGeneratorService genericBillGeneratorService;
@@ -190,6 +194,14 @@ public class CitizenApplicationController extends BpaGenericApplicationControlle
                 bpaApplication.getApplicationNOCDocument().add(nocDocument);
             }
         model.addAttribute("applicationDocumentList", appDocList);
+
+        model.addAttribute("appDocAllowedExtenstions",
+                bpaApplicationSettings.getValue("bpa.citizen.app.docs.allowed.extenstions"));
+        model.addAttribute("appDocMaxSize", bpaApplicationSettings.getValue("bpa.citizen.dcr.docs.max.size"));
+
+        model.addAttribute("dcrDocAllowedExtenstions",
+                bpaApplicationSettings.getValue("bpa.citizen.dcr.docs.allowed.extenstions"));
+        model.addAttribute("dcrDocMaxSize", bpaApplicationSettings.getValue("bpa.citizen.dcr.docs.max.size"));
         getDcrDocumentsUploadMode(model);
         return "citizenApplication-form";
     }
@@ -291,6 +303,7 @@ public class CitizenApplicationController extends BpaGenericApplicationControlle
     public String createNewConnection(@Valid @ModelAttribute final BpaApplication bpaApplication,
             final HttpServletRequest request, final Model model,
             final BindingResult errors, final RedirectAttributes redirectAttributes) {
+        applicationBpaService.validateDocs(bpaApplication, errors);
         if (errors.hasErrors()) {
             buildingFloorDetailsService.buildNewlyAddedFloorDetails(bpaApplication);
             applicationBpaService.buildExistingAndProposedBuildingDetails(bpaApplication);

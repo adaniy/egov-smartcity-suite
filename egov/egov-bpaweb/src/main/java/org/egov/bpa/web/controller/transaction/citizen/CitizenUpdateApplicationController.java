@@ -252,6 +252,7 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
             final HttpServletRequest request, final Model model,
             final RedirectAttributes redirectAttributes, @RequestParam("files") final MultipartFile... files) {
 
+        applicationBpaService.validateDocs(bpaApplication, resultBinder);
         if (resultBinder.hasErrors()) {
             prepareCommonModelAttribute(model, bpaApplication.isCitizenAccepted());
             return loadViewdata(model, bpaApplication);

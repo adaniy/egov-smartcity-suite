@@ -140,9 +140,9 @@
             <c:if test="${dcrDocsManuallyUpload eq true || dcrDocsAutoPopulateAndManuallyUpload eq true || (dcrDocsAutoPopulate eq false && dcrDocsManuallyUpload eq false && dcrDocsAutoPopulateAndManuallyUpload eq false)}">
                 <div class="col-sm-6 add-margin">
                     <div class="files-upload-container <c:if test="${dcrDocument.checklistDtl.isMandatory eq true && fn:length(dcrDocument.getOrderedDcrAttachments()) eq 0}">mandatory-dcr-doc</c:if>"
-                         data-file-max-size="20"
+                         data-file-max-size="${dcrDocMaxSize}"
                          <c:if test="${dcrDocument.checklistDtl.isMandatory eq true && fn:length(dcrDocument.getOrderedDcrAttachments()) eq 0}">required</c:if>
-                         data-allowed-extenstion="pdf">
+                         data-allowed-extenstion="${dcrDocAllowedExtenstions}">
                         <div class="files-viewer ${checklistName}">
                             <c:if test="${fn:length(dcrDocument.getOrderedDcrAttachments()) gt 0}">
                                 <c:forEach items="${dcrDocument.getOrderedDcrAttachments()}" var="file"
@@ -159,11 +159,11 @@
                             <form:hidden path="dcrDocuments[${dcrDocStatus.index}].fileStoreIds"
                                          cssClass="${checklistName}_fileStoreIds dcrFileStoreIds"></form:hidden>
                             <a href="javascript:void(0);" class="file-add"
-                               data-unlimited-files="true"
+                               data-unlimited-files="true" name="dcrDocuments[${dcrDocStatus.index}].files"
                                data-file-input-name="dcrDocuments[${dcrDocStatus.index}].files">
                                 <i class="fa fa-plus"></i>
                             </a>
-
+							<form:errors path="dcrDocuments[${dcrDocStatus.index}].files" cssClass="add-margin error-msg" />
                         </div>
                     </div>
                 </div>

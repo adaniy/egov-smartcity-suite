@@ -79,7 +79,7 @@
 		<script src="<c:url value='/resources/global/js/egov/custom.js?rnd=${app_release_no}' context='/egi'/>"></script>
         <script src="<c:url value='/resources/global/js/egov/patternvalidation.js?rnd=${app_release_no}' context='/egi'/>"></script>
         <script src="<c:url value='/resources/js/app/util-helper.js?rnd=${app_release_no}'/>"></script>
-        <script src="<cdn:url  value='/resources/global/js/egov/csrf.js?rnd=${app_release_no}' context='/egi'/>"></script>
+        <script src="<c:url  value='/resources/global/js/egov/csrf.js?rnd=${app_release_no}' context='/egi'/>"></script>
 		
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
