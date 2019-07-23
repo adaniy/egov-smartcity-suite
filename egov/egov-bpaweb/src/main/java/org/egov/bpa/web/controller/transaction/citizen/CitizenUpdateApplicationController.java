@@ -65,6 +65,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.egov.bpa.config.properties.BpaApplicationSettings;
 import org.egov.bpa.master.entity.StakeHolder;
 import org.egov.bpa.master.entity.enums.StakeHolderStatus;
 import org.egov.bpa.transaction.entity.BpaApplication;
@@ -123,7 +124,8 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
     private ApplicationBpaBillService applicationBpaBillService;
     @Autowired
     private BpaAppointmentScheduleService bpaAppointmentScheduleService;
-
+    @Autowired
+    private BpaApplicationSettings bpaApplicationSettings;
     @ModelAttribute
     public BpaApplication getBpaApplication(@PathVariable final String applicationNumber) {
         return applicationBpaService.findByApplicationNumber(applicationNumber);
@@ -185,6 +187,19 @@ public class CitizenUpdateApplicationController extends BpaGenericApplicationCon
         model.addAttribute("inspectionList", inspectionService.findByBpaApplicationOrderByIdAsc(application));
         model.addAttribute("admissionFee", applicationBpaService.setAdmissionFeeAmountForRegistrationWithAmenities(
                 application.getServiceType().getId(), application.getApplicationAmenity()));
+        
+        model.addAttribute("appDocAllowedExtenstions",
+                bpaApplicationSettings.getValue("bpa.citizen.app.docs.allowed.extenstions"));
+        model.addAttribute("appDocMaxSize", bpaApplicationSettings.getValue("bpa.citizen.dcr.docs.max.size"));
+
+        model.addAttribute("dcrDocAllowedExtenstions",
+                bpaApplicationSettings.getValue("bpa.citizen.dcr.docs.allowed.extenstions"));
+        model.addAttribute("dcrDocMaxSize", bpaApplicationSettings.getValue("bpa.citizen.dcr.docs.max.size"));
+        
+        model.addAttribute("nocDocAllowedExtenstions",
+                bpaApplicationSettings.getValue("bpa.citizen.noc.docs.allowed.extenstions"));
+        model.addAttribute("nocDocMaxSize", bpaApplicationSettings.getValue("bpa.citizen.noc.docs.max.size"));
+        
         if (!lettertoPartyList.isEmpty() && lettertoPartyList.get(0).getSentDate() != null)
             model.addAttribute("mode", "showLPDetails");
         buildAppointmentDetailsOfScutinyAndInspection(model, application);

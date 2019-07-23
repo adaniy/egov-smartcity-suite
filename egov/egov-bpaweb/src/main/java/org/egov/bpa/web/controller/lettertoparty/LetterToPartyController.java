@@ -327,6 +327,7 @@ public class LetterToPartyController extends BpaGenericApplicationController {
     @PostMapping("/lettertopartyreply")
     public String createLettertoPartyReply(@ModelAttribute final LettertoParty lettertoparty, final Model model,
             final HttpServletRequest request, final BindingResult errors, final RedirectAttributes redirectAttributes) {
+        //
         processAndStoreLetterToPartyDocuments(lettertoparty);
         LettertoParty lettertopartyRes = lettertoPartyService.save(lettertoparty,
                 lettertoparty.getApplication().getState().getOwnerPosition().getId());

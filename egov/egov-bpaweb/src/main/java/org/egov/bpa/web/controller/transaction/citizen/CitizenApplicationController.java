@@ -202,6 +202,11 @@ public class CitizenApplicationController extends BpaGenericApplicationControlle
         model.addAttribute("dcrDocAllowedExtenstions",
                 bpaApplicationSettings.getValue("bpa.citizen.dcr.docs.allowed.extenstions"));
         model.addAttribute("dcrDocMaxSize", bpaApplicationSettings.getValue("bpa.citizen.dcr.docs.max.size"));
+        
+        model.addAttribute("nocDocAllowedExtenstions",
+                bpaApplicationSettings.getValue("bpa.citizen.noc.docs.allowed.extenstions"));
+        model.addAttribute("nocDocMaxSize", bpaApplicationSettings.getValue("bpa.citizen.noc.docs.max.size"));
+        
         getDcrDocumentsUploadMode(model);
         return "citizenApplication-form";
     }

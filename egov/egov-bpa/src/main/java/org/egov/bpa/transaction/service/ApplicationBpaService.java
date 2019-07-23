@@ -440,15 +440,29 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
         List<String> dcrDocMimeTypes = new ArrayList<String>(
                 Arrays.asList(bpaApplicationSettings.getValue("bpa.citizen.dcr.docs.allowed.mime.types").split(",")));
 
+        List<String> nocDocAllowedExtenstions = new ArrayList<String>(
+                Arrays.asList(bpaApplicationSettings.getValue("bpa.citizen.noc.docs.allowed.extenstions").split(",")));
+
+        List<String> nocDocMimeTypes = new ArrayList<String>(
+                Arrays.asList(bpaApplicationSettings.getValue("bpa.citizen.noc.docs.allowed.mime.types").split(",")));
+
         Integer i = 0;
         for (ApplicationDocument document : application.getApplicationDocument()) {
             bpaUtils.validateFiles(errors, appDocAllowedExtenstions, appDocMimeTypes, i, document.getFiles(),
                     "applicationDocument");
             i++;
         }
+
         i = 0;
         for (DCRDocument document : application.getDcrDocuments()) {
             bpaUtils.validateFiles(errors, dcrDocAllowedExtenstions, dcrDocMimeTypes, i, document.getFiles(), "dcrDocuments");
+            i++;
+        }
+
+        i = 0;
+        for (ApplicationNocDocument document : application.getApplicationNOCDocument()) {
+            bpaUtils.validateFiles(errors, nocDocAllowedExtenstions, nocDocMimeTypes, i, document.getFiles(),
+                    "applicationNOCDocument");
             i++;
         }
 

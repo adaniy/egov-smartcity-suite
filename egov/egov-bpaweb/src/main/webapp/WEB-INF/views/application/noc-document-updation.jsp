@@ -147,9 +147,9 @@
 						</div>
 					</td>
 					<td>
-						<div class="files-upload-container" data-file-max-size="5"
+						<div class="files-upload-container" data-file-max-size="${nocDocMaxSize }"
 							<c:if test="${docs.checklist.isMandatory eq true && fn:length(docs.getNocSupportDocs()) eq 0}">required</c:if>
-							data-allowed-extenstion="doc,docx,xls,xlsx,rtf,pdf,txt,zip,jpeg,jpg,png,gif,tiff">
+							data-allowed-extenstion="${nocDocAllowedExtenstions }">
 							<div class="files-viewer">
 
 								<c:forEach items="${doc.getNocSupportDocs()}" var="file"
@@ -193,6 +193,7 @@
 									data-file-input-name="applicationNOCDocument[${status.index}].files">
 									<i class="fa fa-plus"></i>
 								</a>
+								<form:errors path="applicationNOCDocument[${status.index}].files" cssClass="add-margin error-msg" />
 
 							</div>
 						</div>

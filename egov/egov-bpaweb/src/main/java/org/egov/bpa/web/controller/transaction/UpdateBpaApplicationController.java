@@ -109,6 +109,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
+import org.egov.bpa.config.properties.BpaApplicationSettings;
 import org.egov.bpa.master.service.PermitConditionsService;
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.BpaAppointmentSchedule;
@@ -187,6 +188,8 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
     @Autowired
     @Qualifier("workflowService")
     private SimpleWorkflowService<BpaApplication> bpaApplicationWorkflowService;
+    @Autowired
+    private BpaApplicationSettings bpaApplicationSettings;
 
     @ModelAttribute
     public BpaApplication getBpaApplication(@PathVariable final String applicationNumber) {
@@ -264,6 +267,7 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
             @PathVariable final String applicationNumber, final BindingResult resultBinder,
             final HttpServletRequest request, @RequestParam final BigDecimal amountRule,
             final Model model, final RedirectAttributes redirectAttributes) throws IOException {
+        applicationBpaService.validateDocs(bpaApplication, resultBinder);
         if (resultBinder.hasErrors()) {
             loadFormData(model, bpaApplication);
             loadCommonApplicationDetails(model, bpaApplication);
@@ -339,6 +343,7 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
             final Model model,
             final RedirectAttributes redirectAttributes,
             @RequestParam final BigDecimal amountRule) throws IOException {
+        // tsins
         if (resultBinder.hasErrors()) {
             loadFormData(model, bpaApplication);
             return BPAAPPLICATION_FORM;
@@ -670,6 +675,18 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
         model.addAttribute("isFeeCollected", bpaDemandService.checkAnyTaxIsPendingToCollect(application));
         model.addAttribute("admissionFee", applicationBpaService.setAdmissionFeeAmountForRegistrationWithAmenities(
                 application.getServiceType().getId(), application.getApplicationAmenity()));
+        
+        model.addAttribute("appDocAllowedExtenstions",
+                bpaApplicationSettings.getValue("bpa.citizen.app.docs.allowed.extenstions"));
+        model.addAttribute("appDocMaxSize", bpaApplicationSettings.getValue("bpa.citizen.dcr.docs.max.size"));
+
+        model.addAttribute("dcrDocAllowedExtenstions",
+                bpaApplicationSettings.getValue("bpa.citizen.dcr.docs.allowed.extenstions"));
+        model.addAttribute("dcrDocMaxSize", bpaApplicationSettings.getValue("bpa.citizen.dcr.docs.max.size"));
+        
+        model.addAttribute("nocDocAllowedExtenstions",
+                bpaApplicationSettings.getValue("bpa.citizen.noc.docs.allowed.extenstions"));
+        model.addAttribute("nocDocMaxSize", bpaApplicationSettings.getValue("bpa.citizen.noc.docs.max.size"));
     }
 
     private void loadCommonApplicationDetails(Model model, BpaApplication application) {
