@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.egov.bpa.config.properties.BpaApplicationSettings;
 import org.egov.bpa.transaction.entity.common.DocketDetailCommon;
 import org.egov.bpa.transaction.entity.enums.ChecklistValues;
 import org.egov.bpa.transaction.entity.enums.ScrutinyChecklistType;
@@ -69,7 +70,8 @@ public class UpdateInspectionForOccupancyCertificateController extends BpaGeneri
 
     @Autowired
     private OCInspectionService ocInspectionService;
-
+    @Autowired
+    private BpaApplicationSettings bpaApplicationSettings;
     @Autowired
     private OCPlanScrutinyChecklistService OCPlanScrutinyChecklistService;
 
@@ -86,6 +88,7 @@ public class UpdateInspectionForOccupancyCertificateController extends BpaGeneri
     public String updateInspection(@ModelAttribute("ocInspection") final OCInspection ocInspection,
             @PathVariable final String applicationNumber, @PathVariable final String inspectionNumber, final Model model,
             final BindingResult resultBinder) {
+        ocInspectionService.validateinspectionDocs(ocInspection, resultBinder);
         if (resultBinder.hasErrors()) {
             loadApplication(model, ocInspection);
             return "oc-inspection-edit";
@@ -136,7 +139,9 @@ public class UpdateInspectionForOccupancyCertificateController extends BpaGeneri
                     .findByInspectionAndScrutinyChecklistType(ocInspection, ScrutinyChecklistType.COMBINED));
         ocInspection.setPlanScrutinyChecklistForDrawingTemp(OCPlanScrutinyChecklistService
                 .findByInspectionAndScrutinyChecklistType(ocInspection, ScrutinyChecklistType.DRAWING_DETAILS));
-
+        model.addAttribute("inspectionDocAllowedExtenstions",
+                bpaApplicationSettings.getValue("bpa.oc.inspection.docs.allowed.extenstions"));
+        model.addAttribute("inspectionDocMaxSize", bpaApplicationSettings.getValue("bpa.oc.inspection.docs.max.size"));
     }
 
 }

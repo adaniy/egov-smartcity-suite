@@ -157,9 +157,9 @@
 						<div class="col-sm-6 add-margin">
 							<div
 								class="files-upload-container <c:if test="${dcrDoc.dcrDocument.checklistDtl.isMandatory eq true && fn:length(dcrDoc.dcrDocument.getOrderedDcrAttachments()) eq 0}">mandatory-dcr-doc</c:if>"
-								data-file-max-size="20"
+								data-file-max-size="${dcrDocMaxSize }"
 								<c:if test="${dcrDoc.dcrDocument.checklistDtl.isMandatory eq true && fn:length(dcrDoc.dcrDocument.getOrderedDcrAttachments()) eq 0}">required</c:if>
-								data-allowed-extenstion="pdf">
+								data-allowed-extenstion="${dcrDocAllowedExtenstions }">
 								<div class="files-viewer ${checklistName}">
 									<c:if
 										test="${fn:length(dcrDoc.dcrDocument.getOrderedDcrAttachments()) gt 0}">
@@ -183,6 +183,7 @@
 										data-file-input-name="dcrDocuments[${dcrDocStatus.index}].dcrDocument.files">
 										<i class="fa fa-plus"></i>
 									</a>
+									<form:errors path="dcrDocuments[${dcrDocStatus.index}].dcrDocument.files"	cssClass="add-margin error-msg" />
 
 								</div>
 							</div>

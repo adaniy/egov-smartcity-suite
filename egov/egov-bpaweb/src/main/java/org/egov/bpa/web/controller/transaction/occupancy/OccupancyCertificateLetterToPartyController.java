@@ -50,6 +50,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.egov.bpa.config.properties.BpaApplicationSettings;
 import org.egov.bpa.master.entity.CheckListDetail;
 import org.egov.bpa.master.entity.LpReason;
 import org.egov.bpa.master.service.CheckListDetailService;
@@ -140,6 +141,8 @@ public class OccupancyCertificateLetterToPartyController {
     private OccupancyCertificateService occupancyCertificateService;
     @Autowired
     private CustomImplProvider specificNoticeService;
+    @Autowired
+    private BpaApplicationSettings bpaApplicationSettings;
 
     @ModelAttribute(name = "lpReasonList")
     public List<LpReason> getLpReasonList() {
@@ -334,14 +337,22 @@ public class OccupancyCertificateLetterToPartyController {
         model.addAttribute(BPA_APPLICATION, ocLetterToParty.getOc().getParent());
         model.addAttribute(CHECK_LIST_DETAIL_LIST,
                 getCheckListDetailList(ocLetterToParty.getOc().getParent().getServiceType().getId()));
+        model.addAttribute("lpreplyDocAllowedExtenstions",
+                bpaApplicationSettings.getValue("bpa.lpreply.docs.allowed.extenstions"));
+        model.addAttribute("lpreplyDocMaxSize", bpaApplicationSettings.getValue("bpa.lpreply.docs.max.size"));
         prepareData(ocLetterToParty, ocLetterToParty.getOc().getApplicationNumber(), model);
         return LP_REPLY;
     }
 
     @PostMapping("/reply/{applicationNumber}/{lpNumber}")
     public String createLetterToPartyReply(@ModelAttribute("ocLetterToParty") final OCLetterToParty ocLetterToParty,
+            final BindingResult errors,
             @PathVariable final String applicationNumber,
             @PathVariable final String lpNumber, final RedirectAttributes redirectAttributes) {
+
+        ocLetterToPartyService.validateDocs(ocLetterToParty, errors);
+        if (errors.hasErrors())
+            return LP_REPLY;
         processAndStoreLetterToPartyDocuments(ocLetterToParty);
         OCLetterToParty ocLetterToPartyRes = ocLetterToPartyService.save(ocLetterToParty,
                 ocLetterToParty.getOc().getState().getOwnerPosition().getId());

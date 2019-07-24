@@ -44,6 +44,7 @@ import static org.egov.bpa.utils.OcConstants.OC_INSPECTION;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -56,6 +57,7 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
 import org.egov.bpa.autonumber.InspectionNumberGenerator;
+import org.egov.bpa.config.properties.BpaApplicationSettings;
 import org.egov.bpa.master.entity.CheckListDetail;
 import org.egov.bpa.master.service.CheckListDetailService;
 import org.egov.bpa.transaction.entity.common.DocketCommon;
@@ -67,6 +69,7 @@ import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.repository.oc.OCInspectionRepository;
 import org.egov.bpa.transaction.service.ApplicationBpaService;
 import org.egov.bpa.utils.BpaConstants;
+import org.egov.bpa.utils.BpaUtils;
 import org.egov.infra.filestore.service.FileStoreService;
 import org.egov.infra.security.utils.SecurityUtils;
 import org.egov.infra.utils.autonumber.AutonumberServiceBeanResolver;
@@ -78,6 +81,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Transactional(readOnly = true)
@@ -99,9 +104,12 @@ public class OCInspectionService {
     private SecurityUtils securityUtils;
     @Autowired
     private ApplicationBpaService applicationBpaService;
-
+    @Autowired
+    private BpaApplicationSettings bpaApplicationSettings;
     @Autowired
     private OCPlanScrutinyChecklistService ocPlanScrutinyChecklistService;
+    @Autowired
+    private BpaUtils bpaUtils;
 
     public Session getCurrentSession() {
         return entityManager.unwrap(Session.class);
@@ -242,4 +250,20 @@ public class OCInspectionService {
         return imageMap;
     }
 
+    public void validateinspectionDocs(final OCInspection ocInspection, final BindingResult errors) {
+        List<String> inspDocAllowedExtenstions = new ArrayList<String>(
+                Arrays.asList(bpaApplicationSettings.getValue("bpa.oc.inspection.docs.allowed.extenstions").split(",")));
+
+        List<String> inspDocMimeTypes = new ArrayList<String>(
+                Arrays.asList(bpaApplicationSettings.getValue("bpa.oc.inspection.docs.allowed.mime.types").split(",")));
+
+        Integer i = 0;
+        for (InspectionFilesCommon document : ocInspection.getInspection().getInspectionSupportDocs()) {
+            bpaUtils.validateFiles(errors, inspDocAllowedExtenstions, inspDocMimeTypes,
+                    new MultipartFile[] { document.getFile() },
+                    "inspection.inspectionSupportDocs[" + i + "].file");
+            i++;
+        }
+
+    }
 }

@@ -2,6 +2,7 @@ package org.egov.bpa.web.controller.transaction;
 
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_PERMIT_CANCELLED;
 
+import org.egov.bpa.config.properties.BpaApplicationSettings;
 import org.egov.bpa.master.entity.PermitCancel;
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.service.ApplicationBpaService;
@@ -38,11 +39,16 @@ public class PermitCancellationController {
     private BpaUtils bpaUtils;
     @Autowired
     private SecurityUtils securityUtils;
-
+    @Autowired
+    private BpaApplicationSettings bpaApplicationSettings;
+    
     @GetMapping("/citizen/cancel-permit/new")
     public String showCancelPermitForm(final Model model) {
         model.addAttribute("currentUser", securityUtils.getCurrentUser());
         model.addAttribute(PERMIT_CANCEL, new PermitCancel());
+        model.addAttribute("pcDocAllowedExtenstions",
+                bpaApplicationSettings.getValue("bpa.permit.cancellation.docs.allowed.extenstions"));
+        model.addAttribute("pcDocMaxSize", bpaApplicationSettings.getValue("bpa.permit.cancellation.docs.max.size"));
         return "permit-cancel-submit";
     }
 

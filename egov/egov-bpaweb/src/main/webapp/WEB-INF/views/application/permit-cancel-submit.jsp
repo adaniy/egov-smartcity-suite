@@ -94,9 +94,9 @@
 								code="lbl.permit.cancel.doc.upload" /><span class="mandatory"></span></label>
 						<div class="col-sm-6 add-margin">
 							<div class="files-upload-container"
-								data-allowed-extenstion="doc,docx,xls,xlsx,rtf,pdf"
+								data-allowed-extenstion="${pcDocAllowedExtenstions }"
 								<c:if test="${fn:length(permitCancel.cancelSupportDocs) eq 0}">required</c:if>
-								data-file-max-size="4">
+								data-file-max-size="${pcDocMaxSize }">
 								<div class="files-viewer"
 									data-existing-files="${fn:length(permitCancel.cancelSupportDocs)}">
 									<a href="javascript:void(0);" class="file-add"> <i

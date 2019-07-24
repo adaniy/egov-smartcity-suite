@@ -109,9 +109,9 @@
 
 				<div class="col-sm-6 add-margin">
 					<div class="files-upload-container <c:if test="${docs.document.checklistDetail.description eq 'Land Tax Receipt' || docs.document.checklistDetail.description eq 'One day permit agreement'}">documentRequire</c:if>"
-					    data-file-max-size="5"
+					    data-file-max-size="${appDocMaxSize}"
 					    <c:if test="${docs.document.checklistDetail.isMandatory eq true && fn:length(docs.document.getOrderedSupportDocs()) eq 0}">required</c:if>
-						data-allowed-extenstion="doc,docx,xls,xlsx,rtf,pdf,txt,zip,jpeg,jpg,png,gif,tiff">
+						data-allowed-extenstion="${appDocAllowedExtenstions }">
 						<div class="files-viewer">
 
 							<c:forEach items="${docs.document.getOrderedSupportDocs()}" var="file" varStatus="status1">
@@ -155,7 +155,7 @@
 								data-file-input-name="documents[${status.index}].document.files">
 								<i class="fa fa-plus"></i>
 							</a>
-
+							<form:errors path="documents[${status.index}].document.files" cssClass="add-margin error-msg" />
 						</div>
 					</div>
 				</div>

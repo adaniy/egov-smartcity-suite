@@ -448,21 +448,22 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
 
         Integer i = 0;
         for (ApplicationDocument document : application.getApplicationDocument()) {
-            bpaUtils.validateFiles(errors, appDocAllowedExtenstions, appDocMimeTypes, i, document.getFiles(),
-                    "applicationDocument");
+            bpaUtils.validateFiles(errors, appDocAllowedExtenstions, appDocMimeTypes, document.getFiles(),
+                    "applicationDocument[" + i + "].files");
             i++;
         }
 
         i = 0;
         for (DCRDocument document : application.getDcrDocuments()) {
-            bpaUtils.validateFiles(errors, dcrDocAllowedExtenstions, dcrDocMimeTypes, i, document.getFiles(), "dcrDocuments");
+            bpaUtils.validateFiles(errors, dcrDocAllowedExtenstions, dcrDocMimeTypes, document.getFiles(),
+                    "dcrDocuments[" + i + "].files");
             i++;
         }
 
         i = 0;
         for (ApplicationNocDocument document : application.getApplicationNOCDocument()) {
-            bpaUtils.validateFiles(errors, nocDocAllowedExtenstions, nocDocMimeTypes, i, document.getFiles(),
-                    "applicationNOCDocument");
+            bpaUtils.validateFiles(errors, nocDocAllowedExtenstions, nocDocMimeTypes, document.getFiles(),
+                    "applicationNOCDocument[" + i + "].files");
             i++;
         }
 
@@ -475,30 +476,8 @@ public class ApplicationBpaService extends GenericBillGeneratorService {
         List<String> tsDocMimeTypes = new ArrayList<String>(
                 Arrays.asList(bpaApplicationSettings.getValue("bpa.ts.docs.allowed.mime.types").split(",")));
 
-        Integer i = 0;
-        String extension;
-        String mimeType;
-        if (application.getFiles() != null && application.getFiles().length > 0)
-            for (MultipartFile file : application.getFiles()) {
-                extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf('.') + 1);
-                mimeType = bpaUtils.getMimeType(file);
-                if (file.isEmpty()) {
-                    errors.rejectValue("files", "upload.file.required");
-                } else if (!tsDocAllowedExtenstions.contains(extension.toLowerCase())) {
-                    errors.rejectValue("files", "upload.invalid.file.type",
-                            new Object[] { file.getOriginalFilename() }, null);
-                } else if (tsDocAllowedExtenstions.contains(extension.toLowerCase())
-                        && (!tsDocMimeTypes.contains(mimeType)
-                                || StringUtils.countMatches(file.getName(), ".") > 1 || file.getName().contains("%00"))) {
-                    errors.rejectValue("files", "upload.malicious.file.type",
-                            new Object[] { file.getOriginalFilename() }, null);
-                } else if (file.getSize() > (Long.valueOf(bpaApplicationSettings.getValue("bpa.ts.docs.max.size"))
-                        * 1024 * 1024)) {
-                    errors.rejectValue("files", "upload.exceeded.file.size",
-                            new Object[] { file.getOriginalFilename() }, null);
-                }
-            }
-        i++;
+        bpaUtils.validateFiles(errors, tsDocAllowedExtenstions, tsDocMimeTypes, application.getFiles(),
+                "files");
 
     }
 

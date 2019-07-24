@@ -50,16 +50,20 @@ import static org.egov.bpa.utils.BpaConstants.SENDSMSFORBPA;
 import static org.egov.bpa.utils.BpaConstants.YES;
 import static org.egov.infra.utils.DateUtils.toDefaultDateFormat;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.egov.bpa.config.properties.BpaApplicationSettings;
 import org.egov.bpa.master.entity.PermitCancel;
 import org.egov.bpa.service.es.BpaIndexService;
 import org.egov.bpa.transaction.entity.ApplicationStakeHolder;
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.repository.PermitCancelRepository;
+import org.egov.bpa.utils.BpaUtils;
 import org.egov.infra.admin.master.entity.AppConfigValues;
 import org.egov.infra.admin.master.service.AppConfigValueService;
 import org.egov.infra.config.core.ApplicationThreadLocals;
@@ -70,6 +74,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 
 @Service
 @Transactional(readOnly = true)
@@ -88,6 +93,10 @@ public class PermitCancelService {
     private ApplicationBpaService applicationBpaService;
     @Autowired
     private BpaIndexService bpaIndexService;
+    @Autowired
+    private BpaApplicationSettings bpaApplicationSettings;
+    @Autowired
+    private BpaUtils bpaUtils;
 
     @Transactional
     public PermitCancel save(PermitCancel permitCancel) {
@@ -196,6 +205,18 @@ public class PermitCancelService {
 
     public Boolean isEmailEnabled() {
         return getAppConfigValueByPassingModuleAndType(EGMODULE_NAME, SENDEMAILFORBPA);
+    }
+
+    public void validateDocs(final PermitCancel permitCancel, final BindingResult errors) {
+        List<String> pcDocAllowedExtenstions = new ArrayList<String>(
+                Arrays.asList(bpaApplicationSettings.getValue("bpa.permit.cancellation.docs.allowed.extenstions").split(",")));
+
+        List<String> pcDocMimeTypes = new ArrayList<String>(
+                Arrays.asList(bpaApplicationSettings.getValue("bpa.permit.cancellation.docs.allowed.mime.types").split(",")));
+
+        bpaUtils.validateFiles(errors, pcDocAllowedExtenstions, pcDocMimeTypes, permitCancel.getFiles(),
+                "files");
+
     }
 
 }

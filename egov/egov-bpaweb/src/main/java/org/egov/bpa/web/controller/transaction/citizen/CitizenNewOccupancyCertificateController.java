@@ -57,6 +57,7 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.egov.bpa.config.properties.BpaApplicationSettings;
 import org.egov.bpa.transaction.entity.WorkflowBean;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.bpa.transaction.service.collection.GenericBillGeneratorService;
@@ -107,6 +108,8 @@ public class CitizenNewOccupancyCertificateController extends BpaGenericApplicat
     private OccupancyCertificateService occupancyCertificateService;
     @Autowired
     private OccupancyCertificateValidationService occupancyCertificateValidationService;
+    @Autowired
+    private BpaApplicationSettings bpaApplicationSettings;
 
     @GetMapping("/occupancy-certificate/apply")
     public String newOCForm(final Model model, final HttpServletRequest request) {
@@ -120,6 +123,17 @@ public class CitizenNewOccupancyCertificateController extends BpaGenericApplicat
         getDcrDocumentsUploadMode(model);
         prepareCommonModelAttribute(model, occupancyCertificate.isCitizenAccepted());
         model.addAttribute("occupancyCertificate", occupancyCertificate);
+        model.addAttribute("appDocAllowedExtenstions",
+                bpaApplicationSettings.getValue("bpa.citizen.app.docs.allowed.extenstions"));
+        model.addAttribute("appDocMaxSize", bpaApplicationSettings.getValue("bpa.citizen.dcr.docs.max.size"));
+
+        model.addAttribute("dcrDocAllowedExtenstions",
+                bpaApplicationSettings.getValue("bpa.citizen.dcr.docs.allowed.extenstions"));
+        model.addAttribute("dcrDocMaxSize", bpaApplicationSettings.getValue("bpa.citizen.dcr.docs.max.size"));
+
+        model.addAttribute("nocDocAllowedExtenstions",
+                bpaApplicationSettings.getValue("bpa.citizen.noc.docs.allowed.extenstions"));
+        model.addAttribute("nocDocMaxSize", bpaApplicationSettings.getValue("bpa.citizen.noc.docs.max.size"));
         return CITIZEN_OCCUPANCY_CERTIFICATE_NEW;
     }
 
@@ -136,6 +150,7 @@ public class CitizenNewOccupancyCertificateController extends BpaGenericApplicat
             return CITIZEN_OCCUPANCY_CERTIFICATE_NEW;
         occupancyCertificateService.validateProposedAndExistingBuildings(occupancyCertificate);
         String result = occupancyCertificateValidationService.validateOcWithBpaApplication(model, occupancyCertificate);
+        occupancyCertificateService.validateDocs(occupancyCertificate, errors);
         if (!result.isEmpty())
             return result;
         WorkflowBean wfBean = new WorkflowBean();

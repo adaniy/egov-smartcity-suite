@@ -43,6 +43,7 @@ import java.util.Date;
 
 import javax.validation.Valid;
 
+import org.egov.bpa.config.properties.BpaApplicationSettings;
 import org.egov.bpa.master.entity.enums.Directions;
 import org.egov.bpa.transaction.entity.common.InspectionCommon;
 import org.egov.bpa.transaction.entity.common.InspectionFilesCommon;
@@ -73,7 +74,9 @@ public class CreateInspectionForOccupancyCertificateController extends BpaGeneri
     private OCInspectionService ocInspectionService;
     @Autowired
     private OccupancyCertificateService occupancyCertificateService;
-
+    @Autowired
+    private BpaApplicationSettings bpaApplicationSettings;
+    
     @GetMapping("/create-inspection/{applicationNumber}")
     public String inspectionDetailForm(final Model model, @PathVariable final String applicationNumber) {
         loadApplication(model, applicationNumber);
@@ -84,6 +87,7 @@ public class CreateInspectionForOccupancyCertificateController extends BpaGeneri
     public String createInspection(@Valid @ModelAttribute final OCInspection ocInspection,
             @PathVariable final String applicationNumber, final Model model, final BindingResult resultBinder) {
         ocInspection.getInspection().setDocket(ocInspectionService.buildDocDetFromUI(ocInspection));
+        ocInspectionService.validateinspectionDocs(ocInspection, resultBinder);
         if (resultBinder.hasErrors()) {
             loadApplication(model, applicationNumber);
             return CREATE_INSPECTION;
@@ -125,6 +129,10 @@ public class CreateInspectionForOccupancyCertificateController extends BpaGeneri
                 checkListDetailService.findActiveCheckListByChecklistTypeAndOrderById("OCPLANSCRUTINYDRAWING"));
         model.addAttribute(BpaConstants.BPA_APPLICATION, oc.getParent());
         model.addAttribute(OcConstants.OCCUPANCY_CERTIFICATE, oc);
+        
+        model.addAttribute("inspectionDocAllowedExtenstions",
+                bpaApplicationSettings.getValue("bpa.oc.inspection.docs.allowed.extenstions"));
+        model.addAttribute("inspectionDocMaxSize", bpaApplicationSettings.getValue("bpa.oc.inspection.docs.max.size"));
     }
 
 }

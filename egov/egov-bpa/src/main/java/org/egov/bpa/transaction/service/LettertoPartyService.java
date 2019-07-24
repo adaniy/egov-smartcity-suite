@@ -145,8 +145,8 @@ public class LettertoPartyService {
 
         Integer i = 0;
         for (LettertoPartyDocument document : lettertoparty.getLettertoPartyDocument()) {
-            bpaUtils.validateFiles(errors, lpDocAllowedExtenstions, lpDocMimeTypes, i, document.getFiles(),
-                    "lettertoPartyDocument");
+            bpaUtils.validateFiles(errors, lpDocAllowedExtenstions, lpDocMimeTypes, document.getFiles(),
+                    "lettertoPartyDocument[" + i + "].files");
             i++;
         }
 

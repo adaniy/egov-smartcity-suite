@@ -97,6 +97,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
+import org.egov.bpa.config.properties.BpaApplicationSettings;
 import org.egov.bpa.master.service.PermitConditionsService;
 import org.egov.bpa.transaction.entity.WorkflowBean;
 import org.egov.bpa.transaction.entity.enums.AppointmentSchedulePurpose;
@@ -183,6 +184,8 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
     @Autowired
     private CustomImplProvider specificNoticeService;
     @Autowired
+    private BpaApplicationSettings bpaApplicationSettings;
+    @Autowired
     @Qualifier("workflowService")
     private SimpleWorkflowService<OccupancyCertificate> ocApplicationWorkflowService;
 
@@ -221,6 +224,17 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
                 bpaApplicationValidationService.isEdcrInetgrationRequired(oc.getParent().getServiceType().getCode()));
         model.addAttribute("documentScrutinyValues", ChecklistValues.values());
         model.addAttribute("loginUser", securityUtils.getCurrentUser());
+        model.addAttribute("appDocAllowedExtenstions",
+                bpaApplicationSettings.getValue("bpa.citizen.app.docs.allowed.extenstions"));
+        model.addAttribute("appDocMaxSize", bpaApplicationSettings.getValue("bpa.citizen.dcr.docs.max.size"));
+
+        model.addAttribute("dcrDocAllowedExtenstions",
+                bpaApplicationSettings.getValue("bpa.citizen.dcr.docs.allowed.extenstions"));
+        model.addAttribute("dcrDocMaxSize", bpaApplicationSettings.getValue("bpa.citizen.dcr.docs.max.size"));
+
+        model.addAttribute("nocDocAllowedExtenstions",
+                bpaApplicationSettings.getValue("bpa.citizen.noc.docs.allowed.extenstions"));
+        model.addAttribute("nocDocMaxSize", bpaApplicationSettings.getValue("bpa.citizen.noc.docs.max.size"));
         getDcrDocumentsUploadMode(model);
         model.addAttribute(APPLICATION_HISTORY,
                 workflowHistoryService.getHistoryForOC(oc.getAppointmentSchedules(), oc.getCurrentState(), oc.getStateHistory()));
@@ -411,6 +425,7 @@ public class UpdateOccupancyCertificateController extends BpaGenericApplicationC
     public String createDocumentScrutinyForOC(@Valid @ModelAttribute final OccupancyCertificate occupancyCertificate,
             @PathVariable final String applicationNumber, final HttpServletRequest request,
             final Model model, final BindingResult errors, final RedirectAttributes redirectAttributes) {
+        occupancyCertificateService.validateDocs(occupancyCertificate, errors);
         if (errors.hasErrors())
             return OC_CREATE_DOCUMENT_SCRUTINY_FORM;
 

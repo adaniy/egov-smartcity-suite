@@ -53,7 +53,7 @@
 	<label class="col-sm-2 control-label text-right"></label>
 	<div class="col-sm-10">
 		<div class="files-upload-container"
-			data-allowed-extenstion="jpeg,jpg,png,gif" data-file-max-size="4">
+			data-allowed-extenstion="${inspectionDocAllowedExtenstions }" data-file-max-size="${inspectionDocMaxSize }">
 			<div class="files-viewer"
 				data-existing-files="${fn:length(ocInspection.inspection.inspectionSupportDocs)}">
 				<c:forEach var="image" items="${ocInspection.inspection.encodedImages}"
@@ -75,8 +75,8 @@
 			<c:forEach var="inspnDoc" items="${ocInspection.inspection.inspectionSupportDocs}"
 					   varStatus="inspnDocStatus">
 				<input type="hidden" name="inspection.inspectionSupportDocs[${inspnDocStatus.index}].direction" value="${inspnDoc.direction}">
-				<input type="file" name="inspection.inspectionSupportDocs[${inspnDocStatus.index}].file" class="filechange inline btn"
-					   style="display: none;" />
+				<input type="file" name="inspection.inspectionSupportDocs[${inspnDocStatus.index}].file" class="filechange inline btn" style="display: none;" />
+				<form:errors path="inspection.inspectionSupportDocs[${inspnDocStatus.index}].file" cssClass="add-margin error-msg" />
 			</c:forEach>
 			<%--<input type="file" name="files" class="filechange inline btn"
 				style="display: none;" /> <input type="file" name="inspectionfiles"

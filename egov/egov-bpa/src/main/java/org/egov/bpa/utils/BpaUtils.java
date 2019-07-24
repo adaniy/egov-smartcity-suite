@@ -704,7 +704,7 @@ public class BpaUtils {
     }
 
     public void validateFiles(final BindingResult errors, List<String> allowedExtenstions, List<String> mimeTypes,
-            Integer i, MultipartFile[] files, String filePathPref) {
+            MultipartFile[] files, String filePath) {
         String extension;
         String mimeType;
         if (files != null && files.length > 0)
@@ -712,18 +712,18 @@ public class BpaUtils {
                 extension = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf('.') + 1);
                 mimeType = getMimeType(file);
                 if (file.isEmpty()) {
-                    errors.rejectValue(filePathPref + "[" + i + "].files", "upload.file.required");
+                    errors.rejectValue(filePath, "upload.file.required");
                 } else if (!allowedExtenstions.contains(extension.toLowerCase())) {
-                    errors.rejectValue(filePathPref + "[" + i + "].files", "upload.invalid.file.type",
+                    errors.rejectValue(filePath, "upload.invalid.file.type",
                             new Object[] { file.getOriginalFilename() }, null);
                 } else if (allowedExtenstions.contains(extension.toLowerCase())
                         && (!mimeTypes.contains(mimeType)
                                 || StringUtils.countMatches(file.getName(), ".") > 1 || file.getName().contains("%00"))) {
-                    errors.rejectValue(filePathPref + "[" + i + "].files", "upload.malicious.file.type",
+                    errors.rejectValue(filePath, "upload.malicious.file.type",
                             new Object[] { file.getOriginalFilename() }, null);
                 } else if (file.getSize() > (Long.valueOf(bpaApplicationSettings.getValue("bpa.citizen.app.docs.max.size"))
                         * 1024 * 1024)) {
-                    errors.rejectValue(filePathPref + "[" + i + "].files", "upload.exceeded.file.size",
+                    errors.rejectValue(filePath, "upload.exceeded.file.size",
                             new Object[] { file.getOriginalFilename() }, null);
                 }
             }

@@ -69,6 +69,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.egov.bpa.config.properties.BpaApplicationSettings;
 import org.egov.bpa.transaction.entity.ApplicationFloorDetail;
 import org.egov.bpa.transaction.entity.BuildingDetail;
 import org.egov.bpa.transaction.entity.WorkflowBean;
@@ -129,6 +130,8 @@ public class CitizenUpdateOccupancyCertificateController extends BpaGenericAppli
     private OCLetterToPartyService ocLetterToPartyService;
     @Autowired
     private OCInspectionService ocInspectionService;
+    @Autowired
+    private BpaApplicationSettings bpaApplicationSettings;
 
     @GetMapping("/occupancy-certificate/update/{applicationNumber}")
     public String showOCUpdateForm(@PathVariable final String applicationNumber, final Model model,
@@ -208,6 +211,17 @@ public class CitizenUpdateOccupancyCertificateController extends BpaGenericAppli
         buildReceiptDetails(oc.getDemand().getEgDemandDetails(), oc.getReceipts());
         model.addAttribute(APPLICATION_HISTORY,
                 workflowHistoryService.getHistoryForOC(oc.getAppointmentSchedules(), oc.getCurrentState(), oc.getStateHistory()));
+        model.addAttribute("appDocAllowedExtenstions",
+                bpaApplicationSettings.getValue("bpa.citizen.app.docs.allowed.extenstions"));
+        model.addAttribute("appDocMaxSize", bpaApplicationSettings.getValue("bpa.citizen.dcr.docs.max.size"));
+
+        model.addAttribute("dcrDocAllowedExtenstions",
+                bpaApplicationSettings.getValue("bpa.citizen.dcr.docs.allowed.extenstions"));
+        model.addAttribute("dcrDocMaxSize", bpaApplicationSettings.getValue("bpa.citizen.dcr.docs.max.size"));
+
+        model.addAttribute("nocDocAllowedExtenstions",
+                bpaApplicationSettings.getValue("bpa.citizen.noc.docs.allowed.extenstions"));
+        model.addAttribute("nocDocMaxSize", bpaApplicationSettings.getValue("bpa.citizen.noc.docs.max.size"));
     }
 
     private void prepareFormData(final OccupancyCertificate oc, final Model model) {
@@ -229,6 +243,7 @@ public class CitizenUpdateOccupancyCertificateController extends BpaGenericAppli
     public String updateOCDetails(@Valid @ModelAttribute("occupancyCertificate") final OccupancyCertificate occupancyCertificate,
             final HttpServletRequest request, final Model model,
             final BindingResult errors) {
+        occupancyCertificateService.validateDocs(occupancyCertificate, errors);
         if (errors.hasErrors())
             return OCCUPANCY_CERTIFICATE_UPDATE;
         occupancyCertificateService.validateProposedAndExistingBuildings(occupancyCertificate);
