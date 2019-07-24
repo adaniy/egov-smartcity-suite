@@ -343,7 +343,9 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
             final Model model,
             final RedirectAttributes redirectAttributes,
             @RequestParam final BigDecimal amountRule) throws IOException {
-        // tsins
+
+        applicationBpaService.validateTownSurveyorDocs(bpaApplication, resultBinder);
+
         if (resultBinder.hasErrors()) {
             loadFormData(model, bpaApplication);
             return BPAAPPLICATION_FORM;
@@ -675,7 +677,7 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
         model.addAttribute("isFeeCollected", bpaDemandService.checkAnyTaxIsPendingToCollect(application));
         model.addAttribute("admissionFee", applicationBpaService.setAdmissionFeeAmountForRegistrationWithAmenities(
                 application.getServiceType().getId(), application.getApplicationAmenity()));
-        
+
         model.addAttribute("appDocAllowedExtenstions",
                 bpaApplicationSettings.getValue("bpa.citizen.app.docs.allowed.extenstions"));
         model.addAttribute("appDocMaxSize", bpaApplicationSettings.getValue("bpa.citizen.dcr.docs.max.size"));
@@ -683,10 +685,15 @@ public class UpdateBpaApplicationController extends BpaGenericApplicationControl
         model.addAttribute("dcrDocAllowedExtenstions",
                 bpaApplicationSettings.getValue("bpa.citizen.dcr.docs.allowed.extenstions"));
         model.addAttribute("dcrDocMaxSize", bpaApplicationSettings.getValue("bpa.citizen.dcr.docs.max.size"));
-        
+
         model.addAttribute("nocDocAllowedExtenstions",
                 bpaApplicationSettings.getValue("bpa.citizen.noc.docs.allowed.extenstions"));
         model.addAttribute("nocDocMaxSize", bpaApplicationSettings.getValue("bpa.citizen.noc.docs.max.size"));
+
+        model.addAttribute("tsDocAllowedExtenstions",
+                bpaApplicationSettings.getValue("bpa.ts.docs.allowed.extenstions"));
+        model.addAttribute("tsDocMaxSize", bpaApplicationSettings.getValue("bpa.ts.docs.max.size"));
+
     }
 
     private void loadCommonApplicationDetails(Model model, BpaApplication application) {

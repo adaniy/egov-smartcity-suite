@@ -74,7 +74,7 @@
 	<label class="col-sm-2 control-label text-right"></label>
 	<div class="col-sm-10">
 		<div class="files-upload-container"
-			 data-allowed-extenstion="doc,docx,xls,xlsx,rtf,pdf,txt,zip,jpeg,jpg,png,gif,tiff" data-file-max-size="4">
+			 data-allowed-extenstion="${tsDocAllowedExtenstions }" data-file-max-size="${tsDocMaxSize }">
 			<div class="files-viewer"
 				 data-existing-files="${fn:length(bpaApplication.tsInspnSupportDocs)}">
 
@@ -116,6 +116,7 @@
 				<a href="javascript:void(0);" class="file-add"> <i
 						class="fa fa-plus" aria-hidden="true"></i>
 				</a>
+				<form:errors path="files" cssClass="add-margin error-msg"/>
 
 			</div>
 

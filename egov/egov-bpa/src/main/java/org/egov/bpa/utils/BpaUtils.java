@@ -689,7 +689,7 @@ public class BpaUtils {
         return appConfigValueList.get(0).getValue();
     }
 
-    private String getMimeType(final MultipartFile file) {
+    public String getMimeType(final MultipartFile file) {
         MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.MagicMimeMimeDetector");
 
         eu.medsea.mimeutil.MimeType mimeType = null;

@@ -29,13 +29,17 @@
  */
 package org.egov.bpa.transaction.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import org.egov.bpa.autonumber.LettertoPartyNumberGenerator;
 import org.egov.bpa.autonumber.LettertoPartyReplyAckNumberGenerator;
+import org.egov.bpa.config.properties.BpaApplicationSettings;
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.LettertoParty;
+import org.egov.bpa.transaction.entity.LettertoPartyDocument;
 import org.egov.bpa.transaction.repository.LettertoPartyRepository;
 import org.egov.bpa.transaction.service.messaging.BPASmsAndEmailService;
 import org.egov.bpa.utils.BpaConstants;
@@ -47,6 +51,7 @@ import org.egov.pims.commons.Position;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 
 @Service
 @Transactional(readOnly = true)
@@ -67,6 +72,8 @@ public class LettertoPartyService {
     private BpaStatusService bpaStatusService;
     @Autowired
     private BPASmsAndEmailService bpaSmsAndEmailService;
+    @Autowired
+    private BpaApplicationSettings bpaApplicationSettings;
 
     @Autowired
     public LettertoPartyService(final LettertoPartyRepository lettertoPartyRepository) {
@@ -127,6 +134,22 @@ public class LettertoPartyService {
         final LettertoPartyReplyAckNumberGenerator lettertoPartyReplyAckNumberGenerator = beanResolver
                 .getAutoNumberServiceFor(LettertoPartyReplyAckNumberGenerator.class);
         return lettertoPartyReplyAckNumberGenerator.generateLettertoPartyReplyAckNumber(financialYearRange);
+    }
+
+    public void validateDocs(final LettertoParty lettertoparty, final BindingResult errors) {
+        List<String> lpDocAllowedExtenstions = new ArrayList<String>(
+                Arrays.asList(bpaApplicationSettings.getValue("bpa.lpreply.docs.allowed.extenstions").split(",")));
+
+        List<String> lpDocMimeTypes = new ArrayList<String>(
+                Arrays.asList(bpaApplicationSettings.getValue("bpa.lpreply.docs.allowed.mime.types").split(",")));
+
+        Integer i = 0;
+        for (LettertoPartyDocument document : lettertoparty.getLettertoPartyDocument()) {
+            bpaUtils.validateFiles(errors, lpDocAllowedExtenstions, lpDocMimeTypes, i, document.getFiles(),
+                    "lettertoPartyDocument");
+            i++;
+        }
+
     }
 
 }

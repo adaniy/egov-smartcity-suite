@@ -129,7 +129,6 @@ public class CitizenApplicationController extends BpaGenericApplicationControlle
 
     @Autowired
     private BpaApplicationSettings bpaApplicationSettings;
-
     @Autowired
     private GenericBillGeneratorService genericBillGeneratorService;
     @Autowired

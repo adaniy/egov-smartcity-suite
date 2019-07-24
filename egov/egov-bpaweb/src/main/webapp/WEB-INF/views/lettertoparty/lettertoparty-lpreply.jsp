@@ -210,9 +210,9 @@
 
 										<div class="col-sm-4 add-margin">
 												<div class="files-upload-container"
-													 data-file-max-size="5"
+													 data-file-max-size="${lpreplyDocMaxSize }"
 													 <c:if test="${lpdoc.isrequested eq true && fn:length(lpdoc.getSupportDocs()) eq 0}">required</c:if>
-													 data-allowed-extenstion="doc,docx,xls,xlsx,rtf,pdf,txt,zip,jpeg,jpg,png,gif,tiff">
+													 data-allowed-extenstion="${lpreplyDocAllowedExtenstions }">
 													<div class="files-viewer">
 
 														<c:forEach items="${lpdoc.getSupportDocs()}" var="file" varStatus="status1">
@@ -256,7 +256,7 @@
 														   data-file-input-name="lettertoPartyDocument[${status.index}].files">
 															<i class="fa fa-plus"></i>
 														</a>
-
+														<form:errors path="lettertoPartyDocument[${status.index}].files" cssClass="add-margin error-msg" />
 													</div>
 												</div>
 										</div>

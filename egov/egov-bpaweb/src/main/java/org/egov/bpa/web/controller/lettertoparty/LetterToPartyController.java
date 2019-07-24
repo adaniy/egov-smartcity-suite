@@ -48,6 +48,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.egov.bpa.config.properties.BpaApplicationSettings;
 import org.egov.bpa.master.entity.CheckListDetail;
 import org.egov.bpa.master.entity.LpReason;
 import org.egov.bpa.master.service.LpReasonService;
@@ -116,7 +117,9 @@ public class LetterToPartyController extends BpaGenericApplicationController {
     private LettertoPartyDocumentService lettertoPartyDocumentService;
     @Autowired
     private CustomImplProvider specificNoticeService;
-
+    @Autowired
+    private BpaApplicationSettings bpaApplicationSettings;
+    
     @ModelAttribute("lpReasonList")
     public List<LpReason> getLpReasonList() {
         return lpReasonService.findAll();
@@ -321,6 +324,9 @@ public class LetterToPartyController extends BpaGenericApplicationController {
         model.addAttribute(BPA_APPLICATION, lettertoParty.getApplication());
         model.addAttribute(CHECK_LIST_DETAIL_LIST,
                 getCheckListDetailList(lettertoParty.getApplication().getServiceType().getId()));
+        model.addAttribute("lpreplyDocAllowedExtenstions",
+                bpaApplicationSettings.getValue("bpa.lpreply.docs.allowed.extenstions"));
+        model.addAttribute("lpreplyDocMaxSize", bpaApplicationSettings.getValue("bpa.lpreply.docs.max.size"));
         return LETTERTOPARTY_LPREPLY;
     }
 
