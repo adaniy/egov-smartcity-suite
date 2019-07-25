@@ -57,6 +57,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
@@ -114,7 +115,7 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
 
     @PostMapping(value = "/search", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String searchApplications(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+    public String searchApplications(@Valid @ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
         return new DataTable<>(searchBpaApplicationService.pagedSearch(searchBpaApplicationForm),
                 searchBpaApplicationForm.draw())
                         .toJson(SearchBpaApplicationAdaptor.class);
@@ -154,7 +155,7 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
 
     @PostMapping(value = "/bpacollectfee", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String searchCollectionPendingRecords(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+    public String searchCollectionPendingRecords(@Valid @ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
         return new DataTable<>(searchBpaApplicationService.hasFeeCollectionPending(searchBpaApplicationForm),
                 searchBpaApplicationForm.draw())
                         .toJson(SearchBpaApplicationAdaptor.class);
@@ -190,7 +191,8 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
 
     @PostMapping(value = "/bpadocumentscrutiny", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String searchDocumentScrutinyPendingRecords(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+    public String searchDocumentScrutinyPendingRecords(
+            @Valid @ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
         return new DataTable<>(searchBpaApplicationService.searchForDocumentScrutinyPending(searchBpaApplicationForm),
                 searchBpaApplicationForm.draw())
                         .toJson(SearchBpaApplicationAdaptor.class);
@@ -218,7 +220,8 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
 
     @PostMapping(value = "/search/initiate-revocation", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String searchApplicationsForRevocation(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+    public String searchApplicationsForRevocation(
+            @Valid @ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
         List<Long> userIds = new ArrayList<>();
         userIds.add(securityUtils.getCurrentUser().getId());
         return new DataTable<>(searchBpaApplicationService.searchForRevocation(searchBpaApplicationForm, userIds),
@@ -236,7 +239,7 @@ public class SearchBpaApplicationController extends BpaGenericApplicationControl
     @PostMapping(value = "/search/cancel-permit", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public String searchApplicationsInitiatedForPermitCancel(
-            @ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+            @Valid @ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
         List<Long> userIds = new ArrayList<>();
         userIds.add(securityUtils.getCurrentUser().getId());
         return new DataTable<>(searchBpaApplicationService.searchForInitForPermitCancel(searchBpaApplicationForm, userIds),

@@ -39,9 +39,12 @@
  */
 package org.egov.bpa.master.entity.enums;
 
+import org.hibernate.validator.constraints.SafeHtml;
+
 public enum SlotMappingApplType {
     ALL_OTHER_SERVICES("Regular"), ONE_DAY_PERMIT("One day permit"), OCCUPANCY_CERTIFICATE("Occupancy certificate");
 
+    @SafeHtml
     private final String applicationTypeVal;
 
     SlotMappingApplType(String aTypeVal) {

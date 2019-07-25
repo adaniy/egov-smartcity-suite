@@ -188,7 +188,7 @@ public class SlotMappingController extends BpaGenericApplicationController {
 
     @RequestMapping(value = "/search/update", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String searchslotMapping(@ModelAttribute final SlotMapping slotMapping) {
+    public String searchslotMapping(@Valid @ModelAttribute final SlotMapping slotMapping) {
         List<SlotMapping> slotMappingList = noOfApplicationsService.searchSlotMapping(slotMapping);
         return new StringBuilder(DATA).append(toJSON(slotMappingList, SlotMapping.class, SlotMappingJsonAdaptor.class))
                 .append("}").toString();
@@ -205,7 +205,7 @@ public class SlotMappingController extends BpaGenericApplicationController {
 
     @RequestMapping(value = "/search/view", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String viewslotMapping(@ModelAttribute final SlotMapping slotMapping) {
+    public String viewslotMapping(@Valid @ModelAttribute final SlotMapping slotMapping) {
         List<SlotMapping> slotMappingList = noOfApplicationsService.searchSlotMapping(slotMapping);
         return new StringBuilder(DATA).append(toJSON(slotMappingList, SlotMapping.class, SlotMappingJsonAdaptor.class))
                 .append("}").toString();

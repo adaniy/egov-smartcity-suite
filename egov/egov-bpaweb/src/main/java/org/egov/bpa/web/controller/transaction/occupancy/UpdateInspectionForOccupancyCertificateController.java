@@ -43,6 +43,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.egov.bpa.config.properties.BpaApplicationSettings;
 import org.egov.bpa.transaction.entity.common.DocketDetailCommon;
 import org.egov.bpa.transaction.entity.enums.ChecklistValues;
@@ -85,7 +87,7 @@ public class UpdateInspectionForOccupancyCertificateController extends BpaGeneri
     }
 
     @PostMapping("/update-inspection/{applicationNumber}/{inspectionNumber}")
-    public String updateInspection(@ModelAttribute("ocInspection") final OCInspection ocInspection,
+    public String updateInspection(@Valid @ModelAttribute("ocInspection") final OCInspection ocInspection,
             @PathVariable final String applicationNumber, @PathVariable final String inspectionNumber, final Model model,
             final BindingResult resultBinder) {
         ocInspectionService.validateinspectionDocs(ocInspection, resultBinder);

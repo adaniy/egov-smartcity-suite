@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.egov.edcr.entity.SearchBuildingPlanScrutinyForm;
 import org.egov.edcr.service.EdcrApplicationService;
@@ -43,7 +44,7 @@ public class EdcrReportsController {
 
     @PostMapping(value = "/buildingplan-scrutinyreport", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String searchBuildingPlanScrutiny(final SearchBuildingPlanScrutinyForm srchPlnScrtny) {
+    public String searchBuildingPlanScrutiny(@Valid final SearchBuildingPlanScrutinyForm srchPlnScrtny) {
         return new DataTable<>(edcrApplicationService.planScrutinyPagedSearch(srchPlnScrtny),
                 srchPlnScrtny.draw())
                         .toJson(SearchBuildingPlanScrutinyAdaptor.class);

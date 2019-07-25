@@ -4,44 +4,60 @@ import java.util.Date;
 import java.util.List;
 
 import org.egov.infra.web.support.search.DataTableSearchRequest;
+import org.hibernate.validator.constraints.SafeHtml;
 
 public class SearchBuildingPlanScrutinyForm extends DataTableSearchRequest {
+
+    @SafeHtml
     private String buildingPlanScrutinyNumber;
 
+    @SafeHtml
     private String status;
 
     private Date fromDate;
 
     private Date toDate;
 
+    @SafeHtml
     private String buildingLicenceeType;
 
+    @SafeHtml
     private String buildingLicenceeName;
 
+    @SafeHtml
     private String dxfFileStoreId;
 
+    @SafeHtml
     private String markedDxfFileStoreId;
 
+    @SafeHtml
     private String reportOutputFileStoreId;
 
+    @SafeHtml
     private String dxfFileName;
 
+    @SafeHtml
     private String markedDxfFileName;
 
+    @SafeHtml
     private String reportOutputFileName;
 
     private List<Long> stakeHolderIds;
 
     private Long stakeHolderId;
 
+    @SafeHtml
     private String applicationNumber;
 
     private Date applicationDate;
 
+    @SafeHtml
     private String applicantName;
 
+    @SafeHtml
     private String bpaApplicationNumber;
 
+    @SafeHtml
     private String permitNumber;
 
     private Date uploadedDateAndTime;

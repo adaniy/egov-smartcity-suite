@@ -48,52 +48,77 @@ import org.egov.bpa.transaction.entity.SiteDetail;
 import org.egov.bpa.transaction.entity.SlotDetail;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
 import org.egov.infra.web.support.search.DataTableSearchRequest;
+import org.hibernate.validator.constraints.SafeHtml;
 
 public class SearchBpaApplicationForm extends DataTableSearchRequest {
     private Long id;
+    @SafeHtml
     private String applicationNumber;
     private Date applicationDate;
+    @SafeHtml
     private String applicantType;
+    @SafeHtml
     private String serviceType;
+    @SafeHtml
     private String occupancy;
     private Long occupancyId;
     private Long serviceTypeId;
+    @SafeHtml
     private String serviceCode;
+    @SafeHtml
     private String status;
     private Long statusId;
     private Date planPermissionDate;
+    @SafeHtml
     private String planPermissionNumber;
     private BigDecimal admissionfeeAmount;
+    @SafeHtml
     private String applicantName;
+    @SafeHtml
     private String stakeHolderName;
+    @SafeHtml
     private String currentOwner;
+    @SafeHtml
     private String pendingAction;
+    @SafeHtml
     private String ward;
     private Long wardId;
+    @SafeHtml
     private String electionWard;
     private Long electionWardId;
+    @SafeHtml
     private String zone;
     private Long zoneId;
     private boolean isFeeCollected;
     private Date fromDate;
     private Date toDate;
+    @SafeHtml
     private String address;
+    @SafeHtml
     private String locality;
+    @SafeHtml
     private String reSurveyNumber;
+    @SafeHtml
     private String serviceTypeEnum;
     private Date appointmentDate;
+    @SafeHtml
     private String appointmentTime;
     private Boolean isRescheduledByEmployee;
     private Boolean isOnePermitApplication;
+    @SafeHtml
     private String applicationType;
+    @SafeHtml
     private String scheduleType;
+    @SafeHtml
     private String failureRemarks;
     private Long userId;
     private BigDecimal fromPlotArea;
     private BigDecimal toPlotArea;
     private BigDecimal fromBuiltUpArea;
     private BigDecimal toBuiltUpArea;
+    @SafeHtml
     private String revocationNumber;
+    @SafeHtml
     private String occupancyCertificateNumber;
     private boolean isReqularized;
 

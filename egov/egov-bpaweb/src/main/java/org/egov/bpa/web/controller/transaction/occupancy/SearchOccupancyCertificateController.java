@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.egov.bpa.transaction.entity.dto.SearchBpaApplicationForm;
 import org.egov.bpa.transaction.entity.oc.OccupancyCertificate;
@@ -108,7 +109,7 @@ public class SearchOccupancyCertificateController extends BpaGenericApplicationC
     @PostMapping(value = "/occupancy-certificate/search", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public String searchOccupancyCertificateApplications(
-            @ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+            @Valid @ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
         return new DataTable<>(searchOCService.pagedSearch(searchBpaApplicationForm),
                 searchBpaApplicationForm.draw())
                         .toJson(SearchBpaApplicationAdaptor.class);
@@ -157,7 +158,8 @@ public class SearchOccupancyCertificateController extends BpaGenericApplicationC
 
     @PostMapping(value = "/occupancy-certificate/search/document-scrutiny", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String searchDocumentScrutinyPendingRecords(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+    public String searchDocumentScrutinyPendingRecords(
+            @Valid @ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
         return new DataTable<>(searchOCService.searchForDocumentScrutinyPending(searchBpaApplicationForm),
                 searchBpaApplicationForm.draw())
                         .toJson(SearchBpaApplicationAdaptor.class);

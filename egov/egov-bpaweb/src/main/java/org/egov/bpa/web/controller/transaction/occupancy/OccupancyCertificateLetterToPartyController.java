@@ -176,7 +176,7 @@ public class OccupancyCertificateLetterToPartyController {
     }
 
     @PostMapping("/create/{applicationNumber}")
-    public String createLetterToParty(@ModelAttribute final OCLetterToParty ocLetterToParty,
+    public String createLetterToParty(@Valid @ModelAttribute final OCLetterToParty ocLetterToParty,
             final Model model, @PathVariable final String applicationNumber,
             final BindingResult errors, final RedirectAttributes redirectAttributes) {
         validateCreateLetterToParty(ocLetterToParty, errors);

@@ -47,6 +47,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.egov.bpa.master.entity.StakeHolder;
 import org.egov.bpa.master.entity.enums.StakeHolderStatus;
@@ -152,7 +153,7 @@ public class StakeHolderController {
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public String createStakeholder(@ModelAttribute(STAKE_HOLDER) final StakeHolder stakeHolder,
+    public String createStakeholder(@Valid @ModelAttribute(STAKE_HOLDER) final StakeHolder stakeHolder,
             final Model model,
             final HttpServletRequest request,
             final BindingResult errors, final RedirectAttributes redirectAttributes) {
@@ -182,7 +183,7 @@ public class StakeHolderController {
     }
 
     @RequestMapping(value = "/createbycitizen", method = RequestMethod.POST)
-    public String createOnlineStakeholder(@ModelAttribute(STAKE_HOLDER) final StakeHolder stakeHolder,
+    public String createOnlineStakeholder(@Valid @ModelAttribute(STAKE_HOLDER) final StakeHolder stakeHolder,
             final Model model,
             final BindingResult errors, final RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
@@ -255,7 +256,7 @@ public class StakeHolderController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public String updateStakeholder(@ModelAttribute(STAKE_HOLDER) final StakeHolder stakeHolder,
+    public String updateStakeholder(@Valid @ModelAttribute(STAKE_HOLDER) final StakeHolder stakeHolder,
             final Model model,
             final HttpServletRequest request,
             final BindingResult errors, final RedirectAttributes redirectAttributes) {
@@ -305,7 +306,7 @@ public class StakeHolderController {
 
     @RequestMapping(value = "/search/update", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String getStakeHolderResultForEdit(@ModelAttribute final StakeHolder stakeHolder, final Model model) {
+    public String getStakeHolderResultForEdit(@Valid @ModelAttribute final StakeHolder stakeHolder, final Model model) {
         final List<StakeHolder> searchResultList = stakeHolderService.search(stakeHolder);
         return new StringBuilder(DATA).append(toJSON(searchResultList, StakeHolder.class, StakeHolderJsonAdaptor.class))
                 .append("}")
@@ -322,7 +323,7 @@ public class StakeHolderController {
 
     @RequestMapping(value = "/search/view", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String getStakeHolderForView(@ModelAttribute final StakeHolder stakeHolder, final Model model) {
+    public String getStakeHolderForView(@Valid @ModelAttribute final StakeHolder stakeHolder, final Model model) {
         final List<StakeHolder> searchResultList = stakeHolderService.search(stakeHolder);
         return new StringBuilder(DATA).append(toJSON(searchResultList, StakeHolder.class, StakeHolderJsonAdaptor.class))
                 .append("}")
@@ -338,7 +339,8 @@ public class StakeHolderController {
 
     @RequestMapping(value = "/search", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String searchStakeHolderForApproval(@ModelAttribute final SearchStakeHolderForm srchStkeHldrFrm, final Model model) {
+    public String searchStakeHolderForApproval(@Valid @ModelAttribute final SearchStakeHolderForm srchStkeHldrFrm,
+            final Model model) {
         List<SearchStakeHolderForm> srchStkeHldrFrmLst = stakeHolderService.searchForApproval(srchStkeHldrFrm);
         return new StringBuilder(DATA)
                 .append(toJSON(srchStkeHldrFrmLst, SearchStakeHolderForm.class, SearchStakeHolderJsonAdaptor.class))
@@ -368,7 +370,7 @@ public class StakeHolderController {
     }
 
     @RequestMapping(value = "/citizen/update", method = RequestMethod.POST)
-    public String approveStakeHolder(@ModelAttribute final StakeHolder stakeHolder, final Model model,
+    public String approveStakeHolder(@Valid @ModelAttribute final StakeHolder stakeHolder, final Model model,
             final RedirectAttributes redirectAttributes, final HttpServletRequest request) {
         String workFlowAction = request.getParameter("workFlowAction");
         StakeHolder stakeHolderResponse = stakeHolderService.updateForApproval(stakeHolder, workFlowAction);

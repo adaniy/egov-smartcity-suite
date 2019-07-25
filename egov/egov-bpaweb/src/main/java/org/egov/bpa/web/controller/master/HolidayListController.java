@@ -47,6 +47,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.egov.bpa.master.entity.Holiday;
 import org.egov.bpa.master.service.HolidayListService;
@@ -93,7 +94,7 @@ public class HolidayListController {
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public String createHolidayList(@ModelAttribute(HOLIDAY) final Holiday holiday, final Model model,
+    public String createHolidayList(@Valid @ModelAttribute(HOLIDAY) final Holiday holiday, final Model model,
             final HttpServletRequest request, final BindingResult errors, final RedirectAttributes redirectAttributes) {
         holidayListService.validateCreateHolidayList(holiday, errors);
 
@@ -127,7 +128,7 @@ public class HolidayListController {
     @RequestMapping(value = "/search/update", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public String getHolidayListResultForEdit(final Model model,
-            @ModelAttribute final SearchHolidayList searchHolidayList) {
+            @Valid @ModelAttribute final SearchHolidayList searchHolidayList) {
         final List<SearchHolidayList> searchResultList = holidayListService.search(searchHolidayList);
 
         return new StringBuilder(DATA)
@@ -143,7 +144,7 @@ public class HolidayListController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public String updateHolidayList(@ModelAttribute(HOLIDAY) final Holiday holidayList, final Model model,
+    public String updateHolidayList(@Valid @ModelAttribute(HOLIDAY) final Holiday holidayList, final Model model,
             final HttpServletRequest request, final BindingResult errors, final RedirectAttributes redirectAttributes) {
         holidayListService.validateUpdateHolidayList(holidayList, errors);
         if (errors.hasErrors()) {
@@ -170,7 +171,7 @@ public class HolidayListController {
 
     @RequestMapping(value = "/search/view", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String getHolidayListForView(@ModelAttribute final SearchHolidayList holidayList, final Model model) {
+    public String getHolidayListForView(@Valid @ModelAttribute final SearchHolidayList holidayList, final Model model) {
         final List<SearchHolidayList> searchResultList = holidayListService.search(holidayList);
         return new StringBuilder(DATA)
                 .append(toJSON(searchResultList, SearchHolidayList.class, HolidayListJsonAdaptor.class)).append("}")

@@ -53,6 +53,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.egov.bpa.master.entity.enums.ApplicationType;
 import org.egov.bpa.master.service.ServiceTypeService;
 import org.egov.bpa.transaction.entity.dto.PersonalRegisterHelper;
@@ -132,7 +134,8 @@ public class BpaReportsController extends BpaGenericApplicationController {
 
     @RequestMapping(value = "/servicewise-statusreport", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String getStatusCountByServicetypeResult(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+    public String getStatusCountByServicetypeResult(
+            @Valid @ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
         final List<SearchBpaApplicationReport> searchResultList = bpaReportsService
                 .getResultsByServicetypeAndStatus(searchBpaApplicationForm);
         return new StringBuilder(DATA)
@@ -171,7 +174,8 @@ public class BpaReportsController extends BpaGenericApplicationController {
 
     @RequestMapping(value = "/servicewise-statusreport/view", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String viewStatusCountByServicetypeDetails(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+    public String viewStatusCountByServicetypeDetails(
+            @Valid @ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
         final List<SearchBpaApplicationForm> searchResultList = searchBpaApplicationService.search(searchBpaApplicationForm);
         return new StringBuilder(DATA)
                 .append(toJSON(searchResultList, SearchBpaApplicationForm.class, SearchBpaApplicationFormAdaptor.class))
@@ -188,7 +192,7 @@ public class BpaReportsController extends BpaGenericApplicationController {
 
     @RequestMapping(value = "/zonewisedetails", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String getZoneWiseServicesResult(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+    public String getZoneWiseServicesResult(@Valid @ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
         final List<SearchBpaApplicationReport> searchResultList = bpaReportsService
                 .getResultsForEachServicetypeByZone(searchBpaApplicationForm);
         return new StringBuilder(DATA)
@@ -212,7 +216,7 @@ public class BpaReportsController extends BpaGenericApplicationController {
     @RequestMapping(value = "/slotdetails/{applicationType}", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public String getSlotDetailsResult(@PathVariable String applicationType,
-            @ModelAttribute final SlotDetailsHelper slotDetailsHelper) {
+            @Valid @ModelAttribute final SlotDetailsHelper slotDetailsHelper) {
         return new DataTable<>(bpaReportsService.searchSlotDetails(slotDetailsHelper, applicationType),
                 slotDetailsHelper.draw())
                         .toJson(SlotDetailsAdaptor.class);
@@ -239,7 +243,8 @@ public class BpaReportsController extends BpaGenericApplicationController {
 
     @RequestMapping(value = "/slotdetails/viewapplications", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String viewUtilizedSlotDetailsByApplication(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+    public String viewUtilizedSlotDetailsByApplication(
+            @Valid @ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
         final List<SearchBpaApplicationForm> searchResultList = searchBpaApplicationService
                 .buildSlotApplicationDetails(searchBpaApplicationForm);
         return new StringBuilder(DATA)
@@ -256,7 +261,7 @@ public class BpaReportsController extends BpaGenericApplicationController {
 
     @RequestMapping(value = "/failureinscheduler", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String showApplicationFailureInSchedulerRecords(final SearchBpaApplicationForm searchBpaApplicationForm) {
+    public String showApplicationFailureInSchedulerRecords(@Valid final SearchBpaApplicationForm searchBpaApplicationForm) {
         List<SearchBpaApplicationForm> searchResultList = failureInSchedulerService
                 .getAllFailedApplications(searchBpaApplicationForm);
         return new StringBuilder(DATA)
@@ -273,7 +278,7 @@ public class BpaReportsController extends BpaGenericApplicationController {
 
     @RequestMapping(value = "/personalregister", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String getPersonalRegisterResult(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+    public String getPersonalRegisterResult(@Valid @ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
         List<Long> userIds = new ArrayList<>();
         if (searchBpaApplicationForm.getUserId() == null)
             userIds.addAll(
@@ -332,7 +337,7 @@ public class BpaReportsController extends BpaGenericApplicationController {
 
     @RequestMapping(value = "/bparegister", method = RequestMethod.POST, produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String getBpaRegisterResult(@ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
+    public String getBpaRegisterResult(@Valid @ModelAttribute final SearchBpaApplicationForm searchBpaApplicationForm) {
         List<Long> userIds = new ArrayList<>();
         if (searchBpaApplicationForm.getUserId() == null)
             userIds.addAll(

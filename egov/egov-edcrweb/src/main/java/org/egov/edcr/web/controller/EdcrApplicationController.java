@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.apache.commons.io.IOUtils;
 import org.egov.bpa.master.entity.ServiceType;
@@ -129,7 +130,7 @@ public class EdcrApplicationController {
     }
 
     @PostMapping("/edcrapplication/create")
-    public String create(@ModelAttribute final EdcrApplication edcrApplication, final BindingResult errors,
+    public String create(@Valid @ModelAttribute final EdcrApplication edcrApplication, final BindingResult errors,
             final Model model, final RedirectAttributes redirectAttrs) {
         if (errors.hasErrors()) {
             prepareNewForm(model);

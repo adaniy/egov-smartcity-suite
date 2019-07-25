@@ -6,6 +6,8 @@ import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_REVOKE_CANCELED
 import static org.egov.infra.utils.StringUtils.append;
 import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
 
+import javax.validation.Valid;
+
 import org.egov.bpa.master.entity.PermitRevocation;
 import org.egov.bpa.transaction.entity.BpaApplication;
 import org.egov.bpa.transaction.notice.impl.PermitRevocationFormat;
@@ -67,7 +69,7 @@ public class PermitRevocationController {
     }
 
     @PostMapping("/initiate/revocation/create")
-    public String submitPermitRevocationInitiation(@ModelAttribute PermitRevocation permitRevocation, final Model model) {
+    public String submitPermitRevocationInitiation(@Valid @ModelAttribute PermitRevocation permitRevocation, final Model model) {
         permitRevocationService.save(permitRevocation);
         permitRevocationService.sendSmsAndEmail(permitRevocation, null);
         bpaUtils.updatePortalUserinbox(permitRevocation.getApplication(), null);
@@ -91,7 +93,7 @@ public class PermitRevocationController {
     }
 
     @PostMapping("/revocation/approval/update")
-    public String approvePermitRevocation(@ModelAttribute PermitRevocation permitRevocation, final Model model) {
+    public String approvePermitRevocation(@Valid @ModelAttribute PermitRevocation permitRevocation, final Model model) {
         permitRevocationService.update(permitRevocation);
         if (!"Save Revocation".equalsIgnoreCase(permitRevocation.getWorkflowAction()))
             bpaUtils.updatePortalUserinbox(permitRevocation.getApplication(), null);

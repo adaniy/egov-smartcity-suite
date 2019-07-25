@@ -42,6 +42,7 @@ package org.egov.bpa.web.controller.master;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.egov.bpa.master.entity.BpaFee;
 import org.egov.bpa.master.entity.BpaFeeDetail;
@@ -81,7 +82,7 @@ public class FeesController {
     }
 
     @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
-    public String updateFeesDetail(@ModelAttribute final BpaFee bpaFee,
+    public String updateFeesDetail(@Valid @ModelAttribute final BpaFee bpaFee,
             @PathVariable final Long id, final Model model,
             final HttpServletRequest request) {
         BpaFee dbBpaFee = bpaFeeService.findById(id);

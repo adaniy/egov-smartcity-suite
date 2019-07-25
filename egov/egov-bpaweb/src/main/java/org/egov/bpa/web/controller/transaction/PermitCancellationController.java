@@ -2,6 +2,8 @@ package org.egov.bpa.web.controller.transaction;
 
 import static org.egov.bpa.utils.BpaConstants.APPLICATION_STATUS_PERMIT_CANCELLED;
 
+import javax.validation.Valid;
+
 import org.egov.bpa.config.properties.BpaApplicationSettings;
 import org.egov.bpa.master.entity.PermitCancel;
 import org.egov.bpa.transaction.entity.BpaApplication;
@@ -41,7 +43,7 @@ public class PermitCancellationController {
     private SecurityUtils securityUtils;
     @Autowired
     private BpaApplicationSettings bpaApplicationSettings;
-    
+
     @GetMapping("/citizen/cancel-permit/new")
     public String showCancelPermitForm(final Model model) {
         model.addAttribute("currentUser", securityUtils.getCurrentUser());
@@ -53,7 +55,7 @@ public class PermitCancellationController {
     }
 
     @PostMapping("/citizen/cancel-permit/create")
-    public String submitCancelPermit(@ModelAttribute PermitCancel permitCancel, final Model model) {
+    public String submitCancelPermit(@Valid @ModelAttribute PermitCancel permitCancel, final Model model) {
         permitCancelService.save(permitCancel);
         bpaUtils.updatePortalUserinbox(permitCancel.getApplication(), null);
         permitCancelService.sendSmsAndEmail(permitCancel);
@@ -74,7 +76,7 @@ public class PermitCancellationController {
     }
 
     @PostMapping("/permit/cancellation/approve")
-    public String approvePermitCancellation(@ModelAttribute PermitCancel permitCancel, final Model model) {
+    public String approvePermitCancellation(@Valid @ModelAttribute PermitCancel permitCancel, final Model model) {
         permitCancelService.update(permitCancel);
         bpaUtils.updatePortalUserinbox(permitCancel.getApplication(), null);
         permitCancelService.sendSmsAndEmail(permitCancel);

@@ -29,9 +29,12 @@
  */
 package org.egov.bpa.transaction.entity.enums;
 
+import org.hibernate.validator.constraints.SafeHtml;
+
 public enum HolidayType {
     GENERAL("General"), GOVERNMENT("Government");
 
+    @SafeHtml
     private final String holidayTypeVal;
 
     private HolidayType(String holidayTypeVal) {

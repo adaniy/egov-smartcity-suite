@@ -1,9 +1,12 @@
 package org.egov.bpa.master.entity.enums;
 
+import org.hibernate.validator.constraints.SafeHtml;
+
 public enum WorkingDays {
 
     MON("1"), TUE("2"), WED("3"), THURS("4"), FRI("5");
 
+    @SafeHtml
     private final String wDaysVal;
 
     private WorkingDays(String wDaysVal) {

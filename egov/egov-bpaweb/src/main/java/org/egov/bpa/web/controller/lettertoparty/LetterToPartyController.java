@@ -47,6 +47,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.egov.bpa.config.properties.BpaApplicationSettings;
 import org.egov.bpa.master.entity.CheckListDetail;
@@ -119,7 +120,7 @@ public class LetterToPartyController extends BpaGenericApplicationController {
     private CustomImplProvider specificNoticeService;
     @Autowired
     private BpaApplicationSettings bpaApplicationSettings;
-    
+
     @ModelAttribute("lpReasonList")
     public List<LpReason> getLpReasonList() {
         return lpReasonService.findAll();
@@ -153,7 +154,7 @@ public class LetterToPartyController extends BpaGenericApplicationController {
     }
 
     @PostMapping("/create")
-    public String createLetterToParty(@ModelAttribute final LettertoParty lettertoParty,
+    public String createLetterToParty(@Valid @ModelAttribute final LettertoParty lettertoParty,
             final BindingResult resultBinder, final Model model, final HttpServletRequest request,
             final BindingResult errors, final RedirectAttributes redirectAttributes) {
         if (lettertoParty.getApplication().getStatus().getCode().equals(BpaConstants.CREATEDLETTERTOPARTY)) {
@@ -232,7 +233,7 @@ public class LetterToPartyController extends BpaGenericApplicationController {
     }
 
     @PostMapping("/update")
-    public String updateLettertoparty(@ModelAttribute final LettertoParty lettertoparty, final Model model,
+    public String updateLettertoparty(@Valid @ModelAttribute final LettertoParty lettertoparty, final Model model,
             final HttpServletRequest request, final BindingResult errors, final RedirectAttributes redirectAttributes) {
         processAndStoreLetterToPartyDocuments(lettertoparty);
         lettertoPartyService.save(lettertoparty, lettertoparty.getApplication().getState().getOwnerPosition().getId());
@@ -331,7 +332,7 @@ public class LetterToPartyController extends BpaGenericApplicationController {
     }
 
     @PostMapping("/lettertopartyreply")
-    public String createLettertoPartyReply(@ModelAttribute final LettertoParty lettertoparty, final Model model,
+    public String createLettertoPartyReply(@Valid @ModelAttribute final LettertoParty lettertoparty, final Model model,
             final HttpServletRequest request, final BindingResult errors, final RedirectAttributes redirectAttributes) {
         lettertoPartyService.validateDocs(lettertoparty, errors);
         if (errors.hasErrors())
